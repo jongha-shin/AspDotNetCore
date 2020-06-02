@@ -11,7 +11,7 @@ namespace EntityFrameworkCoreStudy.Data
         {
 
             //base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-GQCS1NV\SQLEXPRESS;Initial Catalog=hanbiza;User ID=***;Password=*******;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-GQCS1NV\SQLEXPRESS;Initial Catalog=**;User ID=***;Password=****;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
     }
 }

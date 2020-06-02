@@ -8,5 +8,6 @@ namespace EntityFrameworkCoreStudy.Entities
         [Key]
         public int SeqId { get; set; }
         public string StaffName { get; set; }
+        public string CompanyName { get; set; }
     }
 }
