@@ -1,0 +1,12 @@
+<%
+Response.Buffer = true
+If Request.Cookies("HanbizaCookie")("loginID") = "" Then
+%>
+    <script language="javascript">
+    alert("이곳은 회원 전용공간입니다.\n\n로그인 후 이용하실 수 있습니다!");
+	location.href="/login.html";
+    </script>
+ <%
+	Response.End
+End If
+%>

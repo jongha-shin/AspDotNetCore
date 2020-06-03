@@ -1,0 +1,9 @@
+<%
+Dim dir_act : dir_act = Server.MapPath("/FileBox/"&Request.Cookies("HanbizaCookie")("BizNum")) ' 파일 저장경로
+
+Set Fso = CreateObject("Scripting.FileSystemObject") ' 디렉토리 생성
+If Not Fso.FolderExists (dir_act) Then
+		Fso.CreateFolder (dir_act)
+End If
+Set Fso = Nothing
+%>

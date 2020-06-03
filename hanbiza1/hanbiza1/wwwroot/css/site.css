@@ -1,6 +1,6 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-html, body {
+/*html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -176,8 +176,193 @@ app {
         display: none;
     }
 
-    .sidebar .collapse {
+    .sidebar .collapse {*/
         /* Never collapse the sidebar for wide screens */
-        display: block;
+        /*display: block;
     }
+}*/
+
+/* ---------------------------------------------------------------------------------------- */
+
+/* GLOBALS */
+*, *:after, *:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.loading_body {
+    text-align: center;
+    margin: 0 auto;
+    background: #214085;
+    overflow: auto;
+}
+
+.loginForm-box-div {
+    position: absolute;
+    width: 100%;
+    height: 320px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*
+border-bottom: 0px dotted;
+background-color: #c1e7ff;
+opacity: 0.9;
+filter: alpha(opacity=90);
+*/
+}
+/*
+input[type=number] {-webkit-text-security:disc;}
+*/
+.placeholder::-webkit-input-placeholder {
+    color: #fff
+}
+
+.logo_img {
+    width: 100%;
+    height: 10%;
+    padding: 10px 0 30px 0;
+    border-bottom: solid 0px #bfbfbf;
+    text-align: center;
+}
+
+.login_label {
+    width: 100%;
+    height: 10%;
+    padding: 8px;
+    border-bottom: solid 0px #bfbfbf;
+    text-align: center;
+    color: #fff;
+}
+
+.login_id {
+    width: 100%;
+    height: 10%;
+    padding: 7px;
+    border-bottom: solid 0px #bfbfbf;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.login_pwd {
+    width: 100%;
+    height: 10%;
+    padding: 7px;
+    border-bottom: solid 0px #bfbfbf;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.login_auto {
+    width: 100%;
+    height: 10%;
+    padding: 8px;
+    border-bottom: solid 0px #bfbfbf;
+    text-align: center;
+    color: #fff;
+}
+
+.login_btn {
+    width: 100%;
+    height: 10%;
+    padding: 8px;
+    border-bottom: solid 0px #bfbfbf;
+    text-align: center;
+}
+/* 로그인 하단 설명문구 */
+.login_txt {
+    width: 100%;
+    height: 10%;
+    padding: 8px;
+    font-size: 0.7rem;
+    font-weight: normal;
+    color: #fff;
+    border-bottom: solid 0px #bfbfbf;
+    text-align: center;
+}
+
+.loginForm-box-div input[type=number], .loginForm-box-div input[type=password] {
+    width: 50%;
+    height: 29px;
+    line-height: 29px;
+    text-align: center;
+    background: #3763ab;
+    color: #fff;
+    border: 0;
+    outline: none;
+}
+
+    .loginForm-box-div input[type=number]:hover, .loginForm-box-div input[type=password]:hover {
+        border: solid 1px #fff;
+    }
+
+    .loginForm-box-div input[type=number]:focus, .loginForm-box-div input[type=password]:focus {
+        border: solid 1px #fff;
+    }
+
+input[type=number] {
+    -webkit-text-security: disc;
+}
+
+input:required:focus {
+    border: 1px solid #fff;
+    outline: none;
+}
+
+.log-button {
+    width: 30%;
+    background: #3763ab;
+    border: 1px solid #3763ab;
+    color: #fff;
+    margin: 0 auto;
+    text-decoration: none;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+/*체크박스*/
+.checkboxFour input[type=checkbox] {
+    width: 1px;
+    height: 1px;
+}
+
+.checkboxFour {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 100%;
+    position: relative;
+    margin: 0 auto;
+    vertical-align: middle;
+}
+    /*체크박스 버튼 생성*/
+    .checkboxFour label {
+        display: inline;
+        width: 12px;
+        height: 12px;
+        border-radius: 100%;
+        cursor: pointer;
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        z-index: 1;
+        background: #fff;
+    }
+    /* 체크박스 상태 */
+    .checkboxFour input[type=checkbox]:checked + label {
+        background: #3763ab;
+    }
+

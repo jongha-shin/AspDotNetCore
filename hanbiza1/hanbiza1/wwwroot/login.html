@@ -1,0 +1,285 @@
+<!--#include virtual="/inc/head.html" -->
+<%
+If Request.Cookies("HanbizaCookie")("loginID")<>"" AND Request.Cookies("HanbizaCookie")("auto_save")="Y" Then
+Response.redirect "/main.html"
+Response.End
+End If
+%>
+<title><%=home_title%></title>
+<style type="text/css">
+/* GLOBALS */
+*,*:after,*:before {
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+-ms-box-sizing: border-box;
+-o-box-sizing: border-box;
+box-sizing: border-box;
+padding: 0;
+margin: 0;
+}
+.clearfix:after {
+content: "";
+display: table;
+clear: both;
+}
+
+.loading_body
+{
+ text-align: center;
+ margin: 0 auto;
+ background:#214085;
+ overflow:auto;
+}
+
+.loginForm-box-div {
+position:absolute;
+width  : 100%;
+height  : 320px;
+top:50%; left:50%;
+transform: translate(-50%, -50%);
+/*
+border-bottom: 0px dotted;
+background-color: #c1e7ff;
+opacity: 0.9;
+filter: alpha(opacity=90);
+*/
+}
+/*
+input[type=number] {-webkit-text-security:disc;}
+*/
+.placeholder::-webkit-input-placeholder {
+    color: #fff
+}
+.logo_img {
+width:100%;
+height:10%;
+padding:10px 0 30px 0;
+border-bottom: solid 0px #bfbfbf;
+text-align:center;
+}	
+.login_label {
+width:100%;
+height:10%;
+padding:8px;
+border-bottom: solid 0px #bfbfbf;
+text-align:center;
+color: #fff;
+}	
+.login_id {
+width:100%;
+height:10%;
+padding:7px;
+border-bottom: solid 0px #bfbfbf;
+font-size:1.3em;
+text-align:center;
+}	
+.login_pwd {
+width:100%;
+height:10%;
+padding:7px;
+border-bottom: solid 0px #bfbfbf;
+font-size:1.3em;
+text-align:center;
+}
+.login_auto {
+width:100%;
+height:10%;
+padding:8px;
+border-bottom: solid 0px #bfbfbf;
+text-align:center;
+color: #fff;
+}	
+.login_btn {
+width:100%;
+height:10%;
+padding:8px;
+border-bottom: solid 0px #bfbfbf;
+text-align:center;
+}	
+/* 로그인 하단 설명문구 */
+.login_txt {
+width:100%;
+height:10%;
+padding:8px;
+font-size: 0.7rem;
+font-weight: normal;
+color: #fff;
+border-bottom: solid 0px #bfbfbf;
+text-align:center;
+}
+.loginForm-box-div input[type=number], .loginForm-box-div input[type=password] {
+width:50%;
+height:29px;
+line-height:29px;
+text-align:center;
+background: #3763ab;
+color: #fff;
+border: 0;
+outline: none;
+}
+.loginForm-box-div input[type=number]:hover, .loginForm-box-div input[type=password]:hover {
+border: solid 1px #fff;
+}
+.loginForm-box-div input[type=number]:focus, .loginForm-box-div input[type=password]:focus {
+border: solid 1px #fff;
+}
+input[type=number] {-webkit-text-security:disc;}
+input:required:focus {
+border: 1px solid #fff;
+outline: none;
+}
+.log-button {
+width: 30%;
+background: #3763ab;
+border: 1px solid #3763ab;
+color: #fff;
+margin : 0 auto;
+text-decoration: none;
+height: 30px;
+line-height: 30px;
+text-align: center;
+font-weight: bold;
+}
+/*체크박스*/
+.checkboxFour input[type=checkbox]{
+width: 1px;
+height: 1px;
+}
+.checkboxFour {
+display: inline-block;
+width: 18px;
+height: 18px;
+background: #fff;
+border-radius: 100%;
+position: relative;
+margin : 0 auto;
+vertical-align:middle;
+}
+/*체크박스 버튼 생성*/
+.checkboxFour label {
+display: inline;
+width: 12px;
+height: 12px;
+border-radius: 100%;
+cursor: pointer;
+position: absolute;
+top: 3px;
+left: 3px;
+z-index: 1;
+background: #fff;
+}
+/* 체크박스 상태 */
+.checkboxFour input[type=checkbox]:checked + label {
+background: #3763ab;
+}
+</style>
+<script type="text/javascript">
+<!--
+function checkinput(){
+	if(document.loginForm.loginID.value == ""){
+		$('input').addClass('.placeholder');
+		$('#loginID').attr('placeholder','휴대전화번호를 입력해 주세요!');
+//		document.loginForm.loginID.focus();
+		return
+	}
+	if(document.loginForm.PassW.value == ""){
+		$('input').addClass('.placeholder');
+		$('#PassW').attr('placeholder','비밀번호를 입력해 주세요!');
+//		document.loginForm.PassW.focus();
+		return
+	}
+	document.loginForm.random_src.value = "<%=random_num%>" ;
+	document.loginForm.target = "hideQuery";
+	document.loginForm.action = "login_ok.html";
+	document.loginForm.submit();
+	return
+}
+function keyon(Values) {
+	if(event.keyCode == 13) {
+		if(Values==0) {
+			if(document.loginForm.loginID.value == ""){
+				$('input').addClass('.placeholder');
+				$('#loginID').attr('placeholder','휴대전화번호를 입력해 주세요!');
+//				document.loginForm.loginID.focus();
+				return
+			}
+			else {
+				$('input').addClass('.placeholder');
+				$('#PassW').attr('placeholder','비밀번호를 입력해 주세요!');
+//				document.loginForm.PassW.focus();
+				return
+			}
+		}
+		else {
+			checkinput();
+		}
+	}
+	else{
+		return;
+	}
+}
+//-->
+</script>
+
+
+<!--바로가기 버튼 -->
+<!--include virtual="/inc/top-go.html" -->
+<!--본문 내용 -->
+<div class="html-con main-html">
+  <div class="loginForm-box-div">
+
+    <form name="loginForm" id="loginForm" method="post" >
+    <input type="hidden" name="random_src" value="">
+    <input type="hidden" name="random_num" value="<%=random_num%>">
+    <div class="logo_img"><img src="/images/logo_main.png" border="0" alt="한비자"></div>
+    <div class="login_label">휴대전화번호</div>
+	<div class="login_id">
+		<input type="number" id="loginID" name="loginID" placeholder="" class="placeholder" onKeyPress="keyon(0)" style="ime-mode:disabled;color:#fff;" tabindex="1" />
+		<!--<%If Request.Cookies("HanbizaCookie")("id_save")="Y" Then%>  value="<%=Request.Cookies("HanbizaCookie")("loginID")%>" <%Else%> value=""<%End If%> required autocomplete="off" pattern="[0-9]*" inputmode="numeric"-->
+	</div>
+    <div class="login_label">비밀번호</div>
+    <div class="login_pwd">
+    <input type="password" id="PassW" name="PassW" placeholder="" class="placeholder" onKeyPress="keyon(1)" style="ime-mode:disabled;color:#fff;" tabindex="2" required autocomplete="off">
+    </div>
+    <div class="login_auto">
+		<div class="checkboxFour">
+			<input type="checkbox" id="auto_save" name="auto_save" value="Y" />
+			<!--<%If Request.Cookies("HanbizaCookie")("auto_save")="Y" Then%> checked <%End If%>-->
+			<label for="auto_save"></label>
+		</div>&nbsp;<label for="auto_save"><span class="auto_txt" style="dispaly:inline;top:5px;height:30px;border: solid 0px #ddd;">자동로그인</span></label>
+    </div>
+    <div class="login_btn"><a href="#" onClick="checkinput();"><div class="log-button">로 그 인</div></a></div>
+    <div class="login_txt">* 비밀번호 변경은 인사담당자에게 요청하세요!</div>
+    </form>​​
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+    /**/
+    var text = "loginForm-box-div - > 너비:" + $(".loginForm-box-div").width() + "px, 높이:" +  $(".loginForm-box-div").height() + "px - 요소의 크기<br/>";
+    text += "너비:" + $(".loginForm-box-div").innerWidth() + "px, 높이:" +  $(".loginForm-box-div").innerHeight() + "px - 요소의 크기 + 패딩<br/>";
+    text += "너비:" + $(".loginForm-box-div").outerWidth() + "px, 높이:" +  $(".loginForm-box-div").outerHeight() + "px - 요소의 크기 + 패딩 + 테두리<br/>";
+    text += "너비:" + $(".loginForm-box-div").outerWidth(true) + "px, 높이:" +  $(".loginForm-box-div").outerHeight(true) + "px - 요소의 크기 + 패딩 + 테두리 + 마진<br/>";
+    text += "loginForm -> 너비:" + $(".loginForm").width() + "px, 높이:" +  $(".loginForm").height() + "px - 요소의 크기<br/>";
+    text += "너비:" + $(".loginForm").innerWidth() + "px, 높이:" +  $(".loginForm").innerHeight() + "px - 요소의 크기 + 패딩<br/>";
+    text += "너비:" + $(".loginForm").outerWidth() + "px, 높이:" +  $(".loginForm").outerHeight() + "px - 요소의 크기 + 패딩 + 테두리<br/>";
+    text += "너비:" + $(".loginForm").outerWidth(true) + "px, 높이:" +  $(".loginForm").outerHeight(true) + "px - 요소의 크기 + 패딩 + 테두리 + 마진<br/>";
+    $(function() {
+    $("#btnSize").on("click", function() {
+    //       $("p>#pd").html("요소의 너비:" + $(".loginForm-box-div").width() + "px<br/>요소의 높이:" +  $(".loginForm-box-div").height() + "px" );
+    document.getElementById('#pd').innerHTML = text;
+    });
+    });
+    </script>
+<!-- <div id="" class=""></div> -->
+    <iframe name="hideQuery" height="300" style="display:none;width:100%;background-color:#F5F5F5;border:0;z-index:99999;"></iframe>
+
+  </div>
+
+  <!--푸터 부분 -->
+  <!--include virtual="/inc/footer.html" -->
+  <!-- </div> -->
+  <!--js 스크립트 -->
+  <!--#include virtual="/inc/js.html" -->
+</div>
+
+

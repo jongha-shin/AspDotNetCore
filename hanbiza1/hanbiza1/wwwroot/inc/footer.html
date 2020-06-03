@@ -1,0 +1,51 @@
+    <script>
+      $(window).load(function () {
+           $('#layer_ad').css({
+                'position':'fixed',
+                'bottom':0,
+                'right':'20px',
+                'padding':'10px',
+                'font-size':'12px',
+                'width':'250px',
+                'height':'180px',
+                'border-width':'1px 1px 0 1px',
+                'border-color':'#aaaaaa',
+                'border-style':'solid',
+				'background-color': '#fafafa',
+            });
+
+            setInterval(function() {
+               if ($('#layer_ad').css('bottom') != '-200px') {
+                    $('#layer_ad').animate({'bottom':'-200px'}, 'slow');
+                } else {
+                    $('#layer_ad').animate({'bottom':'0px'}, 'slow');
+                }
+            }, 7000);
+        });
+    </script>
+<style type="text/css">
+#footer_t {
+position: fixed; bottom: 0; 
+width: 100%; 
+border: 1px solid #ffcc33;
+z-index:9999;
+}
+</style>
+<div id="footer_t" class="m-footer">
+  <div class="footer-bn-box">
+    <ul class="clearfix">
+      <li class="left-box">
+        <a href="" target="_blank"><span class="icon-01">Website 웹사이트</span></a>
+      </li>
+      <li class="right-box"><a href="tel:0211111111" ><span class="icon-02">Call Us 전화하기</span></a></li>
+    </ul>
+  </div>
+  <div class="footer-box">
+    <div class="footer-txt">
+      <div class="foot-logo"><img src="../images/main/logo.png" alt=""></div>
+      <p class="mt_05 copy-txt">COPYRIGHT &#9426; 2019 HanBiza.com </p>
+      <p></p>
+    </div>
+  </div>
+</div>   
+

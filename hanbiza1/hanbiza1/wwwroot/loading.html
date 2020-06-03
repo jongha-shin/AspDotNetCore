@@ -1,0 +1,44 @@
+<!--#include virtual="/inc/head.html" -->
+<title><%=home_title%></title>
+<style type="text/css">
+.loading_body
+{
+ text-align: center;
+ margin: 0 auto;
+ background:#214085;
+}
+.loading_logo
+{
+ position: absolute;
+ text-align: center;
+ width: 150px;
+ height: 46px;
+ left: 50%;
+ top: 50%;
+ margin-left: -75px;
+ margin-top: -56px;
+ background: #214085;
+}
+.loading_logo.hover
+{
+ cursor: pointer;
+}
+</style>
+<meta HTTP-EQUIV="refresh" CONTENT="3;URL=/login.html">
+
+<body class="loading_body">
+<!--바로가기 버튼 -->
+<!--#include virtual="/inc/top-go.html" -->
+<div class="html-con main-html">
+  <!--본문 내용 -->
+  <div class="loading_logo">
+    <a href="login.html"><img src="/images/logo_w.png" border="0" alt="한비자"></a>
+    <div style="display:block;margin-top:22px;width:100%" class="mt_100 white_01 font_16">MOBILE</div>
+  </div>
+  <!--푸터 부분 -->
+  <!--include virtual="/inc/footer.html" -->
+</div>
+<!--js 스크립트 -->
+<!--#include virtual="/inc/js.html" -->
+</body>
+

@@ -1,0 +1,60 @@
+﻿@page "/"
+<!--본문 내용 -->
+    <body class="loading_body">
+        <div class="html-con main-html">
+            <div class="loginForm-box-div">
+
+                <form name="loginForm" id="loginForm" method="post">
+                    <input type="hidden" name="random_src" value="">
+                    <input type="hidden" name="random_num" value="<%=random_num%>">
+                    <div class="logo_img"><img src="/images/logo_main.png" border="0" alt="한비자"></div>
+                    <div class="login_label">휴대전화번호</div>
+                    <div class="login_id">
+                        <input type="number" id="loginID" name="loginID" placeholder="" class="placeholder" onKeyPress="keyon(0)" style="ime-mode:disabled;color:#fff;" tabindex="1" />
+                        @*<%If Request.Cookies("HanbizaCookie")("id_save")="Y" Then%>  value="<%=Request.Cookies("HanbizaCookie")("loginID")%>" <%Else%> value=""<%End If%> required autocomplete="off" pattern="[0-9]*" inputmode="numeric"*@
+                    </div>
+                    <div class="login_label">비밀번호</div>
+                    <div class="login_pwd">
+                        <input type="password" id="PassW" name="PassW" placeholder="" class="placeholder" onKeyPress="keyon(1)" style="ime-mode:disabled;color:#fff;" tabindex="2" required autocomplete="off">
+                    </div>
+                    <div class="login_auto">
+                        <div class="checkboxFour">
+                            <input type="checkbox" id="auto_save" name="auto_save" value="Y" />
+                            @*<%If Request.Cookies("HanbizaCookie")("auto_save")="Y" Then%> checked <%End If%>*@
+                            <label for="auto_save"></label>
+                        </div>&nbsp;<label for="auto_save"><span class="auto_txt" style="dispaly:inline;top:5px;height:30px;border: solid 0px #ddd;mar">자동로그인</span></label>
+                    </div>
+                    <div class="login_btn"><a href="#" onClick="checkinput();"><div class="log-button">로 그 인</div></a></div>
+                    <div class="login_txt">* 비밀번호 변경은 인사담당자에게 요청하세요!</div>
+                </form>
+
+                @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                    <script>
+                /**/
+                var text = "loginForm-box-div - > 너비:" + $(".loginForm-box-div").width() + "px, 높이:" +  $(".loginForm-box-div").height() + "px - 요소의 크기<br/>";
+                text += "너비:" + $(".loginForm-box-div").innerWidth() + "px, 높이:" +  $(".loginForm-box-div").innerHeight() + "px - 요소의 크기 + 패딩<br/>";
+                text += "너비:" + $(".loginForm-box-div").outerWidth() + "px, 높이:" +  $(".loginForm-box-div").outerHeight() + "px - 요소의 크기 + 패딩 + 테두리<br/>";
+                text += "너비:" + $(".loginForm-box-div").outerWidth(true) + "px, 높이:" +  $(".loginForm-box-div").outerHeight(true) + "px - 요소의 크기 + 패딩 + 테두리 + 마진<br/>";
+                text += "loginForm -> 너비:" + $(".loginForm").width() + "px, 높이:" +  $(".loginForm").height() + "px - 요소의 크기<br/>";
+                text += "너비:" + $(".loginForm").innerWidth() + "px, 높이:" +  $(".loginForm").innerHeight() + "px - 요소의 크기 + 패딩<br/>";
+                text += "너비:" + $(".loginForm").outerWidth() + "px, 높이:" +  $(".loginForm").outerHeight() + "px - 요소의 크기 + 패딩 + 테두리<br/>";
+                text += "너비:" + $(".loginForm").outerWidth(true) + "px, 높이:" +  $(".loginForm").outerHeight(true) + "px - 요소의 크기 + 패딩 + 테두리 + 마진<br/>";
+                $(function() {
+                $("#btnSize").on("click", function() {
+                //       $("p>#pd").html("요소의 너비:" + $(".loginForm-box-div").width() + "px<br/>요소의 높이:" +  $(".loginForm-box-div").height() + "px" );
+                document.getElementById('#pd').innerHTML = text;
+                });
+                });
+                    </script>*@
+                <!-- <div id="" class=""></div> -->
+                <iframe name="hideQuery" height="300" style="display:none;width:100%;background-color:#F5F5F5;border:0;z-index:99999;"></iframe>
+
+            </div>
+
+            <!--푸터 부분 -->
+            <!--include virtual="/inc/footer.html" -->
+            <!-- </div> -->
+            <!--js 스크립트 -->
+            <!--#include virtual="/inc/js.html" -->
+        </div>
+    </body>
