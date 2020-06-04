@@ -12,10 +12,10 @@ namespace Hanbiza.Models
         public string CompanyName { get; set; }
         public string loginID { get; set; }
         public string PassW { get; set; }
-        public string StaffID { get; set; }
+        public int StaffID { get; set; }
         public string StaffName { get; set; }
 
-        public Login_infor1(int sEQID, string dname, string bizNum, string companyName, string loginID, string passW, string staffID, string staffName)
+        public Login_infor1(int sEQID, string dname, string bizNum, string companyName, string loginID, string passW, int staffID, string staffName)
         {
             SEQID = sEQID;
             Dname = dname;

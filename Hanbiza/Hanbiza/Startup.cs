@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Hanbiza.Areas.Identity;
 using Hanbiza.Data;
-using Hanbiza.Pages;
 using Hanbiza.Models;
 
 namespace Hanbiza
@@ -34,9 +33,10 @@ namespace Hanbiza
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            services.AddSingleton<Login_infor1>();
+            
             services.AddAuthentication("Cookies").AddCookie();
-
+            
+            services.AddTransient<ILogin_inforRepository, Login_inforRepository>();
 
 
         }
