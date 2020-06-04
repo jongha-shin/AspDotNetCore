@@ -1,6 +1,8 @@
 ﻿@page "/"
 @page "/Index"
 @page "/Login"
+@inject ILogin_inforRepository repository
+
 <!-- Outer Row -->
 <div class="row justify-content-center" style="align-content:center">
 
@@ -30,7 +32,7 @@
                                         <label class="custom-control-label" for="customCheck">Remember Me</label>
                                     </div>
                                 </div>
-                                <button href="#" class="btn btn-primary btn-user btn-block" @onclick="Login_Click">
+                                <button href="#" class="btn btn-primary btn-user btn-block" @onclick="LoginClick">
                                     로 그 인
                                 </button>
 

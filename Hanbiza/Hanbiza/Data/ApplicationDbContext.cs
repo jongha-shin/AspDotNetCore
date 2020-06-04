@@ -10,7 +10,7 @@ namespace Hanbiza.Data
             : base(options)
         {
         }
-        public DbSet<Login_infor> login_infor { get; set; }
+        public DbSet<Login_infor1> Login_infor { get; set; }
 
     }
 }

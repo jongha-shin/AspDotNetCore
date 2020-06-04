@@ -2,7 +2,7 @@
 
 namespace Hanbiza.Models
 {
-    public class Login_infor
+    public class Login_infor1
     {
         //SELECT Dname, BizNum, CompanyName, joinday, StaffName, StaffID, loginID, State FROM Login_infor
         [Key]
@@ -15,7 +15,7 @@ namespace Hanbiza.Models
         public string StaffID { get; set; }
         public string StaffName { get; set; }
 
-        public Login_infor(int sEQID, string dname, string bizNum, string companyName, string loginID, string passW, string staffID, string staffName)
+        public Login_infor1(int sEQID, string dname, string bizNum, string companyName, string loginID, string passW, string staffID, string staffName)
         {
             SEQID = sEQID;
             Dname = dname;
@@ -27,13 +27,13 @@ namespace Hanbiza.Models
             StaffName = staffName;
         }
 
-        public Login_infor(string loginID, string passW)
+        public Login_infor1(string loginID, string passW)
         {
             this.loginID = loginID;
             PassW = passW;
         }
 
-        public Login_infor()
+        public Login_infor1()
         {
         }
     }

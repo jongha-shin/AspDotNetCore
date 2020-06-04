@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ideaAppCore.Models
 {
@@ -7,7 +6,7 @@ namespace ideaAppCore.Models
     {
         public int Id { get; set; }
         [Required]
-        public String Note { get; set; }
+        public string Note { get; set; }
 
     }
 }

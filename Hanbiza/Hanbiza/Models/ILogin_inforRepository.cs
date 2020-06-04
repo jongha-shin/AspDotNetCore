@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Hanbiza.Models
+﻿namespace Hanbiza.Models
 {
     public interface ILogin_inforRepository
     {
-        Login_infor GetLogin_Infor(Login_infor login_Infor);
+        Login_infor1 GetLogin_Infor(Login_infor1 login_Infor);
 
     }
 }

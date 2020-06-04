@@ -1,8 +1,5 @@
 ﻿using Hanbiza.Data;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace Hanbiza.Models
@@ -16,12 +13,15 @@ namespace Hanbiza.Models
             this.dbContext = dbContext;
         }
         
-        public Login_infor GetLogin_Infor(Login_infor login_Infor)
+        public Login_infor1 GetLogin_Infor(Login_infor1 login_infor)
         {
-            Console.WriteLine(login_Infor.loginID +" / "+login_Infor.PassW);
+            var loginUser = from Login_infor in dbContext.Login_infor
+                            where Login_infor.loginID == login_infor.loginID 
+                            && Login_infor.PassW == login_infor.PassW
+                            select Login_infor;
             
-            Login_infor loginUser = new Login_infor(login_Infor.loginID, login_Infor.PassW);
-            return loginUser;
+            
+            return login_infor;
         }
     }
 }
