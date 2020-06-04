@@ -17,10 +17,12 @@
                             </div>
                             <form class="user">
                                 <div class="form-group">
-                                    <input type="tel" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="ID를 입력하세요">
+                                    <input type="tel" class="form-control form-control-user" placeholder="ID를 입력하세요"
+                                           @bind="@login_infor.loginID">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="비밀번호를 입력하세요">
+                                    <input type="password" class="form-control form-control-user" placeholder="비밀번호를 입력하세요"
+                                           @bind="@login_infor.PassW">
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox small">
@@ -28,9 +30,10 @@
                                         <label class="custom-control-label" for="customCheck">Remember Me</label>
                                     </div>
                                 </div>
-                                <a href="#" class="btn btn-primary btn-user btn-block" @onclick="Login_Click">
+                                <button href="#" class="btn btn-primary btn-user btn-block" @onclick="Login_Click">
                                     로 그 인
-                                </a>
+                                </button>
+
                                 <hr>
                                 <a href="index.html" class="btn btn-google btn-user btn-block">
                                     <i class="fab fa-google fa-fw"></i> Login with Google

@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Hanbiza.Models;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 
 namespace Hanbiza.Pages
 {
@@ -10,13 +8,22 @@ namespace Hanbiza.Pages
     {
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+        public ILogin_inforRepository repository;
+        
+        Login_infor login_infor = new Login_infor();
+
         protected override void OnInitialized()
         {
-            
+           
         }
 
-        protected void Login_Click()
+        public void Login_Click(string ID, string passW)
         {
+            login_infor.loginID = ID;
+            login_infor.PassW = passW;
+            var loginUser = repository.GetLogin_Infor(login_infor);
+            
+            // todo : 쿠키저장
             NavigationManager.NavigateTo("/Main");
         }
     }
