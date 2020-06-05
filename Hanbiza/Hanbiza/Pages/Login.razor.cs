@@ -7,7 +7,7 @@ namespace Hanbiza.Pages
     {
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-        Login_infor1 login_infor = new Login_infor1();
+        LoginInfor login_infor = new LoginInfor();
         
 
         protected override void OnInitialized()

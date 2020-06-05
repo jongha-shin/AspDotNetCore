@@ -2,6 +2,7 @@
 @page "/Index"
 @page "/Login"
 @inject ILogin_inforRepository repository
+@using Hanbiza.Models
 
 <!-- Outer Row -->
 <div class="row justify-content-center" style="align-content:center">
@@ -20,7 +21,7 @@
                             <form class="user">
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-user" placeholder="ID를 입력하세요"
-                                           @bind="@login_infor.loginID">
+                                           @bind="@login_infor.LoginId">
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control form-control-user" placeholder="비밀번호를 입력하세요"
