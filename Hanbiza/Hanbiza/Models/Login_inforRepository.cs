@@ -1,4 +1,5 @@
 ﻿using Hanbiza.Data;
+using Hanbiza.Pages;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,15 +17,29 @@ namespace Hanbiza.Models
         
         public Login_infor1 GetLogin_Infor(Login_infor1 login_infor)
         {
-            IEnumerable<Login_infor1> loginUser = (IEnumerable<Login_infor1>)(from user in dbContext.Login_infor
-                                                 where user.loginID == login_infor.loginID
-                                                       && user.PassW == login_infor.PassW
-                                                 select new
-                                                 {
-                                                     user.BizNum, user.CompanyName, user.Dname, 
-                                                     user.loginID, user.StaffID, user.StaffName
-                                                 });
-            asdf.DataSource = loginUser;
+            System.Console.WriteLine("GetLogin_Infor(): "+ login_infor.loginID +" / "+ login_infor.PassW);
+            var loginUser = from user in dbContext.Login_infor
+                            where user.loginID == login_infor.loginID
+                            select user;
+            
+            //IEnumerable<Login_infor1> loginUser = from user in dbContext.Login_infor
+            //                                      where user.loginID == login_infor.loginID
+            //                                          && user.PassW == login_infor.PassW
+            //                                      select new Login_infor1
+            //                                      {
+            //                                          Dname = user.Dname,
+            //                                          BizNum = user.BizNum,
+            //                                          CompanyName = user.CompanyName,
+            //                                          loginID = user.loginID,
+            //                                          StaffID = user.StaffID,
+            //                                          StaffName = user.StaffName
+            //                                      };
+
+            foreach (var item in loginUser)
+            {
+                System.Console.WriteLine(item.CompanyName);
+            }
+            
 
             
             return (Login_infor1)loginUser;

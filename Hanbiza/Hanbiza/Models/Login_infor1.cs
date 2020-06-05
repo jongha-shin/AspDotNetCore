@@ -17,25 +17,37 @@ namespace Hanbiza.Models
 
         public Login_infor1(int sEQID, string dname, string bizNum, string companyName, string loginID, string passW, int staffID, string staffName)
         {
-            SEQID = sEQID;
-            Dname = dname;
-            BizNum = bizNum;
-            CompanyName = companyName;
+            this.SEQID = sEQID;
+            this.Dname = dname;
+            this.BizNum = bizNum;
+            this.CompanyName = companyName;
             this.loginID = loginID;
-            PassW = passW;
-            StaffID = staffID;
-            StaffName = staffName;
+            this.PassW = passW;
+            this.StaffID = staffID;
+            this.StaffName = staffName;
         }
 
         public Login_infor1(string loginID, string passW)
         {
             this.loginID = loginID;
-            PassW = passW;
+            this.PassW = passW;
+        }
+
+        public Login_infor1(string dname, string bizNum, string companyName, string loginID, int staffID, string staffName)
+        {
+            this.Dname = dname;
+            this.BizNum = bizNum;
+            this.CompanyName = companyName;
+            this.loginID = loginID;
+            this.StaffID = staffID;
+            this.StaffName = staffName;
         }
 
         public Login_infor1()
         {
         }
+
+
     }
 
 }

@@ -12,11 +12,11 @@ namespace Hanbiza.Pages
 
         protected override void OnInitialized()
         {
-            System.Console.WriteLine("hi");
         }
 
         private void LoginClick()
         {
+            System.Console.WriteLine("LoginClick");
             
             login_infor = repository.GetLogin_Infor(login_infor);
             
