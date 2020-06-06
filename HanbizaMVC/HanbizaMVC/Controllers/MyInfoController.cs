@@ -9,45 +9,31 @@ using HanbizaMVC.Models;
 
 namespace HanbizaMVC.Controllers
 {
-    public class HomeController : Controller
+    public class MyInfoController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public MyInfoController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult Sub1()
-        {
-            return View();
-        }
-        public IActionResult Sub2()
-        {
-            return View();
-        }
-        public IActionResult Sub3()
-        {
-            return View();
-        }
-        public IActionResult Sub4()
-        {
-            return View();
-        }
-        public IActionResult Sub5()
-        {
-            return View();
-        }
-        public IActionResult Sub6()
-        {
-            return View();
-        }
         
-      
+        public IActionResult Sub7()
+        {
+            return View();
+        }
+        public IActionResult Sub8()
+        {
+            return View();
+        }
+        public IActionResult Sub9()
+        {
+            return View();
+        }
+        public IActionResult LogIn()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
