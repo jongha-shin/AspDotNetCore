@@ -30,8 +30,10 @@ namespace HanbizaMVC.Controllers
         {
             return View();
         }
-        public IActionResult LogIn()
+        [HttpPost]
+        public IActionResult LogIn(int userID, string userPWD)
         {
+            Console.WriteLine(userID +" / "+ userPWD);
             return View();
         }
 
