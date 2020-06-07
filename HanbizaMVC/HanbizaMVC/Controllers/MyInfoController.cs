@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using HanbizaMVC.Models;
+using System.Linq;
 
 namespace HanbizaMVC.Controllers
 {
@@ -30,12 +27,33 @@ namespace HanbizaMVC.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public IActionResult LogIn(int userID, string userPWD)
+        public IActionResult LogIn()
         {
-            Console.WriteLine(userID +" / "+ userPWD);
             return View();
         }
+        [HttpPost]
+        public IActionResult LogIn(OnlyLogin model)
+        {
+            _logger.LogInformation("LogInProcess: "+model.LoginID +" / "+ model.passW);
+            if (ModelState.IsValid)
+            {
+                using (var db = new HanbizaContext())
+                {
+                    var user = db.LoginInfor.FirstOrDefault(u => u.LoginId.Equals(model.LoginID) &&
+                                                            u.PassW.Equals(model.passW));
+                    if(user != null)
+                    {
+                        //성공
+                        return new RedirectResult("/Home/Index");
+                    }
+                }
+                ModelState.AddModelError(string.Empty, "사용자 ID 혹은 비밀번호가 올바르지 않습니다.");
+            }
+             
+            return View(model);
+        }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
