@@ -24,7 +24,16 @@ namespace HanbizaMVC
 
             services.AddDbContext<HanbizaContext>(options =>
             options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+                Configuration.GetConnectionString("MyConnection")));
+
+            // DI 의존성 주입
+
+            // Session
+            services.AddSession();
+
+            // Identity
+
+            // Web API 관련기능 등 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +52,7 @@ namespace HanbizaMVC
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 

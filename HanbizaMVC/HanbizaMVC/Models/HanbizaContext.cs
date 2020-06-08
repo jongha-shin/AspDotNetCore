@@ -29,7 +29,8 @@ namespace HanbizaMVC.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("name=DefaultConnection");
+                //optionsBuilder.UseSqlServer("name=MyConnection");
+                
             }
         }
 

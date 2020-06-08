@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -24,6 +25,12 @@
 
     <!-- Custom scripts for all pages-->
     <script src="~/js/sb-admin-2.min.js"></script>
+    <style>
+        .bg-gradient-primary {
+            background-image: linear-gradient(180deg,#214085 100%,#214085 100%);
+            background-size: cover;
+        }
+    </style>
 </head>
 <body id="page-top">
 
@@ -110,9 +117,9 @@
                 </a>
             </li>
             <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
+            @*<div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
+            </div>*@
 
         </ul>
         <!-- End of Sidebar -->
@@ -126,14 +133,21 @@
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    @*<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
-                    </button>
+                    </button>*@
 
                     <!-- Topbar title -->
-                        @*<div class="title" style="font-size:large; color:black;">*@
-                            <p  style="margin-bottom: 0px; font-size:large; color:black;">@ViewData["Title"]</p>
-                        
+                    @*<div class="title" style="font-size:large; color:black;">*@
+                    @{
+                        if (TempData["StaffId"] != null)
+                        {
+                                        <p style="margin-bottom: 0px; font-size:large; color:black;">@ViewData["Title"] - @TempData["StaffId"] / @TempData["BizNum"] / @TempData["DateNow"]</p>
+                        }
+                        TempData.Keep("StaffId");
+                        TempData.Keep("BizNum");
+                        TempData.Keep("DateNow");
+                    }
                 </nav>
                 <!-- End of Topbar -->
                 <!-- Begin Page Content -->

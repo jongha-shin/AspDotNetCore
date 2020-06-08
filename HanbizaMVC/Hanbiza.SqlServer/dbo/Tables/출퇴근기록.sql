@@ -1,0 +1,28 @@
+﻿CREATE TABLE [dbo].[출퇴근기록] (
+    [SEQID]   INT           NOT NULL,
+    [Dname]   VARCHAR (50)  NOT NULL,
+    [BizNum]  CHAR (10)     NOT NULL,
+    [StaffID] INT           NOT NULL,
+    [날짜]      DATE          NOT NULL,
+    [주간]      INT           NULL,
+    [출근]      VARCHAR (50)  NULL,
+    [퇴근]      VARCHAR (50)  NULL,
+    [지각]      FLOAT (53)    NULL,
+    [외출]      FLOAT (53)    NULL,
+    [총근로]     FLOAT (53)    NULL,
+    [소정근로]    FLOAT (53)    NULL,
+    [초과근로]    FLOAT (53)    NULL,
+    [주휴]      FLOAT (53)    NULL,
+    [근태조정]    FLOAT (53)    NULL,
+    [연장근로]    FLOAT (53)    NULL,
+    [연장조정]    FLOAT (53)    NULL,
+    [야간근로]    FLOAT (53)    NULL,
+    [휴일근로]    FLOAT (53)    NULL,
+    [휴일연장]    FLOAT (53)    NULL,
+    [휴일야간]    FLOAT (53)    NULL,
+    [일체크]     VARCHAR (100) NULL,
+    [비고]      VARCHAR (200) NULL,
+    [등록인]     VARCHAR (50)  NULL,
+    [Regdate] DATETIME      NULL
+);
+

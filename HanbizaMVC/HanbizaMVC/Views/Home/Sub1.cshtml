@@ -1,7 +1,77 @@
-﻿@{
+﻿@model HanbizaMVC.Models.출퇴근기록집계표
+
+@{
     ViewData["Title"] = "근태 보기";
 }
 
-<div class="text-center">
-    <h1>@ViewData["Title"]</h1>
-</div>
+
+    <div class="text-center">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h3 class="m-0 font-weight-bold text-primary">@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">월별근태내역</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">출퇴근기록</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>근무/휴가</th>
+                                        <th>근무외시수</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>기준일</td>
+                                        <td>@ViewBag.기준일</td>
+                                    </tr>
+                                    <tr>
+                                        <td>근무일</td>
+                                        <td>@ViewBag.근무일</td>
+                                    </tr>
+                                    <tr>
+                                        <td>결근일</td>
+                                        <td>@ViewBag.결근일</td>
+                                    </tr>
+                                    <tr>
+                                        <td>휴무일</td>
+                                        <td>@ViewBag.휴무일</td>
+                                    </tr>
+                                    <tr>
+                                        <td>주휴일</td>
+                                        <td>@ViewBag.주휴일</td>
+                                    </tr>
+                                    <tr>
+                                        <td>유급휴가</td>
+                                        <td>@ViewBag.유급휴일</td>
+                                    </tr>
+                                    <tr>
+                                        <td>무급휴가</td>
+                                        <td>@ViewBag.무급휴가휴일</td>
+                                    </tr>
+                                    <tr>
+                                        <td>유급주휴일</td>
+                                        <td>@ViewBag.유급주휴일</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    ...
+                    </div>
+                </div>
+             
+            </div>
+
+        </div>
+    </div>

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using HanbizaMVC.Models;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace HanbizaMVC.Controllers
 {
@@ -39,11 +41,24 @@ namespace HanbizaMVC.Controllers
             {
                 using (var db = new HanbizaContext())
                 {
-                    var user = db.LoginInfor.FirstOrDefault(u => u.LoginId.Equals(model.LoginID) &&
-                                                            u.PassW.Equals(model.passW));
+                    //var user = db.LoginInfor.FirstOrDefault(u => u.LoginId.Equals(model.LoginID));
+                    //&& u.PassW.Equals(model.passW));
+
+                    var user = from loginUser in db.LoginInfor
+                               where loginUser.LoginId == model.LoginID
+                               select  new { loginUser.BizNum, loginUser.StaffId };
+                    
                     if(user != null)
                     {
+                        foreach (var item in user)
+                        {
+                        TempData["StaffId"]= item.StaffId;
+                        TempData["BizNum"] = item.BizNum;
+                        TempData["DateNow"] = DateTime.Now;
+                        }
                         //성공
+                        //HttpContext.Session.SetString("loginUser", user.CompanyName);
+                        //HttpContext.Session.SetInt32("loginUser", user.StaffId);
                         return new RedirectResult("/Home/Index");
                     }
                 }

@@ -19,6 +19,7 @@
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
                                     <form class="user" action="/MyInfo/LogIn" method="post">
+                                        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user" placeholder="사용자 ID 입력" name="LoginID">
                                             <span class="text-danger" asp-validation-for="LoginID"></span>
