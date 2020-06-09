@@ -5,6 +5,10 @@ using HanbizaMVC.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using System;
+using Microsoft.EntityFrameworkCore;
+using StoredProcedureEFCore;
+using System.Collections.Generic;
+using System.Data;
 
 namespace HanbizaMVC.Controllers
 {
@@ -41,20 +45,24 @@ namespace HanbizaMVC.Controllers
             {
                 using (var db = new HanbizaContext())
                 {
-                    //var user = db.LoginInfor.FirstOrDefault(u => u.LoginId.Equals(model.LoginID));
-                    //&& u.PassW.Equals(model.passW));
+                    //var user1 = from loginUser in db.LoginInfor
+                    //           where loginUser.LoginId == model.LoginID
+                    //           select  new { loginUser.BizNum, loginUser.StaffId };
 
-                    var user = from loginUser in db.LoginInfor
-                               where loginUser.LoginId == model.LoginID
-                               select  new { loginUser.BizNum, loginUser.StaffId };
-                    
+                    List<LoginInfor> user = null;
+                    db.LoadStoredProc("dbo.loginProcess")
+                      .AddParam("loginID", model.LoginID)
+                      .AddParam("passW", model.passW)
+                      .Exec(r => user = r.ToList<LoginInfor>());
+                     
+                    // TODO Cookie 저장
                     if(user != null)
                     {
                         foreach (var item in user)
                         {
-                        TempData["StaffId"]= item.StaffId;
-                        TempData["BizNum"] = item.BizNum;
-                        TempData["DateNow"] = DateTime.Now;
+                            TempData["StaffId"]= item.StaffId;
+                            TempData["BizNum"] = item.BizNum;
+                            TempData["DateNow"] = DateTime.Now.ToShortDateString().Substring(0,7); // Now, 
                         }
                         //성공
                         //HttpContext.Session.SetString("loginUser", user.CompanyName);

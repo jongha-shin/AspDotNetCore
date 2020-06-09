@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using HanbizaMVC.Models;
 using System;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using StoredProcedureEFCore;
+using System.Collections.Generic;
+using HanbizaMVC.ViewModel;
 
 namespace HanbizaMVC.Controllers
 {
@@ -22,30 +26,28 @@ namespace HanbizaMVC.Controllers
         }
         public IActionResult Sub1()
         {
-            var BizNum = TempData["BizNum"];
+            var oBizNum = TempData["BizNum"];
             var oStaffId = TempData["StaffId"];
+            var DateNow = TempData["DateNow"];
+
+            string BizNum = (string)oBizNum;
             int StaffId = (int)oStaffId;
-            _logger.LogInformation(BizNum + "/" + StaffId + " / " + DateTime.Now);
+            _logger.LogInformation(BizNum + " / " + StaffId + " / " + DateNow);
             using (var db = new HanbizaContext()) {
+                
+                // 최근 근태기록 월 구하기
+                db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                    .ExecScalar(out string dateMonth);
+
+                ViewBag.최근월 = dateMonth;
+
+                // 월별근태내역 - 근무/휴가
                 var CulTable = from data in db.출퇴근기록집계표
                                where data.StaffId == StaffId
                                select data;
-                //{
-                //    기준일 = data.기준일,
-                //    근무일 = data.근무일,
-                //    결근일 = data.결근일,
-                //    휴무일 = data.휴무일,
-                //    주휴일 = data.주휴일,
-                //    유급휴일 = data.유급휴가휴일 + data.유급휴일,
-                //    무급휴가휴일 = data.무급휴가휴일,
-                //    유급주휴일 = data.유급주휴일
-                //};
-
-                //CulTable = db.출퇴근기록집계표.Where(u => u.StaffId.Equals(StaffId)).FirstOrDefault();
-
+                
                 foreach (var i in CulTable)
                 {
-                    System.Console.WriteLine(i.근무일);
                     ViewBag.기준일 = i.기준일;
                     ViewBag.근무일 = i.근무일;
                     ViewBag.결근일 = i.결근일;
@@ -56,10 +58,36 @@ namespace HanbizaMVC.Controllers
                     ViewBag.유급주휴일 = i.유급주휴일;
                 }
 
-                if(CulTable != null)
+                // 월별근태내역 - 근무외시수
+                List<TotalAttendence> totalTable = null;
+                db.LoadStoredProc("dbo.totalAttendence").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId).AddParam("lastMonth", dateMonth)
+                  .Exec(r => totalTable = r.ToList<TotalAttendence>());
+
+                foreach (var i in totalTable)
                 {
-                    return View();
+                    ViewBag.총근로 = i.총근로;
+                    ViewBag.소정근로 = i.소정근로;
+                    ViewBag.근태조정 = i.근태조정;
+                    ViewBag.초과근로 = i.초과근로;
+                    ViewBag.연장근로 = i.연장근로;
+                    ViewBag.야간근로 = i.야간근로;
+                    ViewBag.휴일근로 = i.휴일근로;
+                    ViewBag.휴일연장 = i.휴일연장;
+                    ViewBag.휴일야간 = i.휴일야간;
                 }
+
+                // 출퇴근기록
+                List<출퇴근기록> recordTable = null;
+                db.LoadStoredProc("dbo.attendRecord").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId).AddParam("lastMonth", dateMonth)
+                    .Exec(r => recordTable = r.ToList<출퇴근기록>());
+
+                ViewBag.recordTable = recordTable;
+
+                if (CulTable != null)
+                {
+                    return View(recordTable);
+                }
+
             }
             return View();
         }

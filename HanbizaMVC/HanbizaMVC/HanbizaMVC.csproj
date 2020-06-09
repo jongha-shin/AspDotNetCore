@@ -18,10 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
+    <PackageReference Include="StoredProcedureEFCore" Version="1.0.2" />
   </ItemGroup>
 
 </Project>

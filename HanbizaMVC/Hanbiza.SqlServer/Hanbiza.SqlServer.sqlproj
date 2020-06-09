@@ -74,5 +74,9 @@
     <Build Include="dbo\Tables\sysdiagrams.sql" />
     <Build Include="dbo\Tables\Vacation_Approve.sql" />
     <Build Include="dbo\Tables\Vacation_List.sql" />
+    <Build Include="dbo\loginProcess.sql" />
+    <Build Include="dbo\lastMonth.sql" />
+    <Build Include="dbo\totalAttendence.sql" />
+    <Build Include="dbo\attendRecord.sql" />
   </ItemGroup>
 </Project>
