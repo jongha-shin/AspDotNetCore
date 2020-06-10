@@ -14,7 +14,9 @@ namespace HanbizaMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
+        public int StaffId;
+        public string BizNum;
+      
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -24,15 +26,18 @@ namespace HanbizaMVC.Controllers
         {
             return View();
         }
+        // 근태보기
         public IActionResult Sub1()
         {
-            var oBizNum = TempData["BizNum"];
-            var oStaffId = TempData["StaffId"];
+            //var oBizNum = TempData["BizNum"];
+            //var oStaffId = TempData["StaffId"];
+            
             var DateNow = TempData["DateNow"];
+            StaffId = (int)TempData["StaffId"];
+            BizNum = (string)TempData["BizNum"];
 
-            string BizNum = (string)oBizNum;
-            int StaffId = (int)oStaffId;
-            _logger.LogInformation(BizNum + " / " + StaffId + " / " + DateNow);
+            _logger.LogInformation("sub1(): "+BizNum + " / " + StaffId + " / " + DateNow);
+            
             using (var db = new HanbizaContext()) {
                 
                 // 최근 근태기록 월 구하기
@@ -83,7 +88,7 @@ namespace HanbizaMVC.Controllers
 
                 ViewBag.recordTable = recordTable;
 
-                if (CulTable != null)
+                if (CulTable != null && recordTable != null && totalTable != null)
                 {
                     return View(recordTable);
                 }
@@ -91,24 +96,83 @@ namespace HanbizaMVC.Controllers
             }
             return View();
         }
+        
+        // OT신청
         public IActionResult Sub2()
         {
             return View();
         }
+
+        // 휴가신청
         public IActionResult Sub3()
         {
             return View();
         }
+
+        // 휴가결재
         public IActionResult Sub4()
         {
             return View();
         }
+
+        // 연차보기
         public IActionResult Sub5()
         {
-            return View();
+            StaffId = (int)TempData["StaffId"];
+            BizNum = (string)TempData["BizNum"];
+            _logger.LogInformation("sub5(): " + BizNum + " / " + StaffId);
+            using (var db = new HanbizaContext())
+            {
+                List<연차대장> vacationRecord = null;
+                db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                    .Exec(r => vacationRecord = r.ToList<연차대장>());
+
+                foreach (var i in vacationRecord)
+                {
+                    ViewBag.입사일 = i.입사일.ToShortDateString();
+                    ViewBag.연차발생일 = i.연차발생일.ToShortDateString();
+                    ViewBag.근속연수 = i.근속년수;
+                    ViewBag.발생연차 = i.발생연차;
+                    ViewBag.사용연차 = i.발생연차 - i.잔여일수;
+                    ViewBag.잔여연차 = i.잔여일수;
+                    ViewBag.Regdate = i.Regdate.ToShortDateString();
+                }
+
+                List<휴가대장> vacationList = null;
+                db.LoadStoredProc("dbo.usingVacation").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                    .Exec(r => vacationList = r.ToList<휴가대장>());
+
+                ViewBag.vacationList = vacationList;
+
+                if (vacationRecord != null && vacationList != null)
+                {
+                    return View(vacationList);
+                }
+            }
+                return View();
         }
+
+        // 급여명세서
         public IActionResult Sub6()
         {
+            StaffId = (int)TempData["StaffId"];
+            BizNum = (string)TempData["BizNum"];
+            _logger.LogInformation("sub6(): " + BizNum + " / " + StaffId);
+
+            List<PayList> plist = null;
+            using (var db = new HanbizaContext())
+            {
+                db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                    .Exec(r => plist = r.ToList<PayList>());
+               
+                    Console.WriteLine(plist[0].Yyyymm +"년 "+plist[0].Ncount+"회차");
+               
+
+
+                
+
+            }
+
             return View();
         }
         

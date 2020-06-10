@@ -78,5 +78,8 @@
     <Build Include="dbo\lastMonth.sql" />
     <Build Include="dbo\totalAttendence.sql" />
     <Build Include="dbo\attendRecord.sql" />
+    <Build Include="dbo\countVacation.sql" />
+    <Build Include="dbo\usingVacation.sql" />
+    <Build Include="dbo\payment_lastMonth.sql" />
   </ItemGroup>
 </Project>

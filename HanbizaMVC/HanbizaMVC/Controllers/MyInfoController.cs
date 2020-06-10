@@ -60,6 +60,7 @@ namespace HanbizaMVC.Controllers
                     {
                         foreach (var item in user)
                         {
+                            // new 객체 생성후 저장필요
                             TempData["StaffId"]= item.StaffId;
                             TempData["BizNum"] = item.BizNum;
                             TempData["DateNow"] = DateTime.Now.ToShortDateString().Substring(0,7); // Now, 

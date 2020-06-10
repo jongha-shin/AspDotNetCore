@@ -13,5 +13,6 @@ namespace HanbizaMVC.Models
         public double? 반차 { get; set; }
         public string 등록인 { get; set; }
         public DateTime? Regdate { get; set; }
+        public int 번호 { get; set; }
     }
 }

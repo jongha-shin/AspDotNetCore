@@ -23,8 +23,8 @@ namespace HanbizaMVC
             services.AddControllersWithViews();
 
             services.AddDbContext<HanbizaContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("MyConnection")));
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("MyConnection")));
 
             // DI 의존성 주입
 

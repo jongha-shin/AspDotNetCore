@@ -1,7 +1,61 @@
 ﻿@{
     ViewData["Title"] = "급여명세서";
 }
+@model List<PayList>
+    <div class="card shadow mb-4 col-lg-9 ">
+        <div class="card-body">
+            <div class="text-center">
 
-<div class="text-center">
-    <h1>@ViewData["Title"]</h1>
-</div>
+                @*Gubun = 0 && Fsort = 0*@
+                <table class="table table-bordered table-sm" style="width:50%; float:left">
+                    <thead>
+                        <tr>
+                            <th>지급수당</th>
+                            <th>금액</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        @if(item.Gubun.Equals('0'))
+                        {
+                        <tr>
+                            <th>@item.Slist</th>
+                            <td>@item.Svalue</td>
+                        </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+                }
+                @*Gubun = 1 && Fsort = 0*@
+                <table class="table table-bordered table-sm" style="width:50%;">
+                    <thead>
+                        <tr>
+                            <th>공제수당</th>
+                            <th>금액</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                @*Gubun = 1 && Fsort > 0*@
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>공제수당</th>
+                            <th>금액</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        <script>
+            function asdf() {
+                alert("agasg");
+            }
+
+        </script>
