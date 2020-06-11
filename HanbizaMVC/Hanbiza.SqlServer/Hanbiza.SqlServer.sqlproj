@@ -83,5 +83,6 @@
     <Build Include="dbo\payment_lastMonth.sql" />
     <Build Include="dbo\payment_getPayment.sql" />
     <Build Include="dbo\filelist.sql" />
+    <Build Include="dbo\file_data.sql" />
   </ItemGroup>
 </Project>

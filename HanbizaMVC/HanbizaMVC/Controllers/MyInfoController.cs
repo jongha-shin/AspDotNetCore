@@ -2,13 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using HanbizaMVC.Models;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
 using System;
-using Microsoft.EntityFrameworkCore;
-using StoredProcedureEFCore;
 using System.Collections.Generic;
-using System.Data;
+using StoredProcedureEFCore;
 
 namespace HanbizaMVC.Controllers
 {
@@ -22,13 +20,13 @@ namespace HanbizaMVC.Controllers
         {
             _logger = logger;
         }
-        // 확인서명
+// 확인서명
         public IActionResult Sub7()
         {
             return View();
         }
 
-        // 내 문서
+// 내 문서
         public IActionResult Sub8()
         {
             StaffId = (int)TempData["StaffId"];
@@ -40,7 +38,10 @@ namespace HanbizaMVC.Controllers
                 db.LoadStoredProc("dbo.filelist").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
                     .Exec(r => fileList = r.ToList<문서함>());
 
-
+                if(fileList.Count > 0)
+                {
+                    return View(fileList);
+                }
 
             }
                 return View();

@@ -16,7 +16,7 @@ CREATE PROCEDURE [dbo].[filelist]
 AS
 	SELECT *, DATEDIFF(HOUR, GETDATE(), Regdate) as dd
 	FROM 문서함
-	WHERE BizNum = @BizNum AND StaffID = @StaffID AND FileBLOB IS NOT NULL AND Signature = 'N' AND Gubun = '근로계약서'
-		AND DATEDIFF(HOUR
+	WHERE BizNum = @BizNum AND StaffID = @StaffID AND FileBLOB IS NOT NULL AND Signature = 'N' 
+	AND (Gubun = '근로계약서' AND DATEDIFF(HOUR, GETDATE(), Regdate) >= -24)
+	ORDER BY SeqID DESC
 
-RETURN 0

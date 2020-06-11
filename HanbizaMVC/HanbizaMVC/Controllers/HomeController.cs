@@ -21,12 +21,12 @@ namespace HanbizaMVC.Controllers
         {
             _logger = logger;
         }
-
+// 로그인 후 첫 화면 : 공지사항 
         public IActionResult Index()
         {
             return View();
         }
-        // 근태보기
+// 근태보기
         public IActionResult Sub1()
         {
             //var oBizNum = TempData["BizNum"];
@@ -97,25 +97,25 @@ namespace HanbizaMVC.Controllers
             return View();
         }
         
-        // OT신청
+// OT신청
         public IActionResult Sub2()
         {
             return View();
         }
 
-        // 휴가신청
+// 휴가신청
         public IActionResult Sub3()
         {
             return View();
         }
 
-        // 휴가결재
+// 휴가결재
         public IActionResult Sub4()
         {
             return View();
         }
 
-        // 연차보기
+// 연차보기
         public IActionResult Sub5()
         {
             StaffId = (int)TempData["StaffId"];
@@ -152,7 +152,7 @@ namespace HanbizaMVC.Controllers
                 return View();
         }
 
-        // 급여명세서
+// 급여명세서
         public IActionResult Sub6()
         {
             StaffId = (int)TempData["StaffId"];
@@ -173,10 +173,23 @@ namespace HanbizaMVC.Controllers
                 db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
                     .AddParam("Yyyymm", yyyymm).AddParam("Ncount", ncount).Exec(r => plist = r.ToList<PayList>());
 
+                int a = 0;
+                int b = 0;
                 foreach (var item in plist)
                 {
                     item.SSvalue = string.Format("{0:n0}", item.Svalue);
-                    Console.WriteLine(item.Slist +"/"+item.SSvalue+"/"+item.Gubun+"/"+item.Fsort);
+                    //Console.WriteLine(item.Slist +"/"+item.SSvalue+"/"+item.Gubun+"/"+item.Fsort);
+                    if (item.Gubun.Equals("0") && item.Fsort == 0){ a++; }
+                    if (item.Gubun.Equals("1") && item.Fsort == 0){ b++; }
+                }
+
+                if (a >= b)
+                {
+                    ViewBag.rows = a;
+                }
+                else if (b > a)
+                {
+                    ViewBag.rows = b;
                 }
 
             }

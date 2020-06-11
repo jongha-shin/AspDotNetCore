@@ -14,7 +14,7 @@ namespace HanbizaMVC.Models
         public string FileName { get; set; }
         public byte[] FileBlob { get; set; }
         public string 등록인 { get; set; }
-        public DateTime? Regdate { get; set; }
+        public DateTime Regdate { get; set; }
         public string Signature { get; set; }
         public string SignDown { get; set; }
         public string EditYn { get; set; }

@@ -64,18 +64,18 @@
                 <table class="table table-bordered table-sm">
                     <thead>
                         <tr>
-                            <th>공제수당</th>
+                            <th>합계</th>
                             <th>금액</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            @if (item.Gubun.Equals("1") && item.Fsort > 0)
+                            @if (item.Fsort > 0)
                             {
-                                <tr>
-                                    <th>@item.Slist</th>
-                                    <td align="right">@item.SSvalue 원</td>
+                                <tr style="background-color:#d0eaf8; color:black">
+                                    <th style="border-bottom-color:black">@item.Slist</th>
+                                    <td style="border-bottom-color:black" align="right">@item.SSvalue 원</td>
                                 </tr>
                             }
                         }
