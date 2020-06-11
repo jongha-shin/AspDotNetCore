@@ -5,12 +5,21 @@
 @{
     ViewData["Title"] = "근태 보기";
 }
-
+    <style>
+        table{
+            font-size:small;
+        }
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
+        }
+        
+    </style>
 
 <div class="text-center">
-    <div class="card shadow mb-4 col-lg-9 ">
+    <div class="card mb-4 col-lg-9 ">
         <div class="card-body">
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
                 <li class="nav-item">
                     <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">월별근태내역</a>
                 </li>
@@ -18,13 +27,13 @@
                     <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">출퇴근기록</a>
                 </li>
             </ul>
-            <ul class="nav justify-content-end">
+            <ul class="nav justify-content-end" style="font-size:small">
                 @ViewBag.최근월
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th colspan="2">근무/휴가</th>
@@ -92,7 +101,7 @@
                 </div>
                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>날짜</th>
@@ -116,7 +125,7 @@
                                     @foreach (var attend in Model)
                                     {
                                         <tr>
-                                            <td>@attend.날짜</td>
+                                            <td>@attend.날짜.ToShortDateString() (@attend.날짜.DayOfWeek.ToString("d"))</td>
                                             <td>@attend.출근</td>
                                             <td>@attend.퇴근</td>
                                             <td>@attend.총근로</td>

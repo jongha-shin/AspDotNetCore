@@ -17,5 +17,7 @@ namespace HanbizaMVC.Models
         public string 등록인 { get; set; }
         public DateTime? Regdate { get; set; }
         public int? Fsort { get; set; }
+
+        public string SSvalue { get; set; }
     }
 }

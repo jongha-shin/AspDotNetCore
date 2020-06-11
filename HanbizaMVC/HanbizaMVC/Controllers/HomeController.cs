@@ -166,14 +166,22 @@ namespace HanbizaMVC.Controllers
                     .Exec(r => plist = r.ToList<PayList>());
                
                     Console.WriteLine(plist[0].Yyyymm +"년 "+plist[0].Ncount+"회차");
-               
 
+                var yyyymm = plist[0].Yyyymm;
+                var ncount = plist[0].Ncount;
 
-                
+                db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                    .AddParam("Yyyymm", yyyymm).AddParam("Ncount", ncount).Exec(r => plist = r.ToList<PayList>());
+
+                foreach (var item in plist)
+                {
+                    item.SSvalue = string.Format("{0:n0}", item.Svalue);
+                    Console.WriteLine(item.Slist +"/"+item.SSvalue+"/"+item.Gubun+"/"+item.Fsort);
+                }
 
             }
 
-            return View();
+            return View(plist);
         }
         
       

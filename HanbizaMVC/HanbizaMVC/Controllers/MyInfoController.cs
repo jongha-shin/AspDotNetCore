@@ -15,19 +15,35 @@ namespace HanbizaMVC.Controllers
     public class MyInfoController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        public int StaffId;
+        public string BizNum;
 
         public MyInfoController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
-        
+        // 확인서명
         public IActionResult Sub7()
         {
             return View();
         }
+
+        // 내 문서
         public IActionResult Sub8()
         {
-            return View();
+            StaffId = (int)TempData["StaffId"];
+            BizNum = (string)TempData["BizNum"];
+            _logger.LogInformation("sub8(): " + BizNum + " / " + StaffId);
+            using (var db = new HanbizaContext())
+            {
+                List<문서함> fileList = null;
+                db.LoadStoredProc("dbo.filelist").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                    .Exec(r => fileList = r.ToList<문서함>());
+
+
+
+            }
+                return View();
         }
         public IActionResult Sub9()
         {
@@ -35,6 +51,9 @@ namespace HanbizaMVC.Controllers
         }
         public IActionResult LogIn()
         {
+            TempData["StaffId"] = "";
+            TempData["BizNum"] = "";
+            TempData["DateNow"] = "";
             return View();
         }
         [HttpPost]

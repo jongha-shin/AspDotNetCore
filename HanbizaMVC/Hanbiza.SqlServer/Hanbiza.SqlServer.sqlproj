@@ -81,5 +81,7 @@
     <Build Include="dbo\countVacation.sql" />
     <Build Include="dbo\usingVacation.sql" />
     <Build Include="dbo\payment_lastMonth.sql" />
+    <Build Include="dbo\payment_getPayment.sql" />
+    <Build Include="dbo\filelist.sql" />
   </ItemGroup>
 </Project>

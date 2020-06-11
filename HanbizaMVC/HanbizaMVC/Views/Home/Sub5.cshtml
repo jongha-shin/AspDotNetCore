@@ -3,8 +3,16 @@
 }
 @model List<휴가대장>
 
+<style>
+    table > thead > tr > th {
+        background-color: #3763ab;
+        color: white;
+    }
+
+</style>
+
 <div class="text-center">
-    <div class="card shadow mb-4 col-lg-9 ">
+    <div class="card mb-4 col-lg-9 ">
         <div class="card-body">
            
                 <p class="text-right">회계년도 기준 업데이트: @ViewBag.Regdate</p>
