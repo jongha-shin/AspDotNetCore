@@ -7,6 +7,8 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using StoredProcedureEFCore;
+using System.IO;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace HanbizaMVC.Controllers
 {
@@ -23,8 +25,32 @@ namespace HanbizaMVC.Controllers
 // 확인서명
         public IActionResult Sub7()
         {
+            StaffId = (int)TempData["StaffId"];
+            BizNum = (string)TempData["BizNum"];
+            _logger.LogInformation("sub7(): " + BizNum + " / " + StaffId);
+            using (var db = new HanbizaContext())
+            {
+                List<문서함> mySign = null;
+                db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                    .Exec(r => mySign = r.ToList<문서함>());
+
+                if (mySign.Count > 0)
+                {
+                    
+
+                    ViewBag.mySign = Convert.ToBase64String(mySign[0].FileBlob);
+                    ViewBag.asdf = mySign[0].FileBlob;
+                    Console.WriteLine(ViewBag.mySign);
+                    Console.WriteLine(ViewBag.asdf);
+
+                    return View(mySign);
+                }
+
+            }
+                 
             return View();
         }
+
 
 // 내 문서
         public IActionResult Sub8()

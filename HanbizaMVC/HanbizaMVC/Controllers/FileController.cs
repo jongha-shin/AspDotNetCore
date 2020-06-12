@@ -25,22 +25,20 @@ namespace HanbizaMVC.Controllers
             _logger = logger;
             _environment = environment;
         }
-        //  TODO: 파일이름 수정
         public FileContentResult FileDownload(int id)
         {
-            _logger.LogInformation("FileDownload() " + id);
+            //_logger.LogInformation("FileDownload() " + id);
             using (var db = new HanbizaContext())
             {
 
                 List<문서함> fileInfo = null;
                 db.LoadStoredProc("file_data").AddParam("SeqID", id).Exec(r => fileInfo = r.ToList<문서함>());
-                _logger.LogInformation("FileDownload() " + fileInfo[0].FileName);
+                //_logger.LogInformation("FileDownload() " + fileInfo[0].FileName);
 
                 var fileRes = new FileContentResult(fileInfo[0].FileBlob.ToArray(), "application/octet-stream")
                 {
                     FileDownloadName = fileInfo[0].FileName
                 };
-
 
                 //List<GB_INT_GET_APPR_FILE_INFO_Result> file = db2.GB_INT_GET_APPR_FILE_INFO(appr_no, file_seq).ToList();
                 //var fileRes = new FileContentResult(file[0].file_attach.ToArray(), "application/octet-stream");
@@ -55,7 +53,7 @@ namespace HanbizaMVC.Controllers
                 //return File(fileBytes, "application/octet-stream", fileName);
             }
         }
-
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

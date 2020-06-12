@@ -84,5 +84,6 @@
     <Build Include="dbo\payment_getPayment.sql" />
     <Build Include="dbo\filelist.sql" />
     <Build Include="dbo\file_data.sql" />
+    <Build Include="dbo\file_getSignature.sql" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@
         color:white;
     }
 
-    table > tbody > tr > th {
+    table > tbody > tr:last-child {
         
     }
 </style>
@@ -25,15 +25,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                   @foreach (var item in Model)
-                    {
-                       @if (item.Gubun.Equals("0") && item.Fsort == 0) { 
-                        <tr>
-                            <th>@item.Slist</th>
-                            <td align="right">@item.SSvalue 원</td>
-                        </tr>
-                       }
-                   }
+                        @{int a = 0; }
+                        @foreach (var item in Model)
+                        {
+                            @if (item.Gubun.Equals("0") && item.Fsort == 0)
+                            {
+                                a++;
+                                <tr>
+                                    <th>@item.Slist</th>
+                                    <td align="right">@item.SSvalue 원</td>
+                                </tr>
+                            }
+                        }
+                        @if (a < ViewBag.Crows)
+                        {
+                            @for (int i = a; i < ViewBag.Crows; i++)
+                            {
+
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td>&nbsp;</td>
+                            </tr>
+                            }
+                        }
                     </tbody>
                 </table>
                     
@@ -48,13 +62,25 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @{int b = 0; }
                         @foreach (var item in Model)
                         {
                             @if (item.Gubun.Equals("1") && item.Fsort == 0)
                             {
+                                b++;
                                 <tr>
                                     <th>@item.Slist</th>
                                     <td align="right">@item.SSvalue 원</td>
+                                </tr>
+                            }
+                        }
+                        @if (b < ViewBag.Crows)
+                        {
+                            @for (int i = b; i < ViewBag.Crows; i++)
+                            {
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <td>&nbsp;</td>
                                 </tr>
                             }
                         }
@@ -79,6 +105,9 @@
                                 </tr>
                             }
                         }
+                        <tr>
+                            <td colspan="2" align="center" style="color:#3763ab; padding:10px;">귀하의 노고에 감사드립니다.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

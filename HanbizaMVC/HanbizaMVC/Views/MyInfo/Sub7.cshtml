@@ -1,7 +1,19 @@
 ﻿@{
     ViewData["Title"] = "확인서명";
 }
+@model List<문서함>
+<div class="row justify-content-center">
 
-<div class="text-center">
-    <h1>@ViewData["Title"]</h1>
+    <div class="col-xl-5 col-lg-6 col-md-5">
+        <div class="text-center">
+            <div class="card mb-4 col-lg-9 ">
+                <div class="card-body">
+                    <img src="@ViewBag.mySign" alt="확인서명" />
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+

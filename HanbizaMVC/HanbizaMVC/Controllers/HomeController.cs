@@ -175,21 +175,23 @@ namespace HanbizaMVC.Controllers
 
                 int a = 0;
                 int b = 0;
+                int i = 0;
                 foreach (var item in plist)
                 {
                     item.SSvalue = string.Format("{0:n0}", item.Svalue);
-                    //Console.WriteLine(item.Slist +"/"+item.SSvalue+"/"+item.Gubun+"/"+item.Fsort);
+                    Console.WriteLine(item.Slist +"/"+item.SSvalue+"/"+item.Gubun+"/"+item.Fsort +"/  "+i);
+                    i++;    
                     if (item.Gubun.Equals("0") && item.Fsort == 0){ a++; }
                     if (item.Gubun.Equals("1") && item.Fsort == 0){ b++; }
                 }
-
+                Console.WriteLine(a +" / "+b);
                 if (a >= b)
                 {
-                    ViewBag.rows = a;
+                    ViewBag.Crows = a;
                 }
                 else if (b > a)
                 {
-                    ViewBag.rows = b;
+                    ViewBag.Crows = b;
                 }
 
             }
