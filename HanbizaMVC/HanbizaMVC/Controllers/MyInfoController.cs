@@ -36,12 +36,16 @@ namespace HanbizaMVC.Controllers
 
                 if (mySign.Count > 0)
                 {
-                    
 
-                    ViewBag.mySign = Convert.ToBase64String(mySign[0].FileBlob);
-                    ViewBag.asdf = mySign[0].FileBlob;
-                    Console.WriteLine(ViewBag.mySign);
-                    Console.WriteLine(ViewBag.asdf);
+                    var aaa = Convert.ToBase64String(mySign[0].FileBlob);
+                    var bbb = Base64UrlTextEncoder.Decode(aaa);
+                    var ccc = Base64UrlTextEncoder.Encode(mySign[0].FileBlob);
+
+                    Console.WriteLine("tobase64 : "+aaa);
+                    Console.WriteLine("decode : "+bbb);
+                    Console.WriteLine("encode : " + ccc);
+
+                    
 
                     return View(mySign);
                 }
