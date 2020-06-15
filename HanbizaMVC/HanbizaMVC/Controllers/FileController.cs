@@ -53,7 +53,7 @@ namespace HanbizaMVC.Controllers
                 //return File(fileBytes, "application/octet-stream", fileName);
             }
         }
-        
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -36,18 +36,22 @@ namespace HanbizaMVC.Controllers
 
                 if (mySign.Count > 0)
                 {
-
                     var aaa = Convert.ToBase64String(mySign[0].FileBlob);
-                    var bbb = Base64UrlTextEncoder.Decode(aaa);
-                    var ccc = Base64UrlTextEncoder.Encode(mySign[0].FileBlob);
-
-                    Console.WriteLine("tobase64 : "+aaa);
-                    Console.WriteLine("decode : "+bbb);
-                    Console.WriteLine("encode : " + ccc);
-
+                    //Console.WriteLine("tobase64 : "+aaa);
                     
+                    System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
+                    System.Text.Decoder utf8Decode = encoder.GetDecoder();
+                    
+                    byte[] todecode_byte = Convert.FromBase64String(aaa);
+                    int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
+                    char[] decoded_char = new char[charCount];
+                    utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
+                    string result = new String(decoded_char);
+                    // Console.WriteLine("asdf:: "+result);
 
-                    return View(mySign);
+                    ViewBag.mySign = result;
+
+                    return View();
                 }
 
             }
