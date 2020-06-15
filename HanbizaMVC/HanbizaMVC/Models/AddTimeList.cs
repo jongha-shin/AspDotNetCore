@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace HanbizaMVC.Models
 {
@@ -17,5 +18,8 @@ namespace HanbizaMVC.Models
         public string HbzMsend { get; set; }
         public DateTime? HbzYymmdd { get; set; }
         public DateTime? Regdate { get; set; }
+
+        public string Snals { get; set; }
+        public string Enals { get; set; }
     }
 }

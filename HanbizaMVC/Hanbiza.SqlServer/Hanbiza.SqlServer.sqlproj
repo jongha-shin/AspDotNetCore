@@ -85,5 +85,6 @@
     <Build Include="dbo\filelist.sql" />
     <Build Include="dbo\file_data.sql" />
     <Build Include="dbo\file_getSignature.sql" />
+    <Build Include="dbo\OT_list.sql" />
   </ItemGroup>
 </Project>

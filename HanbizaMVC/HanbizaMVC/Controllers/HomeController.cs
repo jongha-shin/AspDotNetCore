@@ -21,12 +21,12 @@ namespace HanbizaMVC.Controllers
         {
             _logger = logger;
         }
-// 로그인 후 첫 화면 : 공지사항 
+// 0. 로그인 후 첫 화면 : 공지사항 
         public IActionResult Index()
         {
             return View();
         }
-// 근태보기
+// 1. 근태보기
         public IActionResult Sub1()
         {
             //var oBizNum = TempData["BizNum"];
@@ -97,25 +97,42 @@ namespace HanbizaMVC.Controllers
             return View();
         }
         
-// OT신청
+// 2. OT신청
         public IActionResult Sub2()
         {
-            return View();
+            StaffId = (int)TempData["StaffId"];
+            BizNum = (string)TempData["BizNum"];
+            _logger.LogInformation("sub2(): " + BizNum + " / " + StaffId);
+         
+            
+            using (var db = new HanbizaContext())
+            {
+                // OT 신청내역
+                List<AddTimeList> OTlist = null;
+                db.LoadStoredProc("dbo.OT_list").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                    .Exec(r => OTlist = r.ToList<AddTimeList>());
+
+                if(OTlist.Count > 0)
+                {
+                    return View(OTlist);
+                }
+            }
+                return View();
         }
 
-// 휴가신청
+// 3. 휴가신청
         public IActionResult Sub3()
         {
             return View();
         }
 
-// 휴가결재
+// 4. 휴가결재
         public IActionResult Sub4()
         {
             return View();
         }
 
-// 연차보기
+// 5. 연차보기
         public IActionResult Sub5()
         {
             StaffId = (int)TempData["StaffId"];
@@ -152,7 +169,7 @@ namespace HanbizaMVC.Controllers
                 return View();
         }
 
-// 급여명세서
+// 6. 급여명세서
         public IActionResult Sub6()
         {
             StaffId = (int)TempData["StaffId"];

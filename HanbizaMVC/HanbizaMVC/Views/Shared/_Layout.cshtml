@@ -6,9 +6,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hanbiza</title>
-    
+
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />*@
+        <link rel="stylesheet" href="~/css/site.css" />*@
 
     <!-- Custom fonts for this template-->
     <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -26,6 +26,9 @@
 
     <!-- Custom scripts for all pages-->
     <script src="~/js/sb-admin-2.min.js"></script>
+
+    
+    <link href="~/lib/bootstrap-3-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
     <style>
         .bg-gradient-primary {
             background-color: #214085;
@@ -120,8 +123,8 @@
             </li>
             <!-- Sidebar Toggler (Sidebar) -->
             @*<div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>*@
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>*@
 
         </ul>
         <!-- End of Sidebar -->
@@ -136,8 +139,8 @@
 
                     <!-- Sidebar Toggle (Topbar) -->
                     @*<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>*@
+                            <i class="fa fa-bars"></i>
+                        </button>*@
 
                     <!-- Topbar title -->
                     @*<div class="title" style="font-size:large; color:black;">*@
@@ -202,6 +205,8 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap-3-datepicker/dist/js/bootstrap-datepicker.js"></script>
+    <script src="~/lib/bootstrap-3-datepicker/js/locales/bootstrap-datepicker.ko.js" charset="UTF-8"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
