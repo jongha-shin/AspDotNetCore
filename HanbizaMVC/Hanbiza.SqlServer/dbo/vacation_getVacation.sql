@@ -13,3 +13,4 @@ AS
 	SELECT SEQID, Vicname, UseTime, SNal, Enal, ProCDeep, AllProCess, VicReaSon, Regdate
 	FROM Vacation_List
 	WHERE BizNum = @BizNum AND StaffID = @StaffID
+	ORDER BY SNal DESC, SEQID DESC

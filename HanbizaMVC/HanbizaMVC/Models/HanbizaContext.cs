@@ -193,6 +193,14 @@ namespace HanbizaMVC.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
+            modelBuilder.Entity<Vacation_Approve>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<Vacation_List>(entity =>
+            {
+                entity.HasNoKey();
+            });
 
             modelBuilder.Entity<공지사항>(entity =>
             {

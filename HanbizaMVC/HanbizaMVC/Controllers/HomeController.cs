@@ -120,7 +120,7 @@ namespace HanbizaMVC.Controllers
             }
                 return View();
         }
-        //2-1 OT 신청 클릭
+//2-1 OT 신청 클릭
         public IActionResult Sub2_1(AddTimeList addtime)
         {
             StaffId = (int)TempData["StaffId"];
@@ -129,7 +129,7 @@ namespace HanbizaMVC.Controllers
             
             return new RedirectResult("/Home/Sub2");
         }
-        // 3. 휴가신청
+// 3. 휴가신청
         public IActionResult Sub3()
         {
             StaffId = (int)TempData["StaffId"];
@@ -138,7 +138,13 @@ namespace HanbizaMVC.Controllers
 
             using (var db = new HanbizaContext())
             {
-                List<vacation_>
+                List<Vacation_List> Vlist = null;
+                db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                    .Exec(r => Vlist = r.ToList<Vacation_List>());
+                if (Vlist.Count > 0)
+                {
+                    return View(Vlist);
+                }
             }
 
 

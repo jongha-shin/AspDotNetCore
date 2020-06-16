@@ -9,7 +9,7 @@ namespace HanbizaMVC.Models
         public string BizNum { get; set; }
         public int StaffID { get; set; }
         public string Vicname { get; set; }
-        public float UseTime { get; set; }
+        public double UseTime { get; set; }
         public DateTime Snal { get; set; }
         public DateTime Enal { get; set; }
         public int ProCDeep { get; set; }
