@@ -24,6 +24,8 @@ namespace HanbizaMVC.Models
         public virtual DbSet<출퇴근기록> 출퇴근기록 { get; set; }
         public virtual DbSet<출퇴근기록집계표> 출퇴근기록집계표 { get; set; }
         public virtual DbSet<휴가대장> 휴가대장 { get; set; }
+        public virtual DbSet<Vacation_Approve> Vacation_Approve { get; set; }
+        public virtual DbSet<Vacation_List> Vacation_List { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

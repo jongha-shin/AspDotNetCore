@@ -98,12 +98,13 @@ namespace HanbizaMVC.Controllers
         }
         
 // 2. OT신청
-        public IActionResult Sub2()
+        public IActionResult Sub2(AddTimeList addtime)
         {
             StaffId = (int)TempData["StaffId"];
             BizNum = (string)TempData["BizNum"];
             _logger.LogInformation("sub2(): " + BizNum + " / " + StaffId);
-         
+    
+                    
             
             using (var db = new HanbizaContext())
             {
@@ -119,11 +120,30 @@ namespace HanbizaMVC.Controllers
             }
                 return View();
         }
-
-// 3. 휴가신청
+        //2-1 OT 신청 클릭
+        public IActionResult Sub2_1(AddTimeList addtime)
+        {
+            StaffId = (int)TempData["StaffId"];
+            BizNum = (string)TempData["BizNum"];
+            _logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal); // 신청x
+            
+            return new RedirectResult("/Home/Sub2");
+        }
+        // 3. 휴가신청
         public IActionResult Sub3()
         {
-            return View();
+            StaffId = (int)TempData["StaffId"];
+            BizNum = (string)TempData["BizNum"];
+            _logger.LogInformation("sub3(): " + BizNum + " / " + StaffId);
+
+            using (var db = new HanbizaContext())
+            {
+                List<vacation_>
+            }
+
+
+
+                return View();
         }
 
 // 4. 휴가결재

@@ -2,6 +2,108 @@
     ViewData["Title"] = "휴가신청";
 }
 
-<div class="text-center">
-    <h1>@ViewData["Title"]</h1>
-</div>
+    <div class="card mb-4 col-lg-9 ">
+        <div class="card-body pt-3">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">휴가신청</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">휴가신청내역</a>
+                </li>
+            </ul>
+            <ul class="nav justify-content-end">
+                @ViewBag.최근월
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div class="table-responsive">
+                        <form class="user  p-3" action="/Home/Sub2_1" method="get">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">구분</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control form-control-sm" name="Gubun">
+                                        <option value="a" selected>선택</option>
+                                        <option value="S">연차</option>
+                                        <option value="C">반차</option>
+                                        <option value="R">기타휴가</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">신청일</label>
+                                <div class="col-sm-10">
+                                    <input id="Snal" class="form-control form-control-sm" name="regdate" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">OT 신청시간</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <label class="col-3 col-lg-2 col-form-label">시작</label>
+                                        <select class="form-control form-control-sm col-3" name="Snal_h">
+                                            @for (int i = 0; i < 24; i++)
+                                            {
+                                                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                                            }
+                                        </select>
+                                        &nbsp;: &nbsp;
+                                        <select class="form-control form-control-sm col-3" name="Snal_m">
+                                            <option value="00">00</option>
+                                            <option value="15">15</option>
+                                            <option value="30">30</option>
+                                            <option value="45">45</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-3 col-lg-2 col-form-label">종료</label>
+                                        <select class="form-control form-control-sm col-3" name="Enal_h">
+                                            @for (int i = 0; i < 24; i++)
+                                            {
+                                                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                                            }
+                                        </select>
+                                        &nbsp;: &nbsp;
+                                        <select class="form-control form-control-sm col-3" name="Enal_m">
+                                            <option value="00">00</option>
+                                            <option value="15">15</option>
+                                            <option value="30">30</option>
+                                            <option value="45">45</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">사유</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control form-control-sm" name="Reason"></textarea>
+                                </div>
+                            </div>
+
+                            <div>
+                                <input class="btn btn-primary btn-user btn-block" type="submit" value="신청" />
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="table-responsive">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>구분</th>
+                                    <th>신청시간</th>
+                                    <th>결재현황</th>
+                                    <th>결과</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                         
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
