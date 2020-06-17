@@ -7,8 +7,7 @@ using System;
 using StoredProcedureEFCore;
 using System.Collections.Generic;
 using HanbizaMVC.ViewModel;
-using System.Threading.Tasks;
-using System.Dynamic;
+using Newtonsoft.Json;
 
 namespace HanbizaMVC.Controllers
 {
@@ -135,39 +134,49 @@ namespace HanbizaMVC.Controllers
         {
             StaffId = (int)TempData["StaffId"];
             BizNum = (string)TempData["BizNum"];
-            _logger.LogInformation("sub3(): " + BizNum + " / " + StaffId + " / " + SearchKey + " / " + SearchWord);
-
-            dynamic model = new ExpandoObject();
+            _logger.LogInformation("sub3(): " + BizNum + " / " + StaffId);
 
             using (var db = new HanbizaContext())
             {
-                //List<Vacation_List> Vlist = null;
+                List<Vacation_List> Vlist = null;
                 db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
-                    .Exec(r => model.Vlist = r.ToList<Vacation_List>());
-
-                if (SearchKey != null && SearchWord != null)
-                {
-                    if (!SearchKey.Equals("") && !SearchWord.Equals(""))
-                    {
-                        //Console.WriteLine("모달데이터 가져오기");
-                      db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", BizNum).AddParam("SearchKey", SearchKey).AddParam("SearchWord", SearchWord)
-                            .Exec( r => model.Datatable = r.ToList<Approver>());
-                    }
-                    
-                }
+                    .Exec(r => Vlist = r.ToList<Vacation_List>());
                 
-                if (model.Vlist != null)
+                if (Vlist != null)
                 {
-                    return View(model);
+                    return View(Vlist);
                 }
             }
 
                 return View();
         }
-        //public IActionResult Sub3_1(string SearchKey, string SearchWord)
-        //{
-        //    return JsonResult();
-        //}
+        // 3_1. ajax 메소드
+        [Route("/Home/Sub3_1/{SearchKey}/{SearchWord}")]
+        public IActionResult Sub3_1(string SearchKey, string SearchWord)
+        {
+            StaffId = (int)TempData["StaffId"];
+            BizNum = (string)TempData["BizNum"];
+            _logger.LogInformation("sub3_1(): " + BizNum + " / " + StaffId + " / " + SearchKey + " / " + SearchWord);
+            var jsonString = "";
+
+            if (SearchKey != null && SearchWord != null)
+            {
+                if (!SearchKey.Equals("") && !SearchWord.Equals(""))
+                {
+                    using (var db = new HanbizaContext())
+                    {
+                        List<Approver> Datatable = null;
+                        db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", BizNum).AddParam("SearchKey", SearchKey).AddParam("SearchWord", SearchWord)
+                          .Exec(r => Datatable = r.ToList<Approver>());
+                        
+                        jsonString = JsonConvert.SerializeObject(Datatable);
+                        _logger.LogInformation("json: "+jsonString);
+                    }
+                }
+
+            }
+            return new JsonResult(jsonString);
+        }
 
 // 4. 휴가결재
         public IActionResult Sub4()

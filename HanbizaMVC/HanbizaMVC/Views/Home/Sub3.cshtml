@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "휴가신청";
 }
-@model dynamic
+@model List<Vacation_List>
     <style>
         .table-hover{
             cursor:pointer
@@ -106,38 +106,31 @@
                     </form>
                 </div>
             </div>
-            @* layer *@
+            @* layer1 *@
             <!-- dnnCreateForm modal block -->
-            <div id="dnnCreateForm" class="modal fade" tabindex="-1" role="dialog">
+            <div id="findApproverModal" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-primary modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <p class="modal-title">결재자 찾기</p>
+                            <p class="modal-title"><span id="step"></span>단계 결재자 찾기</p>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form class="user" action="/Home/Sub3" method="get">
-                                <div class="form-group row">
-                                    <select class="form-control form-control-sm col-sm-1 mr-2" name="searchKey">
-                                        <option value="부서" selected>부서</option>
-                                        <option value="이름">이름</option>
-                                    </select>
-                                    <input class="form-control form-control-sm col-sm-8 mr-2" value="1" type="text" name="searchWord" placeholder="검색어를 입력하세요" />
-                                    <input class="form-control form-control-sm col-sm-1" type="submit" value="검색" />
-                                </div>
-                            </form>
+                            <div class="form-group row">
+                                <select class="form-control form-control-sm col-sm-1 mr-2" id="searchKey">
+                                    <option value="부서" selected>부서</option>
+                                    <option value="이름">이름</option>
+                                </select>
+                                <input class="form-control form-control-sm col-sm-8 mr-2" type="text" placeholder="검색어를 입력하세요" id="searchWord" />
+                                <input class="form-control form-control-sm col-sm-1" type="submit" value="검색" id="searchBtn" />
+                            </div>
                             <div class="table-responsive">
-                                <table class="table-sm table-bordered col-sm-12" >
-                                    <tr>
-                                        <th align="center" width="50%">부서명</th>
-                                        <th align="center" width="50%">이름</th>
-                                    </tr>
+                                <table class="table-sm table-bordered col-sm-12">
+                                    @* ajax로 데이터 가져옴 *@
+                                    <spand id="result"></spand>
 
-                                    <tr>
-                                        <td colspan="2" align="center">데이터가 없습니다</td>
-                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -162,7 +155,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.Vlist == null)
+                            @if (Model.Count == 0)
                             {
                                 <tr>
                                     <td colspan="4">데이터가 없습니다</td>
@@ -170,7 +163,7 @@
                             }
                             else
                             {
-                                @foreach (var item in Model.Vlist)
+                                @foreach (var item in Model)
                                 {
                                     <tr>
                                         <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
@@ -206,14 +199,49 @@
                     </table>
                 </div>
             </div>
+            @* layer2 *@
+            <div id="" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-primary modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <p class="modal-title">결재자 찾기</p>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <select class="form-control form-control-sm col-sm-1 mr-2" id="searchKey">
+                                    <option value="부서" selected>부서</option>
+                                    <option value="이름">이름</option>
+                                </select>
+                                <input class="form-control form-control-sm col-sm-8 mr-2" type="text" placeholder="검색어를 입력하세요" id="searchWord" />
+                                <input class="form-control form-control-sm col-sm-1" type="submit" value="검색" id="searchBtn" />
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table-sm table-bordered col-sm-12">
+                                    @* ajax로 데이터 가져옴 *@
+                                    <spand id="result"></spand>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                            <button type="button" class="btn btn-primary" id="btnSave">등록</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         </div>
     </div>
     <script>
         function layer_open(id) {
-            
-            $("#dnnCreateForm").modal('show'); // 입력 및 수정 폼 모달 창 열기
+            //alert(id);
+            $("#step").html(id);
+            $("#findApproverModal").modal('show'); // 입력 및 수정 폼 모달 창 열기
         }
 
         function fn_timeHide() {
@@ -242,9 +270,9 @@
                 language: 'ko'
             });
 
-            $("#vacationTable").click(function () {
+            $("#vacationTable tr").click(function () {
 
-                var seq = $(this).val();
+                var seq = $(this).find("input").val();
                 alert(seq)
             });
             $("#ProCDeep").change(function () {
@@ -260,6 +288,42 @@
                     }
                 }
             });
-            
+            $("#searchBtn").click(function () {
+                var searchKey = $("#searchKey").val();
+                var searchWord = $("#searchWord").val();
+                //alert(searchKey + "/" + searchWord);
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/Sub3_1/' + searchKey + '/' + searchWord,
+                    dataType: "JSON",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                        var sjson = JSON.parse(result);
+                        //alert("succ");
+                        var s = '<table class="table-sm table-bordered col-sm-12">';
+                        s += "<tr><th align='center' width='50%'>부서명</th><th align='center' width='50%'>이름</th></tr>"
+                        if (sjson.length == 0) {
+                            s += '< tr ><td colspan="2" align="center">데이터가 없습니다</td></tr >';
+                        } else {
+                            for (var i = 0; i < sjson.length; i++) {
+                                s += "<tr>";
+                                s += "<td>" + sjson[i].Buseo + "</td>"
+                                s += "<td>" + sjson[i].StaffName + "</td>"
+                                s += "</tr>"
+                                //alert(sjson[i].Buseo);
+                            }
+                            s += "</table>"
+                        }
+
+                        $("#result").html(s);
+                    },
+                    error: function () {
+                        alert("err");
+                    }
+                })
+
+            });
+
         });
     </script>

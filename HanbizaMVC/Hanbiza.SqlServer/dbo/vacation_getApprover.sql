@@ -5,13 +5,13 @@
 AS
 IF(@SearchKey = '부서')
 	BEGIN
-		SELECT Buseo, StaffName
+		SELECT Buseo  as 부서, StaffName as 이름
 		FROM Login_infor
 		WHERE BizNum = @BizNum AND Buseo LIKE  '%' + @SearchWord + '%'
 	END
 ELSE
 	BEGIN
-		SELECT Buseo, StaffName
+		SELECT Buseo  as 부서, StaffName as 이름
 		FROM Login_infor
 		WHERE BizNum = @BizNum AND StaffName = @SearchWord
 	END
