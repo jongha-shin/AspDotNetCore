@@ -37,13 +37,13 @@
         }
     </style>
 </head>
-<body id="page-top">
+<body id="page-top" class="">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/Home/Index">
@@ -121,10 +121,11 @@
                     <span>로그아웃</span>
                 </a>
             </li>
+
             <!-- Sidebar Toggler (Sidebar) -->
-            @*<div class="text-center d-none d-md-inline">
-                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
-                </div>*@
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
 
         </ul>
         <!-- End of Sidebar -->
@@ -138,9 +139,9 @@
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    @*<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                            <i class="fa fa-bars"></i>
-                        </button>*@
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
 
                     <!-- Topbar title -->
                     @*<div class="title" style="font-size:large; color:black;">*@
@@ -209,5 +210,19 @@
     <script src="~/lib/bootstrap-3-datepicker/js/locales/bootstrap-datepicker.ko.js" charset="UTF-8"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+
+<script>
+    $(function () {
+        $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {
+            //alert("g");
+            $("body").toggleClass("sidebar-toggled");
+            $(".sidebar").toggleClass("toggled");
+            if ($(".sidebar").hasClass("toggled")) {
+                $('.sidebar .collapse').collapse('hide');
+            };
+        });
+
+    });
+</script>
 </body>
 </html>

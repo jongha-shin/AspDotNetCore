@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using HanbizaMVC.Models;
 using System;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using StoredProcedureEFCore;
 using System.Collections.Generic;
 using HanbizaMVC.ViewModel;
+using System.Threading.Tasks;
+using System.Dynamic;
 
 namespace HanbizaMVC.Controllers
 {
@@ -130,27 +131,43 @@ namespace HanbizaMVC.Controllers
             return new RedirectResult("/Home/Sub2");
         }
 // 3. 휴가신청
-        public IActionResult Sub3()
+        public IActionResult Sub3(string SearchKey, string SearchWord)
         {
             StaffId = (int)TempData["StaffId"];
             BizNum = (string)TempData["BizNum"];
-            _logger.LogInformation("sub3(): " + BizNum + " / " + StaffId);
+            _logger.LogInformation("sub3(): " + BizNum + " / " + StaffId + " / " + SearchKey + " / " + SearchWord);
+
+            dynamic model = new ExpandoObject();
 
             using (var db = new HanbizaContext())
             {
-                List<Vacation_List> Vlist = null;
+                //List<Vacation_List> Vlist = null;
                 db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
-                    .Exec(r => Vlist = r.ToList<Vacation_List>());
-                if (Vlist.Count > 0)
+                    .Exec(r => model.Vlist = r.ToList<Vacation_List>());
+
+                if (SearchKey != null && SearchWord != null)
                 {
-                    return View(Vlist);
+                    if (!SearchKey.Equals("") && !SearchWord.Equals(""))
+                    {
+                        //Console.WriteLine("모달데이터 가져오기");
+                      db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", BizNum).AddParam("SearchKey", SearchKey).AddParam("SearchWord", SearchWord)
+                            .Exec( r => model.Datatable = r.ToList<Approver>());
+                    }
+                    
+                }
+                
+                if (model.Vlist != null)
+                {
+                    return View(model);
                 }
             }
 
-
-
                 return View();
         }
+        //public IActionResult Sub3_1(string SearchKey, string SearchWord)
+        //{
+        //    return JsonResult();
+        //}
 
 // 4. 휴가결재
         public IActionResult Sub4()

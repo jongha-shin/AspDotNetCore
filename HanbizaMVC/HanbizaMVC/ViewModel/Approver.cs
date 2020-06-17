@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace HanbizaMVC.ViewModel
 {
-    public class LoginUser
+    public class Approver
     {
-      
+        public string Buseo { get; set; }
+        public string StaffName { get; set; }
     }
 }
