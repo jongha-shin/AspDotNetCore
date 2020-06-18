@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
 @using HanbizaMVC.ViewModel
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -146,13 +147,12 @@
                     <!-- Topbar title -->
                     @*<div class="title" style="font-size:large; color:black;">*@
                     @{
-                        if (TempData["StaffId"] != null)
+                        
+                        if (ViewBag.LoginUser != null)
                         {
-                            <p style="margin-bottom: 0px; font-size:large; color:black;">@ViewData["Title"] - @TempData["StaffId"] / @TempData["BizNum"] / @TempData["DateNow"]</p>
+                            <p style="margin-bottom: 0px; font-size:large; color:black;">@ViewData["Title"] - @ViewBag.LoginUser.StaffId / @ViewBag.LoginUser.BizNum / @ViewBag.LoginUser.LoginDate</p>
                         }
-                        TempData.Keep("StaffId");
-                        TempData.Keep("BizNum");
-                        TempData.Keep("DateNow");
+                        
                     }
                 </nav>
                 <!-- End of Topbar -->
@@ -222,6 +222,15 @@
             };
         });
 
+        $("#approverTable tr").on("click",function () {
+            alert("");
+            var seq = $(this).find("input").val();
+            //
+            alert(seq)
+        });
+    });
+    $("#document").on("click", "#approverTable tr", function () {
+        alert("");
     });
 </script>
 </body>

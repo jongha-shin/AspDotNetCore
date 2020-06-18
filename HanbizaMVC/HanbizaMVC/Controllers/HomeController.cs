@@ -8,47 +8,60 @@ using StoredProcedureEFCore;
 using System.Collections.Generic;
 using HanbizaMVC.ViewModel;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace HanbizaMVC.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        public int StaffId;
-        public string BizNum;
-      
+        private LoginUser LoginUser;
+        
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
+
+        public void GetLoginUser()
+        {
+            var StaffId = (int)HttpContext.Session.GetInt32("StaffId");
+            var BizNum = HttpContext.Session.GetString("BizNum");
+            var LoginDate = HttpContext.Session.GetString("DateNow");
+            LoginUser = new LoginUser
+            {
+                StaffId = StaffId,
+                BizNum = BizNum,
+                LoginDate = LoginDate
+            };
+
+        }
+
+
 // 0. 로그인 후 첫 화면 : 공지사항 
         public IActionResult Index()
         {
+            GetLoginUser();
+            ViewBag.LoginUser = LoginUser;
             return View();
         }
 // 1. 근태보기
         public IActionResult Sub1()
         {
-            //var oBizNum = TempData["BizNum"];
-            //var oStaffId = TempData["StaffId"];
-            
-            var DateNow = TempData["DateNow"];
-            StaffId = (int)TempData["StaffId"];
-            BizNum = (string)TempData["BizNum"];
-
-            _logger.LogInformation("sub1(): "+BizNum + " / " + StaffId + " / " + DateNow);
+            GetLoginUser();
+            _logger.LogInformation("sub1(): "+ LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.LoginDate);
             
             using (var db = new HanbizaContext()) {
                 
                 // 최근 근태기록 월 구하기
-                db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .ExecScalar(out string dateMonth);
 
                 ViewBag.최근월 = dateMonth;
 
                 // 월별근태내역 - 근무/휴가
                 var CulTable = from data in db.출퇴근기록집계표
-                               where data.StaffId == StaffId
+                               where data.StaffId == LoginUser.StaffId
                                select data;
                 
                 foreach (var i in CulTable)
@@ -65,7 +78,7 @@ namespace HanbizaMVC.Controllers
 
                 // 월별근태내역 - 근무외시수
                 List<TotalAttendence> totalTable = null;
-                db.LoadStoredProc("dbo.totalAttendence").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId).AddParam("lastMonth", dateMonth)
+                db.LoadStoredProc("dbo.totalAttendence").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
                   .Exec(r => totalTable = r.ToList<TotalAttendence>());
 
                 foreach (var i in totalTable)
@@ -83,7 +96,7 @@ namespace HanbizaMVC.Controllers
 
                 // 출퇴근기록
                 List<출퇴근기록> recordTable = null;
-                db.LoadStoredProc("dbo.attendRecord").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId).AddParam("lastMonth", dateMonth)
+                db.LoadStoredProc("dbo.attendRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
                     .Exec(r => recordTable = r.ToList<출퇴근기록>());
 
                 ViewBag.recordTable = recordTable;
@@ -100,9 +113,9 @@ namespace HanbizaMVC.Controllers
 // 2. OT신청
         public IActionResult Sub2(AddTimeList addtime)
         {
-            StaffId = (int)TempData["StaffId"];
-            BizNum = (string)TempData["BizNum"];
-            _logger.LogInformation("sub2(): " + BizNum + " / " + StaffId);
+            GetLoginUser();
+
+            _logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
     
                     
             
@@ -110,7 +123,7 @@ namespace HanbizaMVC.Controllers
             {
                 // OT 신청내역
                 List<AddTimeList> OTlist = null;
-                db.LoadStoredProc("dbo.OT_list").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                db.LoadStoredProc("dbo.OT_list").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => OTlist = r.ToList<AddTimeList>());
 
                 if(OTlist.Count > 0)
@@ -123,23 +136,21 @@ namespace HanbizaMVC.Controllers
 //2-1 OT 신청 클릭
         public IActionResult Sub2_1(AddTimeList addtime)
         {
-            StaffId = (int)TempData["StaffId"];
-            BizNum = (string)TempData["BizNum"];
+            
             _logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal); // 신청x
             
             return new RedirectResult("/Home/Sub2");
         }
 // 3. 휴가신청
-        public IActionResult Sub3(string SearchKey, string SearchWord)
+        public IActionResult Sub3()
         {
-            StaffId = (int)TempData["StaffId"];
-            BizNum = (string)TempData["BizNum"];
-            _logger.LogInformation("sub3(): " + BizNum + " / " + StaffId);
+            GetLoginUser();
+            _logger.LogInformation("sub3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             using (var db = new HanbizaContext())
             {
                 List<Vacation_List> Vlist = null;
-                db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => Vlist = r.ToList<Vacation_List>());
                 
                 if (Vlist != null)
@@ -154,9 +165,8 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub3_1/{SearchKey}/{SearchWord}")]
         public IActionResult Sub3_1(string SearchKey, string SearchWord)
         {
-            StaffId = (int)TempData["StaffId"];
-            BizNum = (string)TempData["BizNum"];
-            _logger.LogInformation("sub3_1(): " + BizNum + " / " + StaffId + " / " + SearchKey + " / " + SearchWord);
+            GetLoginUser();
+            _logger.LogInformation("sub3_1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + SearchKey + " / " + SearchWord);
             var jsonString = "";
 
             if (SearchKey != null && SearchWord != null)
@@ -166,7 +176,7 @@ namespace HanbizaMVC.Controllers
                     using (var db = new HanbizaContext())
                     {
                         List<Approver> Datatable = null;
-                        db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", BizNum).AddParam("SearchKey", SearchKey).AddParam("SearchWord", SearchWord)
+                        db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("SearchKey", SearchKey).AddParam("SearchWord", SearchWord)
                           .Exec(r => Datatable = r.ToList<Approver>());
                         
                         jsonString = JsonConvert.SerializeObject(Datatable);
@@ -187,13 +197,12 @@ namespace HanbizaMVC.Controllers
 // 5. 연차보기
         public IActionResult Sub5()
         {
-            StaffId = (int)TempData["StaffId"];
-            BizNum = (string)TempData["BizNum"];
-            _logger.LogInformation("sub5(): " + BizNum + " / " + StaffId);
+            GetLoginUser();
+            _logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             using (var db = new HanbizaContext())
             {
                 List<연차대장> vacationRecord = null;
-                db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => vacationRecord = r.ToList<연차대장>());
 
                 foreach (var i in vacationRecord)
@@ -208,7 +217,7 @@ namespace HanbizaMVC.Controllers
                 }
 
                 List<휴가대장> vacationList = null;
-                db.LoadStoredProc("dbo.usingVacation").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                db.LoadStoredProc("dbo.usingVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => vacationList = r.ToList<휴가대장>());
 
                 ViewBag.vacationList = vacationList;
@@ -224,14 +233,13 @@ namespace HanbizaMVC.Controllers
 // 6. 급여명세서
         public IActionResult Sub6()
         {
-            StaffId = (int)TempData["StaffId"];
-            BizNum = (string)TempData["BizNum"];
-            _logger.LogInformation("sub6(): " + BizNum + " / " + StaffId);
+            GetLoginUser();
+            _logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<PayList> plist = null;
             using (var db = new HanbizaContext())
             {
-                db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => plist = r.ToList<PayList>());
                
                     Console.WriteLine(plist[0].Yyyymm +"년 "+plist[0].Ncount+"회차");
@@ -239,7 +247,7 @@ namespace HanbizaMVC.Controllers
                 var yyyymm = plist[0].Yyyymm;
                 var ncount = plist[0].Ncount;
 
-                db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .AddParam("Yyyymm", yyyymm).AddParam("Ncount", ncount).Exec(r => plist = r.ToList<PayList>());
 
                 int a = 0;

@@ -86,9 +86,7 @@ namespace HanbizaMVC.Controllers
         }
         public IActionResult LogIn()
         {
-            TempData["StaffId"] = "";
-            TempData["BizNum"] = "";
-            TempData["DateNow"] = "";
+            
             return View();
         }
         [HttpPost]
@@ -114,14 +112,12 @@ namespace HanbizaMVC.Controllers
                     {
                         foreach (var item in user)
                         {
-                            // new 객체 생성후 저장필요
-                            TempData["StaffId"]= item.StaffId;
-                            TempData["BizNum"] = item.BizNum;
-                            TempData["DateNow"] = DateTime.Now.ToShortDateString().Substring(0,7); // Now, 
+                            
+                            HttpContext.Session.SetString("DateNow", DateTime.Now.ToShortDateString().Substring(0, 7));
+                            HttpContext.Session.SetString("BizNum", item.BizNum);
+                            HttpContext.Session.SetInt32("StaffId", item.StaffId);
                         }
-                        //성공
-                        //HttpContext.Session.SetString("loginUser", user.CompanyName);
-                        //HttpContext.Session.SetInt32("loginUser", user.StaffId);
+                        
                         return new RedirectResult("/Home/Index");
                     }
                 }

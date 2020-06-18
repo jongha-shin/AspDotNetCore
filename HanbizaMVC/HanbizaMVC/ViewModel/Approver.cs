@@ -9,5 +9,6 @@ namespace HanbizaMVC.ViewModel
     {
         public string Buseo { get; set; }
         public string StaffName { get; set; }
+        public int StaffID { get; set; }
     }
 }

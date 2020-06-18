@@ -126,17 +126,11 @@
                                 <input class="form-control form-control-sm col-sm-8 mr-2" type="text" placeholder="검색어를 입력하세요" id="searchWord" />
                                 <input class="form-control form-control-sm col-sm-1" type="submit" value="검색" id="searchBtn" />
                             </div>
-                            <div class="table-responsive">
-                                <table class="table-sm table-bordered col-sm-12">
                                     @* ajax로 데이터 가져옴 *@
                                     <spand id="result"></spand>
-
-                                </table>
-                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                            <button type="button" class="btn btn-primary" id="btnSave">등록</button>
                         </div>
                     </div>
                 </div>
@@ -177,7 +171,7 @@
                                             <td>@item.Snal.ToShortDateString() ~ @item.Enal.ToShortDateString()</td>
                                         }
 
-                                        <td>@item.ProCDeep</td>
+                                        <td> / @item.ProCDeep</td>
 
                                         @if (@item.AllProCess.Equals("F"))
                                         {
@@ -200,46 +194,47 @@
                 </div>
             </div>
             @* layer2 *@
-            <div id="" class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-primary modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <p class="modal-title">결재자 찾기</p>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group row">
-                                <select class="form-control form-control-sm col-sm-1 mr-2" id="searchKey">
-                                    <option value="부서" selected>부서</option>
-                                    <option value="이름">이름</option>
-                                </select>
-                                <input class="form-control form-control-sm col-sm-8 mr-2" type="text" placeholder="검색어를 입력하세요" id="searchWord" />
-                                <input class="form-control form-control-sm col-sm-1" type="submit" value="검색" id="searchBtn" />
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table-sm table-bordered col-sm-12">
-                                    @* ajax로 데이터 가져옴 *@
-                                    <spand id="result"></spand>
-
-                                </table>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                            <button type="button" class="btn btn-primary" id="btnSave">등록</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        </div>
+        
     </div>
     <script>
+        function getApproverTable(searchKey, searchWord) {
+            $.ajax({
+                type: 'GET',
+                url: '/Home/Sub3_1/' + searchKey + '/' + searchWord,
+                dataType: "JSON",
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    var sjson = JSON.parse(result);
+                    //alert("succ");
+                    var s = '<table id="approverTable" class="table-sm table-bordered table-hover col-sm-12">';
+                    s += "<thead><tr><th align='center' width='50%'>부서명</th><th align='center' width='50%'>이름</th></tr></thead>"
+                    if (sjson.length == 0) {
+                        s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
+                    } else {
+                        for (var i = 0; i < sjson.length; i++) {
+                            s += "<tr>";
+                            s += "<td>" + sjson[i].Buseo + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
+                            s += "<td>" + sjson[i].StaffName + "</td>"
+                            s += "</tr>"
+                            //alert(sjson[i].Buseo);
+                        }
+                        s += "</table>"
+                    }
+
+                    $("#result").html(s);
+                },
+                error: function () {
+                    alert("err");
+                }
+            })
+        }
+
         function layer_open(id) {
             //alert(id);
+
+            $("#searchWord").val("");
             $("#step").html(id);
             $("#findApproverModal").modal('show'); // 입력 및 수정 폼 모달 창 열기
         }
@@ -262,6 +257,10 @@
                 $("#Enal").css("background", "#fff");
             }
         }
+        $("#document").on("click", "#approverTable", function () {
+            alert("");
+        });
+
         $(function () {
             $("#Snal").datepicker({
                 language: 'ko'
@@ -275,6 +274,7 @@
                 var seq = $(this).find("input").val();
                 alert(seq)
             });
+            
             $("#ProCDeep").change(function () {
                 var optionValue = $("#ProCDeep option:selected").val();
                 //	   alert(optionValue);
@@ -290,38 +290,16 @@
             });
             $("#searchBtn").click(function () {
                 var searchKey = $("#searchKey").val();
-                var searchWord = $("#searchWord").val();
+                var searchWord = $("#searchWord").val().trim();
                 //alert(searchKey + "/" + searchWord);
+                if (searchWord == null || searchWord == "") {
+                    alert("검색어를 입력해 주세요");
+                    this.focus();
 
-                $.ajax({
-                    type: 'GET',
-                    url: '/Home/Sub3_1/' + searchKey + '/' + searchWord,
-                    dataType: "JSON",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (result) {
-                        var sjson = JSON.parse(result);
-                        //alert("succ");
-                        var s = '<table class="table-sm table-bordered col-sm-12">';
-                        s += "<tr><th align='center' width='50%'>부서명</th><th align='center' width='50%'>이름</th></tr>"
-                        if (sjson.length == 0) {
-                            s += '< tr ><td colspan="2" align="center">데이터가 없습니다</td></tr >';
-                        } else {
-                            for (var i = 0; i < sjson.length; i++) {
-                                s += "<tr>";
-                                s += "<td>" + sjson[i].Buseo + "</td>"
-                                s += "<td>" + sjson[i].StaffName + "</td>"
-                                s += "</tr>"
-                                //alert(sjson[i].Buseo);
-                            }
-                            s += "</table>"
-                        }
+                } else {
 
-                        $("#result").html(s);
-                    },
-                    error: function () {
-                        alert("err");
-                    }
-                })
+                    getApproverTable(searchKey, searchWord);
+                }
 
             });
 
