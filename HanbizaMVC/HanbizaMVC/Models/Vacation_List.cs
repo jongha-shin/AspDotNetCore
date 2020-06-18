@@ -18,5 +18,7 @@ namespace HanbizaMVC.Models
         public string HbzMSend { get; set; }
         public DateTime HbzMYYMMDD { get; set; }
         public DateTime Regdate { get; set; }
+
+        public int DeepNum { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "휴가신청";
+    
 }
 @model List<Vacation_List>
     <style>
@@ -107,7 +108,7 @@
                 </div>
             </div>
             @* layer1 *@
-            <!-- dnnCreateForm modal block -->
+            <!-- findApproverModal modal block -->
             <div id="findApproverModal" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-primary modal-lg" role="document">
                     <div class="modal-content">
@@ -126,8 +127,8 @@
                                 <input class="form-control form-control-sm col-sm-8 mr-2" type="text" placeholder="검색어를 입력하세요" id="searchWord" />
                                 <input class="form-control form-control-sm col-sm-1" type="submit" value="검색" id="searchBtn" />
                             </div>
-                                    @* ajax로 데이터 가져옴 *@
-                                    <spand id="result"></spand>
+                            @* ajax로 데이터 가져옴 *@
+                            <spand id="result"></spand>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
@@ -135,7 +136,7 @@
                     </div>
                 </div>
             </div>
-            <!-- /dnnCreateForm modal block -->
+            <!-- /findApproverModal modal block -->
             @* tap2 *@
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                 <div class="table-responsive">
@@ -171,7 +172,7 @@
                                             <td>@item.Snal.ToShortDateString() ~ @item.Enal.ToShortDateString()</td>
                                         }
 
-                                        <td> / @item.ProCDeep</td>
+                                        <td> @item.DeepNum / @item.ProCDeep</td>
 
                                         @if (@item.AllProCess.Equals("F"))
                                         {
@@ -194,6 +195,26 @@
                 </div>
             </div>
             @* layer2 *@
+            <!-- ApproveDetail modal block -->
+            <div id="ApproveDetail" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <p class="modal-title" id="exampleModalLongTitle">휴가신청 세부내역</p>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <span></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /ApproveDetail modal block -->
         </div>
 
         
@@ -272,7 +293,39 @@
             $("#vacationTable tr").click(function () {
 
                 var seq = $(this).find("input").val();
-                alert(seq)
+                //alert(seq)
+                $("#ApproveDetail").modal('show');
+                // ajax 세부 내용 가져오기
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/Sub3_2/' + seq,
+                    dataType: "JSON",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                        var sjson = JSON.parse(result);
+                        alert("succ");
+                        var s = '<table id="approverTable" class="table-sm table-bordered table-hover col-sm-12">';
+                        s += "<thead><tr><th align='center' width='50%'>부서명</th><th align='center' width='50%'>이름</th></tr></thead>"
+                        if (sjson.length == 0) {
+                            s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
+                        } else {
+                            for (var i = 0; i < sjson.length; i++) {
+                                s += "<tr>";
+                                s += "<td>" + sjson[i].Buseo + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
+                                s += "<td>" + sjson[i].StaffName + "</td>"
+                                s += "</tr>"
+                                //alert(sjson[i].Buseo);
+                            }
+                            s += "</table>"
+                        }
+
+                        $("#result").html(s);
+                    },
+                    error: function () {
+                        alert("err");
+                    }
+                })
+
             });
             
             $("#ProCDeep").change(function () {

@@ -25,15 +25,19 @@ namespace HanbizaMVC.Controllers
 
         public void GetLoginUser()
         {
-            var StaffId = (int)HttpContext.Session.GetInt32("StaffId");
-            var BizNum = HttpContext.Session.GetString("BizNum");
-            var LoginDate = HttpContext.Session.GetString("DateNow");
-            LoginUser = new LoginUser
+            if (HttpContext.Session.GetString("StaffId") != null )
             {
-                StaffId = StaffId,
-                BizNum = BizNum,
-                LoginDate = LoginDate
-            };
+                var StaffId = (int)HttpContext.Session.GetInt32("StaffId");
+                var BizNum = HttpContext.Session.GetString("BizNum");
+                var LoginDate = HttpContext.Session.GetString("DateNow");
+                LoginUser = new LoginUser
+                {
+                    StaffId = StaffId,
+                    BizNum = BizNum,
+                    LoginDate = LoginDate
+                };
+            }
+
 
         }
 
