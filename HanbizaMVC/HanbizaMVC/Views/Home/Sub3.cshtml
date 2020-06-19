@@ -4,8 +4,15 @@
 }
 @model List<Vacation_List>
     <style>
-        .table-hover{
-            cursor:pointer
+        .table-hover {
+            cursor: pointer
+        }
+        table {
+            font-size: small;
+        }
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
         }
     </style>
     <div class="card mb-4 col-lg-9 ">
@@ -72,59 +79,38 @@
                             </select>
                         </div>
                         <div class="form-group row">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <label class="col-form-label">결재자</label>
-                                    </td>
-                                    <td>
-                                        <div id="" class="inputCls1 col-sm-10">
-                                            <input type="hidden" name="StaffID1" id="StaffID1">
-                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign1" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <div id="" class="inputCls2 col-sm-10" style="display:none;">
-                                            <br>
-                                            <input type="hidden" name="StaffID2" id="StaffID2">
-                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign2" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <div id="" class="inputCls3 col-sm-10" style="display:none;">
-                                            <br>
-                                            <input type="hidden" name="StaffID3" id="StaffID3">
-                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign3" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <div id="" class="inputCls4 col-sm-10" style="display:none;">
-                                            <br>
-                                            <input type="hidden" name="StaffID4" id="StaffID4">
-                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign4" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <div id="" class="inputCls5 col-sm-10" style="display:none;">
-                                            <br>
-                                            <input type="hidden" name="StaffID5" id="StaffID5">
-                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign5" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
+
+                            <label class="col-sm-2 col-form-label">결재자</label>
+                            <div id="" class="inputCls1 col-sm-10">
+                                <input type="hidden" name="StaffID1" id="StaffID1">
+                                <input type="text" style="text-align:center;cursor:pointer;" name="sign1" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
+                            </div>
+
+
+                            <label class="col-sm-2 col-form-label"></label>
+                            <div id="" class="inputCls2 col-sm-10" style="display:none;">
+                                <input type="hidden" name="StaffID2" id="StaffID2">
+                                <input type="text" style="text-align:center;cursor:pointer;" name="sign2" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
+                            </div>
+
+                                <label class="col-sm-2 col-form-label"></label>
+                            <div id="" class="inputCls3 col-sm-10" style="display:none;">
+                                <input type="hidden" name="StaffID3" id="StaffID3">
+                                <input type="text" style="text-align:center;cursor:pointer;" name="sign3" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
+                            </div>
+
+                                <label class="col-sm-2 col-form-label"></label>
+                            <div id="" class="inputCls4 col-sm-10" style="display:none;">
+                                <input type="hidden" name="StaffID4" id="StaffID4">
+                                <input type="text" style="text-align:center;cursor:pointer;" name="sign4" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
+                            </div>
+
+                                <label class="col-sm-2 col-form-label"></label>
+                            <div id="" class="inputCls5 col-sm-10" style="display:none;">
+                                <input type="hidden" name="StaffID5" id="StaffID5">
+                                <input type="text" style="text-align:center;cursor:pointer;" name="sign5" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
+                            </div>
+
                         </div>
 
                         <div>
@@ -311,9 +297,6 @@
             var name = $(this).find("td").eq(1).text();
             var staffID = $(this).find("input").val();
             alert(name + "/" + staffID + "/" + i);
-@*
-<input type="hidden" name="StaffID1" id="StaffID1">
-<input type="text" style="text-align:center;cursor:pointer;" name="sign1" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">*@
 
             $("#StaffID" + i).val(staffID);
             $("#sign" + i).val(name);
@@ -394,9 +377,7 @@
                 if (searchWord == null || searchWord == "") {
                     alert("검색어를 입력해 주세요");
                     this.focus();
-
                 } else {
-
                     getApproverTable(searchKey, searchWord);
                 }
 

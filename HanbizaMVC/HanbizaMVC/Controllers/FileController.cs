@@ -4,14 +4,9 @@ using Microsoft.Extensions.Logging;
 using HanbizaMVC.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using System;
-using Microsoft.EntityFrameworkCore;
 using StoredProcedureEFCore;
 using System.Collections.Generic;
-using System.Data;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace HanbizaMVC.Controllers
 {

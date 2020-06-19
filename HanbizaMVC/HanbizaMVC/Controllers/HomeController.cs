@@ -37,8 +37,6 @@ namespace HanbizaMVC.Controllers
                     LoginDate = LoginDate
                 };
             }
-
-
         }
 
 
@@ -115,13 +113,11 @@ namespace HanbizaMVC.Controllers
         }
         
 // 2. OT신청
-        public IActionResult Sub2(AddTimeList addtime)
+        public IActionResult Sub2()
         {
             GetLoginUser();
 
             _logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-    
-                    
             
             using (var db = new HanbizaContext())
             {
@@ -137,6 +133,7 @@ namespace HanbizaMVC.Controllers
             }
                 return View();
         }
+
 //2-1 OT 신청 클릭
         public IActionResult Sub2_1(AddTimeList addtime)
         {
@@ -145,6 +142,7 @@ namespace HanbizaMVC.Controllers
             
             return new RedirectResult("/Home/Sub2");
         }
+
 // 3. 휴가신청
         public IActionResult Sub3()
         {
@@ -210,7 +208,7 @@ namespace HanbizaMVC.Controllers
                 return  new JsonResult(jsonString);
         }
 
-            // 4. 휴가결재
+// 4. 휴가결재
         public IActionResult Sub4()
         {
             GetLoginUser();

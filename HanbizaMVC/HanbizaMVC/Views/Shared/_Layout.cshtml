@@ -142,15 +142,11 @@
                     </button>
 
                     <!-- Topbar title -->
-                    @*<div class="title" style="font-size:large; color:black;">*@
+                    <div class="title" style="font-size:large; color:black;">
                     @{
-                        
-                        if (ViewBag.LoginUser != null)
-                        {
-                            <p style="margin-bottom: 0px; font-size:large; color:black;">@ViewData["Title"] - @ViewBag.LoginUser.StaffId / @ViewBag.LoginUser.BizNum / @ViewBag.LoginUser.LoginDate</p>
-                        }
-                        
+                            <p style="margin-bottom: 0px; font-size:large; color:black;">@ViewData["Title"]</p>
                     }
+                    </div>
                 </nav>
                 <!-- End of Topbar -->
                 <!-- Begin Page Content -->

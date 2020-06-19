@@ -2,159 +2,168 @@
     ViewData["Title"] = "OT신청";
 }
 @model List<AddTimeList>
+    <style>
+        table {
+            font-size: small;
+        }
 
-        <div class="card mb-4 col-lg-9 ">
-            <div class="card-body pt-3">
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">OT신청</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">OT신청내역</a>
-                    </li>
-                </ul>
-                <ul class="nav justify-content-end">
-                    @ViewBag.최근월
-                </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                        <div class="table-responsive">
-                            <form class="user  p-3" action="/Home/Sub2_1" method="get">
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">구분</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control form-control-sm" name="Gubun">
-                                            <option value="S">선택</option>
-                                            <option value="C">평일근로</option>
-                                            <option value="R">휴일근로</option>
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
+        }
+    </style>
+    <div class="card mb-4 col-lg-9 ">
+        <div class="card-body pt-3">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">OT신청</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">OT신청내역</a>
+                </li>
+            </ul>
+            <ul class="nav justify-content-end">
+                @ViewBag.최근월
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div class="table-responsive">
+                        <form class="user  p-3" action="/Home/Sub2_1" method="get">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">구분</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control form-control-sm" name="Gubun">
+                                        <option value="S">선택</option>
+                                        <option value="C">평일근로</option>
+                                        <option value="R">휴일근로</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">신청일</label>
+                                <div class="col-sm-10">
+                                    <input id="Snal" class="form-control form-control-sm" name="regdate" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">OT 신청시간</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <label class="col-3 col-lg-2 col-form-label">시작</label>
+                                        <select class="form-control form-control-sm col-3" name="Snal_h">
+                                            @for (int i = 0; i < 24; i++)
+                                            {
+                                                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                                            }
+                                        </select>
+                                        &nbsp;: &nbsp;
+                                        <select class="form-control form-control-sm col-3" name="Snal_m">
+                                            <option value="00">00</option>
+                                            <option value="15">15</option>
+                                            <option value="30">30</option>
+                                            <option value="45">45</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-3 col-lg-2 col-form-label">종료</label>
+                                        <select class="form-control form-control-sm col-3" name="Enal_h">
+                                            @for (int i = 0; i < 24; i++)
+                                            {
+                                                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                                            }
+                                        </select>
+                                        &nbsp;: &nbsp;
+                                        <select class="form-control form-control-sm col-3" name="Enal_m">
+                                            <option value="00">00</option>
+                                            <option value="15">15</option>
+                                            <option value="30">30</option>
+                                            <option value="45">45</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">신청일</label>
-                                    <div class="col-sm-10">
-                                        <input id="Snal" class="form-control form-control-sm" name="regdate"/>
-                                    </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">사유</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control form-control-sm" name="Reason"></textarea>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">OT 신청시간</label>
-                                    <div class="col-sm-10">
-                                        <div class="row">
-                                            <label class="col-3 col-lg-2 col-form-label">시작</label>
-                                            <select class="form-control form-control-sm col-3" name="Snal_h">
-                                                @for (int i = 0; i < 24; i++)
-                                                {
-                                                    <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-                                                }
-                                            </select>
-                                            &nbsp;: &nbsp;
-                                            <select class="form-control form-control-sm col-3" name="Snal_m">
-                                                <option value="00">00</option>
-                                                <option value="15">15</option>
-                                                <option value="30">30</option>
-                                                <option value="45">45</option>
-                                            </select>
-                                        </div>
-                                        <div class="row">
-                                            <label class="col-3 col-lg-2 col-form-label">종료</label>
-                                            <select class="form-control form-control-sm col-3" name="Enal_h">
-                                                @for (int i = 0; i < 24; i++)
-                                                {
-                                                    <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-                                                }
-                                            </select>
-                                            &nbsp;: &nbsp;
-                                            <select class="form-control form-control-sm col-3" name="Enal_m">
-                                                <option value="00">00</option>
-                                                <option value="15">15</option>
-                                                <option value="30">30</option>
-                                                <option value="45">45</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">사유</label>
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control form-control-sm" name="Reason"></textarea>
-                                    </div>
-                                </div>
+                            </div>
 
-                                <div>
-                                    <input class="btn btn-primary btn-user btn-block" type="submit" value="신청"/>
-                                </div>
+                            <div>
+                                <input class="btn btn-primary btn-user btn-block" type="submit" value="신청" />
+                            </div>
 
-                            </form>
-                        </div>
+                        </form>
                     </div>
-                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        <div class="table-responsive">
-                            <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
+                </div>
+                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="table-responsive">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>신청일</th>
+                                    <th>OT신청시간</th>
+                                    <th>사유</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Count == 0)
+                                {
                                     <tr>
-                                        <th>신청일</th>
-                                        <th>OT신청시간</th>
-                                        <th>사유</th>
+                                        <td colspan="3">데이터가 없습니다</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @if(Model.Count == 0)
+                                }
+                                else
+                                {
+                                    @foreach (var item in Model)
                                     {
-                                        <tr>
-                                            <td colspan="3">데이터가 없습니다</td>
-                                        </tr>
-                                    }
-                                    else
-                                    {
-                                       @foreach (var item in Model)
-                                        {
                                         <tr>
                                             <td>@item.Regdate</td>
                                             <td>@item.Snals ~ @item.Enals</td>
                                             <td>@item.Reason</td>
                                         </tr>
-                                        }
                                     }
+                                }
 
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
             </div>
+
         </div>
-    
+    </div>
+
     <script type="text/javascript">
         $(function () {
             //$("#Snal").click(function () {
             //    alert("asdf");
             //});
             $("#Snal").datepicker({
-               language: 'ko'
+                language: 'ko'
             });
 
 
-    //        $(".datepicker").datepicker({
-    //            autoSize: true,
-    //            yearRange: "-1:+1", // last hundred years
-    //            showOn: "both",
-				///*
-				//buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
-				//buttonImageOnly: true, //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-				//*/
-    //            buttonText: "", /*달력 이미지 아이콘 숨기기 */
-    //            showButtonPanel: true,
-    //            changeYear: false,
-    //            dateFormat: "yy-mm-dd",
-    //            showOtherMonths: false,
-    //            // showWeek: true, /* 주수 출력 여부*/
-    //            // weekHeader: "주", /* 주수 출력 여부*/
-				///*
-    //            ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-    //            ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                
-				//*/
-    //        });
+            //        $(".datepicker").datepicker({
+            //            autoSize: true,
+            //            yearRange: "-1:+1", // last hundred years
+            //            showOn: "both",
+            ///*
+            //buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+            //buttonImageOnly: true, //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+            //*/
+            //            buttonText: "", /*달력 이미지 아이콘 숨기기 */
+            //            showButtonPanel: true,
+            //            changeYear: false,
+            //            dateFormat: "yy-mm-dd",
+            //            showOtherMonths: false,
+            //            // showWeek: true, /* 주수 출력 여부*/
+            //            // weekHeader: "주", /* 주수 출력 여부*/
+            ///*
+            //            ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+            //            ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
+            //*/
+            //        });
 
 
         });

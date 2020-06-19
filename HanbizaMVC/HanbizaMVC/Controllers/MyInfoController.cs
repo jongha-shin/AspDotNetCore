@@ -9,14 +9,30 @@ using System.Collections.Generic;
 using StoredProcedureEFCore;
 using System.IO;
 using Microsoft.AspNetCore.WebUtilities;
+using HanbizaMVC.ViewModel;
 
 namespace HanbizaMVC.Controllers
 {
     public class MyInfoController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        public int StaffId;
-        public string BizNum;
+        private LoginUser LoginUser;
+
+        public void GetLoginUser()
+        {
+            if (HttpContext.Session.GetString("StaffId") != null)
+            {
+                var StaffId = (int)HttpContext.Session.GetInt32("StaffId");
+                var BizNum = HttpContext.Session.GetString("BizNum");
+                var LoginDate = HttpContext.Session.GetString("DateNow");
+                LoginUser = new LoginUser
+                {
+                    StaffId = StaffId,
+                    BizNum = BizNum,
+                    LoginDate = LoginDate
+                };
+            }
+        }
 
         public MyInfoController(ILogger<HomeController> logger)
         {
@@ -25,13 +41,12 @@ namespace HanbizaMVC.Controllers
 // 확인서명
         public IActionResult Sub7()
         {
-            StaffId = (int)TempData["StaffId"];
-            BizNum = (string)TempData["BizNum"];
-            _logger.LogInformation("sub7(): " + BizNum + " / " + StaffId);
+            GetLoginUser();
+            _logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             using (var db = new HanbizaContext())
             {
                 List<문서함> mySign = null;
-                db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => mySign = r.ToList<문서함>());
 
                 if (mySign.Count > 0)
@@ -63,13 +78,13 @@ namespace HanbizaMVC.Controllers
 // 내 문서
         public IActionResult Sub8()
         {
-            StaffId = (int)TempData["StaffId"];
-            BizNum = (string)TempData["BizNum"];
-            _logger.LogInformation("sub8(): " + BizNum + " / " + StaffId);
+            GetLoginUser();
+            
+            _logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             using (var db = new HanbizaContext())
             {
                 List<문서함> fileList = null;
-                db.LoadStoredProc("dbo.filelist").AddParam("BizNum", BizNum).AddParam("StaffId", StaffId)
+                db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => fileList = r.ToList<문서함>());
 
                 if(fileList.Count > 0)
@@ -92,7 +107,7 @@ namespace HanbizaMVC.Controllers
         [HttpPost]
         public IActionResult LogIn(OnlyLogin model)
         {
-            _logger.LogInformation("LogInProcess: "+model.LoginID +" / "+ model.passW);
+_logger.LogInformation("LogInProcess: "+model.LoginID +" / "+ model.passW);
             if (ModelState.IsValid)
             {
                 using (var db = new HanbizaContext())
@@ -112,7 +127,6 @@ namespace HanbizaMVC.Controllers
                     {
                         foreach (var item in user)
                         {
-                            
                             HttpContext.Session.SetString("DateNow", DateTime.Now.ToShortDateString().Substring(0, 7));
                             HttpContext.Session.SetString("BizNum", item.BizNum);
                             HttpContext.Session.SetInt32("StaffId", item.StaffId);
@@ -126,8 +140,6 @@ namespace HanbizaMVC.Controllers
              
             return View(model);
         }
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
