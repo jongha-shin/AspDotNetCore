@@ -184,17 +184,49 @@ namespace HanbizaMVC.Controllers
                           .Exec(r => Datatable = r.ToList<Approver>());
                         
                         jsonString = JsonConvert.SerializeObject(Datatable);
-                        _logger.LogInformation("json: "+jsonString);
+                        _logger.LogInformation("json1: "+jsonString);
                     }
                 }
-
             }
             return new JsonResult(jsonString);
         }
+        // 3_2. ajax 메소드
+        [Route("/Home/Sub3_2/{VacID}")]
+        public IActionResult Sub3_2(string VacID)
+        {
+            GetLoginUser();
+            _logger.LogInformation("sub3_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + VacID);
+            var jsonString = "";
 
-// 4. 휴가결재
+            using (var db = new HanbizaContext())
+            {
+                List<Vacation_ProcessDetail> VPList = null; ;
+                db.LoadStoredProc("dbo.vacation_getDetail").AddParam("VacID", VacID)
+                    .Exec(r => VPList = r.ToList<Vacation_ProcessDetail>());
+
+                jsonString = JsonConvert.SerializeObject(VPList);
+                _logger.LogInformation("json2: " + jsonString);
+            }
+                return  new JsonResult(jsonString);
+        }
+
+            // 4. 휴가결재
         public IActionResult Sub4()
         {
+            GetLoginUser();
+            _logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            using (var db = new HanbizaContext())
+            {
+                List<ApproveList> Alist = null; ;
+                db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                    .Exec(r => Alist = r.ToList<ApproveList>());
+                Console.WriteLine("sub4 list count: "+Alist.Count());
+                if (Alist != null)
+                {
+                    return View(Alist);
+                }
+            }
+
             return View();
         }
 

@@ -1,7 +1,110 @@
 ﻿@{
     ViewData["Title"] = "휴가결재";
 }
-
+@using HanbizaMVC.ViewModel
+@model List<ApproveList >
 <div class="text-center">
-    <h1>@ViewData["Title"]</h1>
+    <div class="card mb-4 col-lg-9 ">
+        <div class="card-body">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">대기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">승인</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile2-tab" data-toggle="pill" href="#pills-profile2" role="tab" aria-controls="pills-profile2" aria-selected="false">반려</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div class="table-responsive">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox"></th>
+                                    <th>신청자</th>
+                                    <th>기간 및 사유</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
+                                        {
+                                            <tr>
+                                                <td><input type="checkbox"/></td>
+                                                <td>@item.Staffname</td>
+                                                <td>
+                                                    @item.Vicname : @item.SNal.ToShortDateString() ~ @item.ENal.ToShortDateString()<br />
+                                                    <span style="color:black">@item.VicReaSon</span><br />
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="table-responsive">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>신청자</th>
+                                    <th>기간 및 사유</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    if (item.AResult.Equals("Y"))
+                                    {
+                                        <tr>
+                                            <td>@item.Staffname</td>
+                                            <td>
+                                                @item.Vicname : @item.SNal.ToShortDateString() ~ @item.ENal.ToShortDateString()<br />
+                                                <span style="color:black">@item.VicReaSon</span><br />
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="table-responsive">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>신청자</th>
+                                    <th>기간 및 사유</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    if (item.AResult.Equals("F"))
+                                    {
+                                        <tr>
+                                            <td>@item.Staffname</td>
+                                            <td>
+                                                @item.Vicname : @item.SNal.ToShortDateString() ~ @item.ENal.ToShortDateString()<br />
+                                                <span style="color:black">@item.VicReaSon</span><br />
+                                                <span style="color:red">@item.RereaSon</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 </div>

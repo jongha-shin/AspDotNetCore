@@ -21,6 +21,7 @@
             <ul class="nav justify-content-end">
                 @ViewBag.최근월
             </ul>
+        </div>
         @* tap1 *@
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -71,33 +72,59 @@
                             </select>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">결재자</label>
-
-                            <div id="" class="inputCls1 col-sm-10">
-                                <input type="hidden" name="StaffID1" id="StaffID1">
-                                <input type="text" style="text-align:center;cursor:pointer;" name="sign1" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
-                            </div>
-                            <div id="" class="inputCls2 col-sm-10" style="display:none;">
-                                <br>
-                                <input type="hidden" name="StaffID2" id="StaffID2">
-                                <input type="text" style="text-align:center;cursor:pointer;" name="sign2" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
-                            </div>
-                            <div id="" class="inputCls3 col-sm-10" style="display:none;">
-                                <br>
-                                <input type="hidden" name="StaffID3" id="StaffID3">
-                                <input type="text" style="text-align:center;cursor:pointer;" name="sign3" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
-                            </div>
-                            <div id="" class="inputCls4 col-sm-10" style="display:none;">
-                                <br>
-                                <input type="hidden" name="StaffID4" id="StaffID4">
-                                <input type="text" style="text-align:center;cursor:pointer;" name="sign4" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
-                            </div>
-                            <div id="" class="inputCls5 col-sm-10" style="display:none;">
-                                <br>
-                                <input type="hidden" name="StaffID5" id="StaffID5">
-                                <input type="text" style="text-align:center;cursor:pointer;" name="sign5" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
-                            </div>
-
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label class="col-form-label">결재자</label>
+                                    </td>
+                                    <td>
+                                        <div id="" class="inputCls1 col-sm-10">
+                                            <input type="hidden" name="StaffID1" id="StaffID1">
+                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign1" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div id="" class="inputCls2 col-sm-10" style="display:none;">
+                                            <br>
+                                            <input type="hidden" name="StaffID2" id="StaffID2">
+                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign2" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div id="" class="inputCls3 col-sm-10" style="display:none;">
+                                            <br>
+                                            <input type="hidden" name="StaffID3" id="StaffID3">
+                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign3" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div id="" class="inputCls4 col-sm-10" style="display:none;">
+                                            <br>
+                                            <input type="hidden" name="StaffID4" id="StaffID4">
+                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign4" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div id="" class="inputCls5 col-sm-10" style="display:none;">
+                                            <br>
+                                            <input type="hidden" name="StaffID5" id="StaffID5">
+                                            <input type="text" style="text-align:center;cursor:pointer;" name="sign5" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
 
                         <div>
@@ -206,7 +233,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <span></span>
+                            <span id="result2"></span>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
@@ -217,8 +244,8 @@
             <!-- /ApproveDetail modal block -->
         </div>
 
-        
-    </div>
+    </div>   
+    
     <script>
         function getApproverTable(searchKey, searchWord) {
             $.ajax({
@@ -254,14 +281,12 @@
 
         function layer_open(id) {
             //alert(id);
-
             $("#searchWord").val("");
             $("#step").html(id);
             $("#findApproverModal").modal('show'); // 입력 및 수정 폼 모달 창 열기
         }
 
         function fn_timeHide() {
-            
             $("#div_msg").html("");
             if ($("#Vicname").val() == "반차") {
                 $("#UseTime").attr("disabled", false);
@@ -278,8 +303,22 @@
                 $("#Enal").css("background", "#fff");
             }
         }
-        $("#document").on("click", "#approverTable", function () {
-            alert("");
+
+        // 동적 테이블 생성 후 클릭 이벤트
+        $(document).on("click", "#approverTable tr", function () {
+            //alert("");
+            var i = $("#step").text();
+            var name = $(this).find("td").eq(1).text();
+            var staffID = $(this).find("input").val();
+            alert(name + "/" + staffID + "/" + i);
+@*
+<input type="hidden" name="StaffID1" id="StaffID1">
+<input type="text" style="text-align:center;cursor:pointer;" name="sign1" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">*@
+
+            $("#StaffID" + i).val(staffID);
+            $("#sign" + i).val(name);
+            $("#findApproverModal").modal('toggle');
+
         });
 
         $(function () {
@@ -291,43 +330,50 @@
             });
 
             $("#vacationTable tr").click(function () {
-
-                var seq = $(this).find("input").val();
+                var VacID = $(this).find("input").val();
                 //alert(seq)
                 $("#ApproveDetail").modal('show');
-                // ajax 세부 내용 가져오기
                 $.ajax({
                     type: 'GET',
-                    url: '/Home/Sub3_2/' + seq,
+                    url: '/Home/Sub3_2/' + VacID,
                     dataType: "JSON",
                     contentType: 'application/json; charset=utf-8',
                     success: function (result) {
                         var sjson = JSON.parse(result);
-                        alert("succ");
-                        var s = '<table id="approverTable" class="table-sm table-bordered table-hover col-sm-12">';
-                        s += "<thead><tr><th align='center' width='50%'>부서명</th><th align='center' width='50%'>이름</th></tr></thead>"
+                        //alert("succ");
+                        var s = '<table id="VPTable" class="table-sm table-bordered col-sm-12">';
+                        s += "<thead><tr><th align='center' width='20%' >결재</th><th align='center' width='20%'>이름</th><th align='center'>부서</th><th align='center'>반려사유</th></tr></thead>"
                         if (sjson.length == 0) {
                             s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
                         } else {
+                            //TODO: 신청 사유 적기 + 색깔입히기 - 거절시 앞단계 회색처리
                             for (var i = 0; i < sjson.length; i++) {
+                                var f_color = '';
+                                if (sjson[i].AResult == 'N' && sjson[i].processPoint == 'N') f_color = "gray";
+                                if (sjson[i].AResult == 'Y' && sjson[i].processPoint == 'N') f_color = "blue";
+                                if (sjson[i].AResult == 'F' && sjson[i].processPoint == 'N') {
+                                    f_color = "red";
+                                    //var DeepNumChk = Number(sjson[i].DeepNum);
+                                    //if (0 < DeepNumChk < Number(sjson[i].DeepNum)-1 ) f_color = "gray";
+                                }
                                 s += "<tr>";
-                                s += "<td>" + sjson[i].Buseo + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
-                                s += "<td>" + sjson[i].StaffName + "</td>"
+                                s += "<td style='color:" + f_color +"'>" + sjson[i].DeepNum + "</td>"
+                                s += "<td style='color:" + f_color +"'>" + sjson[i].approveName + "</td>"
+                                s += "<td style='color:" + f_color + "'>" + sjson[i].Buseo + "</td>"
+                                s += "<td style='color:" + f_color + "'>" + sjson[i].RereaSon + "</td>"
                                 s += "</tr>"
                                 //alert(sjson[i].Buseo);
                             }
                             s += "</table>"
                         }
-
-                        $("#result").html(s);
+                        $("#result2").html(s);
                     },
                     error: function () {
                         alert("err");
                     }
                 })
-
             });
-            
+
             $("#ProCDeep").change(function () {
                 var optionValue = $("#ProCDeep option:selected").val();
                 //	   alert(optionValue);
