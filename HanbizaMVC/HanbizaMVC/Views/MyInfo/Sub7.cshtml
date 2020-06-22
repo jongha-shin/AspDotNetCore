@@ -1,43 +1,215 @@
 ﻿@{
     ViewData["Title"] = "확인서명";
 }
-@model List<문서함>
 
 <div class="row justify-content-center">
-    @if (ViewBag.mySign == null )
-    {
         <div class="col-xl-4 col-sm-12">
             <div class="text-center">
-                <div class="card">
-                    <div class="card-body">
-                        <img src="@ViewBag.mySign" alt="확인서명"/>
+                <div class="card" style="width:300px">
+                    <input type="hidden" id="SEQID" value="@ViewBag.SEQID"/>
+                    <div class="card-body p-0">
+                        <canvas id="drawCanvas" width="300" height="182" style="border:0px solid #d0eaf8;" align="center">Canvas not supported</canvas>
+                        <canvas id='blank' width="300" height="182" style='display:none'></canvas>
+                    </div>
+
+                    <div class="btn_div">
+                        <button id="btnClear">취소하기</button>
+                        <button id="btnSave">등록하기</button>
+                    </div>
+                    <br />
+                    <div class="sign_txt">등록 후 수정이 불가하니 <br />
+                                        신중하게 서명하시기 바랍니다!
                     </div>
                 </div>
             </div>
         </div>
-    }
-    else
-    {
-        <div class="col-xl-4 col-sm-12">
-            <div class="text-center">
-                <div class="card">
-                    <form action="/" method="post"> @* 경로 설정 필요 *@
-                        <div class="card-body">
-                            <canvas id="drawCanvas" width="300" height="182" style="border:0px solid #d0eaf8;" align="center">Canvas not supported</canvas>
-                            <canvas id='blank' width="300" height="182" style='display:none'></canvas>
-                        </div>
-
-                        <div class="btn_div" style="display:none;">
-                            <button id="btnClear">취소하기</button>
-                            <button id="btnSave">등록하기</button>
-                        </div>
-                        <div class="sign_txt">등록 후 수정이 불가하니 신중하게 서명하시기 바랍니다!</div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    }
 </div>
+<script>
+    $(document).ready(function () {
+        draw();
+
+        function draw() {
+                //이미지 객체 생성
+                var imgClo = new Image();
+                //페이지 로드후 이미지가 로드 되었을 때 이미지 출력
+                imgClo.addEventListener('load', function () {
+                    //로드된 이미지를 캔버스에 출력
+                    var ctx = document.getElementById('drawCanvas').getContext("2d");
+                    //canvas.drawImage() 함수를 사용하여 이미지 출력
+                    //drawImage ( image sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+                    ctx.drawImage(imgClo, 0, 0, 300, 182);
+                }, false);
+                if ('@ViewBag.mySign' != null) {
+                    imgClo.src = "@ViewBag.mySign";
+                } else {
+                    imgClo.src = "~/img/canvas_empty.png"
+                }
+        }
+
+        let drawCanvas = document.getElementById('drawCanvas');
+        let drawBackup = new Array();
+
+        if (typeof drawCanvas.getContext == 'function') {
+            let ctx = drawCanvas.getContext('2d');
+            let isDraw = false;
+            let width = "4";
+            let color = "#000";
+            let pDraw = $('#drawCanvas').offset();
+            let currP = null;
+
+            // 저장된 이미지 호출
+            if (localStorage['imgCanvas']) {
+                loadImage();
+            } else {
+                ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            }
+
+            // Event (마우스)
+            $('#drawCanvas').on('mousedown', function (e) {
+                if (e.button === 0) {
+                    saveCanvas();
+                    e.preventDefault();
+                    ctx.beginPath();
+                    isDraw = true;
+                }
+            });
+
+            $('#drawCanvas').on('mousemove', function (e) {
+                let event = e.originalEvent;
+                e.preventDefault();
+                currP = { X: event.offsetX, Y: event.offsetY };
+                if (isDraw) draw_line(currP);
+                /*
+                isDraw = true;
+                */
+            });
+
+            $('#drawCanvas').on('mouseup', function (e) {
+                e.preventDefault();
+                isDraw = false;
+            });
+            $('#drawCanvas').on('mouseleave', function (e) {
+                isDraw = false;
+            });
+
+
+            // Event (터치스크린)
+            $('#drawCanvas').on('touchstart', function (e) {
+                saveCanvas();
+                e.preventDefault();
+                ctx.beginPath();
+            });
+            $('#drawCanvas').on('touchmove', function (e) {
+                let event = e.originalEvent;
+                e.preventDefault();
+                currP = { X: event.touches[0].pageX - pDraw.left, Y: event.touches[0].pageY - pDraw.top };
+                draw_line(currP);
+            });
+            $('#drawCanvas').on('touchend', function (e) {
+                e.preventDefault();
+            });
+
+            // 선 그리기
+            function draw_line(p) {
+                ctx.lineWidth = width;
+                ctx.lineCap = 'round';
+                ctx.lineTo(p.X, p.Y);
+                ctx.moveTo(p.X, p.Y);
+                ctx.strokeStyle = color;
+                ctx.stroke();
+            }
+
+            function loadImage() { // reload from localStorage
+                let img = new Image();
+                img.onload = function () {
+                    ctx.drawImage(img, 0, 0);
+                }
+                img.src = localStorage.getItem('imgCanvas');
+            }
+
+
+            //function saveImage() { // save to localStorage
+            //    var canvas = document.getElementById('drawCanvas');
+            //    localStorage.setItem('imgCanvas', canvas.toDataURL('image/png'));
+            //    var img = document.getElementById('saveImg');
+            //    img.src = canvas.toDataURL('image/jpg');
+            //    var tmp = $('<a>').attr('download', 'test1.png').attr('href', img.src);
+            //    tmp[0].click();
+            //    tmp.remove();
+            //}
+
+            function clearCanvas() {
+                ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                ctx.beginPath();
+                localStorage.removeItem('imgCanvas');
+            }
+
+            function saveCanvas() {
+                drawBackup.push(ctx.getImageData(0, 0, drawCanvas.width, drawCanvas.height));
+            }
+
+            function prevCanvas() {
+                ctx.putImageData(drawBackup.pop(), 0, 0);
+            }
+
+            $('#btnPrev').click(function () {
+                prevCanvas();
+            });
+
+            $('#btnClear').click(function () {
+                clearCanvas();
+            });
+
+            $('#btnRefresh').click(function () {
+                draw();
+            });
+        }
+
+        let canvas_chk = document.getElementById('drawCanvas');
+            document.getElementById('btnSave').addEventListener('click', function () {
+            if (canvas_chk.toDataURL() == document.getElementById('blank').toDataURL()) {
+                alert('서명을 등록해 주세요!'); return false;
+            } else {
+                UploadPic(); return true;
+            }
+        });
+
+
+        function UploadPic() {
+            //	generate the image data
+            var Pic = document.getElementById("drawCanvas").toDataURL("image/jpeg");
+            console.log("1: " + Pic);
+            Pic = Pic.replace(/^data:image\/(png|jpg|jpeg);base64,/, "")
+            console.log("2: " + Pic);
+
+            var SEQID = $("#SEQID").val();
+                console.log("3: "+SEQID)
+
+            //TODO: url 지정 저장컨트롤러 작성
+            $.ajax({
+                url: "/File/SaveSign/",
+                type: "POST",
+                dataType: "text",
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                charset: "utf-8",
+                data: { "imageData": Pic, "SEQID": SEQID }
+            })
+                .done(function (msg) {
+                    alert("서명이 등록되었습니다!");
+                    location.reload(true);
+                })
+                .fail(function (xhr, status, errorThrown) {
+                    alert("요청 실패");
+                    $("#text").html("오류가 발생했습니다.<br>")
+                        .append("오류명: " + errorThrown + "<br>")
+                        .append("상태: " + status);
+                })
+                .always(function () {
+                    // alert("요청 완료");
+                });
+        }
+    });
+</script>
 
 
 

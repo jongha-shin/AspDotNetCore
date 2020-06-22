@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using StoredProcedureEFCore;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
+using System;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace HanbizaMVC.Controllers
 {
@@ -48,6 +50,40 @@ namespace HanbizaMVC.Controllers
                 //return File(fileBytes, "application/octet-stream", fileName);
             }
         }
+        [HttpPost]
+        public string SaveSign(string imageData, string SEQID)
+        {
+
+            if (SEQID == null) SEQID = "0";
+            int SeqID = Int32.Parse(SEQID);
+            _logger.LogInformation("SaveSign()1 " + imageData + " / \n seqid: "+ SEQID);
+
+            string BizNum = HttpContext.Session.GetString("BizNum");
+            int StaffID = (int)HttpContext.Session.GetInt32("StaffId");
+            string Base64string = imageData;
+            string ImageFileName = "sign_" + StaffID + ".jpg";
+            string ImageDir = "FileBox/" + BizNum;
+            string StaffName = HttpContext.Session.GetString("StaffName");
+            string Dname = HttpContext.Session.GetString("Dname");
+
+            _logger.LogInformation("SaveSign()2 " + BizNum + " / " + StaffID);
+            
+
+            using (var db = new HanbizaContext())
+            {
+                var rs = 
+                    db.LoadStoredProc("file_SaveSignature").AddParam("BizNum", BizNum).AddParam("StaffID", StaffID).AddParam("Base64string", Base64string)
+                    .AddParam("ImageFileName", ImageFileName).AddParam("ImageDir", ImageDir).AddParam("StaffName", StaffName).AddParam("Dname", Dname).AddParam("SEQID", SeqID)
+                    .ExecNonQuery();
+
+                if (rs > 0) return "success";
+                
+            }
+
+                return "fail";
+        }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

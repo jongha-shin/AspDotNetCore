@@ -51,20 +51,21 @@ namespace HanbizaMVC.Controllers
 
                 if (mySign.Count > 0)
                 {
-                    var aaa = Convert.ToBase64String(mySign[0].FileBlob);
-                    //Console.WriteLine("tobase64 : "+aaa);
+                    var stringify_byte = Convert.ToBase64String(mySign[0].FileBlob);
+                    Console.WriteLine("tobase64 : "+ stringify_byte);
                     
                     System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
                     System.Text.Decoder utf8Decode = encoder.GetDecoder();
                     
-                    byte[] todecode_byte = Convert.FromBase64String(aaa);
+                    byte[] todecode_byte = Convert.FromBase64String(stringify_byte);
                     int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
                     char[] decoded_char = new char[charCount];
                     utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
                     string result = new String(decoded_char);
-                    // Console.WriteLine("asdf:: "+result);
+                    Console.WriteLine("asdf:: "+result);
 
                     ViewBag.mySign = result;
+                    ViewBag.SEQID = mySign[0].SeqId;
 
                     return View();
                 }
@@ -107,7 +108,7 @@ namespace HanbizaMVC.Controllers
         [HttpPost]
         public IActionResult LogIn(OnlyLogin model)
         {
-_logger.LogInformation("LogInProcess: "+model.LoginID +" / "+ model.passW);
+            _logger.LogInformation("LogInProcess: "+model.LoginID +" / "+ model.passW);
             if (ModelState.IsValid)
             {
                 using (var db = new HanbizaContext())
@@ -130,6 +131,8 @@ _logger.LogInformation("LogInProcess: "+model.LoginID +" / "+ model.passW);
                             HttpContext.Session.SetString("DateNow", DateTime.Now.ToShortDateString().Substring(0, 7));
                             HttpContext.Session.SetString("BizNum", item.BizNum);
                             HttpContext.Session.SetInt32("StaffId", item.StaffId);
+                            HttpContext.Session.SetString("StaffName", item.StaffName);
+                            HttpContext.Session.SetString("Dname", item.Dname);
                         }
                         
                         return new RedirectResult("/Home/Index");

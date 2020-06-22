@@ -16,7 +16,7 @@ namespace HanbizaMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private LoginUser LoginUser;
-        
+
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -25,36 +25,44 @@ namespace HanbizaMVC.Controllers
 
         public void GetLoginUser()
         {
-            if (HttpContext.Session.GetString("StaffId") != null )
+            if (LoginUser == null)
+            {
+                // 로그인으로 이동
+            }
+            if (HttpContext.Session.GetString("StaffId") != null)
             {
                 var StaffId = (int)HttpContext.Session.GetInt32("StaffId");
                 var BizNum = HttpContext.Session.GetString("BizNum");
                 var LoginDate = HttpContext.Session.GetString("DateNow");
+
+
                 LoginUser = new LoginUser
                 {
                     StaffId = StaffId,
                     BizNum = BizNum,
                     LoginDate = LoginDate
                 };
+
             }
         }
 
 
-// 0. 로그인 후 첫 화면 : 공지사항 
+        // 0. 로그인 후 첫 화면 : 공지사항 
         public IActionResult Index()
         {
             GetLoginUser();
             ViewBag.LoginUser = LoginUser;
             return View();
         }
-// 1. 근태보기
+        // 1. 근태보기
         public IActionResult Sub1()
         {
             GetLoginUser();
-            _logger.LogInformation("sub1(): "+ LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.LoginDate);
-            
-            using (var db = new HanbizaContext()) {
-                
+            _logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.LoginDate);
+
+            using (var db = new HanbizaContext())
+            {
+
                 // 최근 근태기록 월 구하기
                 db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .ExecScalar(out string dateMonth);
@@ -65,7 +73,7 @@ namespace HanbizaMVC.Controllers
                 var CulTable = from data in db.출퇴근기록집계표
                                where data.StaffId == LoginUser.StaffId
                                select data;
-                
+
                 foreach (var i in CulTable)
                 {
                     ViewBag.기준일 = i.기준일;
@@ -111,14 +119,14 @@ namespace HanbizaMVC.Controllers
             }
             return View();
         }
-        
-// 2. OT신청
+
+        // 2. OT신청
         public IActionResult Sub2()
         {
             GetLoginUser();
 
             _logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            
+
             using (var db = new HanbizaContext())
             {
                 // OT 신청내역
@@ -126,24 +134,24 @@ namespace HanbizaMVC.Controllers
                 db.LoadStoredProc("dbo.OT_list").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => OTlist = r.ToList<AddTimeList>());
 
-                if(OTlist.Count > 0)
+                if (OTlist.Count > 0)
                 {
                     return View(OTlist);
                 }
             }
-                return View();
+            return View();
         }
 
-//2-1 OT 신청 클릭
+        //2-1 OT 신청 클릭
         public IActionResult Sub2_1(AddTimeList addtime)
         {
-            
+
             _logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal); // 신청x
-            
+
             return new RedirectResult("/Home/Sub2");
         }
 
-// 3. 휴가신청
+        // 3. 휴가신청
         public IActionResult Sub3()
         {
             GetLoginUser();
@@ -154,14 +162,14 @@ namespace HanbizaMVC.Controllers
                 List<Vacation_List> Vlist = null;
                 db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => Vlist = r.ToList<Vacation_List>());
-                
+
                 if (Vlist != null)
                 {
                     return View(Vlist);
                 }
             }
 
-                return View();
+            return View();
         }
         // 3_1. ajax 메소드
         [Route("/Home/Sub3_1/{SearchKey}/{SearchWord}")]
@@ -180,9 +188,9 @@ namespace HanbizaMVC.Controllers
                         List<Approver> Datatable = null;
                         db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("SearchKey", SearchKey).AddParam("SearchWord", SearchWord)
                           .Exec(r => Datatable = r.ToList<Approver>());
-                        
+
                         jsonString = JsonConvert.SerializeObject(Datatable);
-                        _logger.LogInformation("json1: "+jsonString);
+                        _logger.LogInformation("json1: " + jsonString);
                     }
                 }
             }
@@ -205,10 +213,10 @@ namespace HanbizaMVC.Controllers
                 jsonString = JsonConvert.SerializeObject(VPList);
                 _logger.LogInformation("json2: " + jsonString);
             }
-                return  new JsonResult(jsonString);
+            return new JsonResult(jsonString);
         }
 
-// 4. 휴가결재
+        // 4. 휴가결재
         public IActionResult Sub4()
         {
             GetLoginUser();
@@ -218,7 +226,7 @@ namespace HanbizaMVC.Controllers
                 List<ApproveList> Alist = null; ;
                 db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => Alist = r.ToList<ApproveList>());
-                Console.WriteLine("sub4 list count: "+Alist.Count());
+                Console.WriteLine("sub4 list count: " + Alist.Count());
                 if (Alist != null)
                 {
                     return View(Alist);
@@ -228,7 +236,7 @@ namespace HanbizaMVC.Controllers
             return View();
         }
 
-// 5. 연차보기
+        // 5. 연차보기
         public IActionResult Sub5()
         {
             GetLoginUser();
@@ -261,10 +269,10 @@ namespace HanbizaMVC.Controllers
                     return View(vacationList);
                 }
             }
-                return View();
+            return View();
         }
 
-// 6. 급여명세서
+        // 6. 급여명세서
         public IActionResult Sub6()
         {
             GetLoginUser();
@@ -275,8 +283,8 @@ namespace HanbizaMVC.Controllers
             {
                 db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => plist = r.ToList<PayList>());
-               
-                    Console.WriteLine(plist[0].Yyyymm +"년 "+plist[0].Ncount+"회차");
+
+                Console.WriteLine(plist[0].Yyyymm + "년 " + plist[0].Ncount + "회차");
 
                 var yyyymm = plist[0].Yyyymm;
                 var ncount = plist[0].Ncount;
@@ -290,12 +298,12 @@ namespace HanbizaMVC.Controllers
                 foreach (var item in plist)
                 {
                     item.SSvalue = string.Format("{0:n0}", item.Svalue);
-                    Console.WriteLine(item.Slist +"/"+item.SSvalue+"/"+item.Gubun+"/"+item.Fsort +"/  "+i);
-                    i++;    
-                    if (item.Gubun.Equals("0") && item.Fsort == 0){ a++; }
-                    if (item.Gubun.Equals("1") && item.Fsort == 0){ b++; }
+                    Console.WriteLine(item.Slist + "/" + item.SSvalue + "/" + item.Gubun + "/" + item.Fsort + "/  " + i);
+                    i++;
+                    if (item.Gubun.Equals("0") && item.Fsort == 0) { a++; }
+                    if (item.Gubun.Equals("1") && item.Fsort == 0) { b++; }
                 }
-                Console.WriteLine(a +" / "+b);
+                Console.WriteLine(a + " / " + b);
                 if (a >= b)
                 {
                     ViewBag.Crows = a;
@@ -309,8 +317,8 @@ namespace HanbizaMVC.Controllers
 
             return View(plist);
         }
-        
-      
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
