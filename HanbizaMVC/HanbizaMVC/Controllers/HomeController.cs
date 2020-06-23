@@ -145,10 +145,10 @@ namespace HanbizaMVC.Controllers
         //2-1 OT 신청 클릭
         public IActionResult Sub2_1(AddTimeList addtime)
         {
-
+            string jsonstring = "";
             _logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal); // 신청x
 
-            return new RedirectResult("/Home/Sub2");
+            return new JsonResult(jsonstring);
         }
 
         // 3. 휴가신청

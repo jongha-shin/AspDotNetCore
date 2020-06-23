@@ -12,8 +12,8 @@
             color: white;
         }
 </style>
-<div class="card mb-4 col-lg-9 ">
-    <div class="card-body pt-3">
+<div class="card col-lg-9 ">
+    <div class="card-body p-3">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left">
             <li class="nav-item">
                 <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">OT신청</a>
@@ -27,7 +27,7 @@
         </ul>
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                <div class="table-responsive">
+                <div class="table-responsive col-12">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">구분</label>
                         <div class="col-sm-10">
@@ -159,8 +159,39 @@
             //        });
         });
 
-        $("#submitBtn").click(functioin(){
-            
+        $("#submitBtn").click(function () {
+            //alert("asdf");
+            let Gubun = $("#Gubun").val();
+
+            let Snal_1 = $("#Snal").val();
+            let Snal_h = $("#Snal_h").val();
+            let Snal_m = $("#Snal_m").val();
+
+            let Snal = Snal_1 + " " + Snal_h + ":" + Snal_m;
+
+            let Enal_h = $("#Enal_h").val();
+            let Enal_m = $("#Enal_m").val();
+
+            let Enal = Snal_1 + " " + Enal_h + ":" + Enal_m;
+
+            let Reason = $("#Reason").val();
+            alert(Gubun + "/" + Snal + "/" + Enal + "/" + Reason);
+
+            $.ajax({
+                url: "/Home/Sub2_1/",
+                type: "GET",
+                dataType: "text",
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                charset: "utf-8",
+                data: { "Gubun": Gubun, "SEQID": SEQID },
+                success: function () {
+                    alert("succ")
+                },
+                error: function () {
+                    alert("err")
+                }
+            });
+
 
         });
 
