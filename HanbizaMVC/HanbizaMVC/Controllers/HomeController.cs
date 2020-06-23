@@ -64,6 +64,8 @@ namespace HanbizaMVC.Controllers
             {
 
                 // 최근 근태기록 월 구하기
+                
+                
                 db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .ExecScalar(out string dateMonth);
 
