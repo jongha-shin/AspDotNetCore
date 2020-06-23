@@ -56,7 +56,7 @@ namespace HanbizaMVC.Controllers
 
             if (SEQID == null) SEQID = "0";
             int SeqID = Int32.Parse(SEQID);
-            _logger.LogInformation("SaveSign()1 " + imageData + " / \n seqid: "+ SEQID);
+            _logger.LogInformation("SaveSign()1 " + imageData + "\n seqid: " + SEQID);
 
             string BizNum = HttpContext.Session.GetString("BizNum");
             int StaffID = (int)HttpContext.Session.GetInt32("StaffId");
@@ -65,9 +65,6 @@ namespace HanbizaMVC.Controllers
             string ImageDir = "FileBox/" + BizNum;
             string StaffName = HttpContext.Session.GetString("StaffName");
             string Dname = HttpContext.Session.GetString("Dname");
-
-            _logger.LogInformation("SaveSign()2 " + BizNum + " / " + StaffID);
-            
 
             using (var db = new HanbizaContext())
             {

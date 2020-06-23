@@ -62,7 +62,7 @@ namespace HanbizaMVC.Controllers
                     char[] decoded_char = new char[charCount];
                     utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
                     string result = new String(decoded_char);
-                    Console.WriteLine("asdf:: "+result);
+                    Console.WriteLine("result: "+result);
 
                     ViewBag.mySign = result;
                     ViewBag.SEQID = mySign[0].SeqId;

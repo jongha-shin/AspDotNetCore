@@ -39,23 +39,24 @@
                     //drawImage ( image sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
                     ctx.drawImage(imgClo, 0, 0, 300, 182);
                 }, false);
+                //이미지 경로 설정
                 if ('@ViewBag.mySign' != null) {
                     imgClo.src = "@ViewBag.mySign";
                 } else {
-                    imgClo.src = "~/img/canvas_empty.png"
+                    imgClo.src = "<img src= '~/img/canvas_empty.png'>";
                 }
         }
 
-        let drawCanvas = document.getElementById('drawCanvas');
-        let drawBackup = new Array();
+        var drawCanvas = document.getElementById('drawCanvas');
+        var drawBackup = new Array();
 
         if (typeof drawCanvas.getContext == 'function') {
-            let ctx = drawCanvas.getContext('2d');
-            let isDraw = false;
-            let width = "4";
-            let color = "#000";
-            let pDraw = $('#drawCanvas').offset();
-            let currP = null;
+            var ctx = drawCanvas.getContext('2d');
+            var isDraw = false;
+            var width = "4";
+            var color = "#000";
+            var pDraw = $('#drawCanvas').offset();
+            var currP = null;
 
             // 저장된 이미지 호출
             if (localStorage['imgCanvas']) {
@@ -75,7 +76,7 @@
             });
 
             $('#drawCanvas').on('mousemove', function (e) {
-                let event = e.originalEvent;
+                var event = e.originalEvent;
                 e.preventDefault();
                 currP = { X: event.offsetX, Y: event.offsetY };
                 if (isDraw) draw_line(currP);
@@ -100,7 +101,7 @@
                 ctx.beginPath();
             });
             $('#drawCanvas').on('touchmove', function (e) {
-                let event = e.originalEvent;
+                var event = e.originalEvent;
                 e.preventDefault();
                 currP = { X: event.touches[0].pageX - pDraw.left, Y: event.touches[0].pageY - pDraw.top };
                 draw_line(currP);
@@ -120,7 +121,7 @@
             }
 
             function loadImage() { // reload from localStorage
-                let img = new Image();
+                var img = new Image();
                 img.onload = function () {
                     ctx.drawImage(img, 0, 0);
                 }
@@ -165,7 +166,7 @@
             });
         }
 
-        let canvas_chk = document.getElementById('drawCanvas');
+        var canvas_chk = document.getElementById('drawCanvas');
             document.getElementById('btnSave').addEventListener('click', function () {
             if (canvas_chk.toDataURL() == document.getElementById('blank').toDataURL()) {
                 alert('서명을 등록해 주세요!'); return false;
@@ -177,14 +178,14 @@
 
         function UploadPic() {
             //	generate the image data
-            var Pic = document.getElementById("drawCanvas").toDataURL("image/jpeg");
+            var Pic = document.getElementById("drawCanvas").toDataURL("image/jpg");
             console.log("1: " + Pic);
-            Pic = Pic.replace(/^data:image\/(png|jpg|jpeg);base64,/, "")
+            Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
             console.log("2: " + Pic);
 
             var SEQID = $("#SEQID").val();
                 console.log("3: "+SEQID)
-
+            alert("===일시정지===")
             //TODO: url 지정 저장컨트롤러 작성
             $.ajax({
                 url: "/File/SaveSign/",
