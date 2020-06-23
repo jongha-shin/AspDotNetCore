@@ -21,6 +21,7 @@ namespace HanbizaMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddAuthentication("Cookies").AddCookie();  // optioin 추가가능
 
             services.AddDbContext<HanbizaContext>(options =>
                 options.UseSqlServer(
@@ -56,6 +57,7 @@ namespace HanbizaMVC
             app.UseRouting();
 
             app.UseSession();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

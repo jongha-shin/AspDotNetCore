@@ -2,16 +2,16 @@
 @{
     ViewData["Title"] = "근태 보기";
 }
-    <style>
-        table{
-            font-size:small;
-        }
-        table > thead > tr > th {
-            background-color: #3763ab;
-            color: white;
-        }
-        
-    </style>
+<style>
+    table {
+        font-size: small;
+    }
+
+    table > thead > tr > th {
+        background-color: #3763ab;
+        color: white;
+    }
+</style>
 
 <div class="text-center">
     <div class="card mb-4 col-lg-9 ">
@@ -122,7 +122,20 @@
                                     @foreach (var attend in Model)
                                     {
                                         <tr>
-                                            <td>@attend.날짜.ToShortDateString() (@attend.날짜.DayOfWeek.ToString("d"))</td>
+
+                                            @if (attend.날짜.DayOfWeek.ToString("d").Equals("0"))
+                                            {
+                                            <th style="color:red">@attend.날짜.ToShortDateString() @attend.요일</th>
+                                            }
+                                            else if (attend.날짜.DayOfWeek.ToString("d").Equals("6"))
+                                            {
+                                        <th style="color:blue">@attend.날짜.ToShortDateString() @attend.요일</th>
+                                            }
+                                            else
+                                            {
+                                            <th>@attend.날짜.ToShortDateString() @attend.요일</th>
+                                            }
+
                                             <td>@attend.출근</td>
                                             <td>@attend.퇴근</td>
                                             <td>@attend.총근로</td>

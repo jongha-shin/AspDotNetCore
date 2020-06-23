@@ -30,5 +30,7 @@ namespace HanbizaMVC.Models
         public string 비고 { get; set; }
         public string 등록인 { get; set; }
         public DateTime? Regdate { get; set; }
+
+        public string 요일 { get; set; }
     }
 }

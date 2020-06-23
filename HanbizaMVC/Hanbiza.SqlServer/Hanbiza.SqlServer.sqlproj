@@ -91,5 +91,6 @@
     <Build Include="dbo\vacation_getDetail.sql" />
     <Build Include="dbo\approvalList.sql" />
     <Build Include="dbo\file_SaveSignature.sql" />
+    <Build Include="dbo\OT_insert.sql" />
   </ItemGroup>
 </Project>
