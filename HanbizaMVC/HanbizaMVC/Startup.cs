@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace HanbizaMVC
 {
@@ -22,15 +23,19 @@ namespace HanbizaMVC
         {
             services.AddControllersWithViews();
             services.AddAuthentication("Cookies").AddCookie();  // optioin 추가가능
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                options.LoginPath = "Account/Login";
+                options.LogoutPath = "Account/Logout";
+                options.AccessDeniedPath = "Home/Index";
+            });
 
             services.AddDbContext<HanbizaContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MyConnection")));
 
             // DI 의존성 주입
-
-            // Session
-            services.AddSession();
 
             // Identity
 
@@ -56,7 +61,6 @@ namespace HanbizaMVC
 
             app.UseRouting();
 
-            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 

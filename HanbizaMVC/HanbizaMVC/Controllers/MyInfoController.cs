@@ -102,7 +102,7 @@ namespace HanbizaMVC.Controllers
         }
         public IActionResult LogIn()
         {
-            
+            Console.WriteLine("로그인 화면");
             return View();
         }
         [HttpPost]

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using HanbizaMVC.ViewModel;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HanbizaMVC.Controllers
 {
@@ -28,6 +29,7 @@ namespace HanbizaMVC.Controllers
             if (LoginUser == null)
             {
                 // 로그인으로 이동
+
             }
             if (HttpContext.Session.GetString("StaffId") != null)
             {
@@ -55,19 +57,33 @@ namespace HanbizaMVC.Controllers
             return View();
         }
         // 1. 근태보기
-        public IActionResult Sub1()
+        [Authorize]
+        public IActionResult Sub1(string PrevNext)
         {
+            if(PrevNext == null) PrevNext = "";
+            
             GetLoginUser();
-            _logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.LoginDate);
+            //_logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.LoginDate);
 
             using (var db = new HanbizaContext())
             {
 
                 // 최근 근태기록 월 구하기
-                
-                
+                List<출퇴근기록> Months = null;
                 db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .ExecScalar(out string dateMonth);
+                    .Exec(r => Months = r.ToList<출퇴근기록>());
+
+                int selectMonth = 0;
+                if (PrevNext.Equals("-"))
+                {
+                    
+                }
+                else // +
+                {
+
+                }
+
+                var dateMonth = Months[selectMonth].월;
 
                 ViewBag.최근월 = dateMonth;
 
