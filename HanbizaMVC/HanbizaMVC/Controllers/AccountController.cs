@@ -25,20 +25,18 @@ namespace HanbizaMVC.Controllers
             LoginInfor account = null;
             using (var db = new HanbizaContext())
             {
-                db.LoadStoredProc("dbo.loginProcess").AddParam("loginID", model.LoginID).AddParam("passW", model.passW)
+                db.LoadStoredProc("dbo.login_Process").AddParam("loginID", model.LoginID).AddParam("passW", model.passW)
                   .Exec(r => account = r.SingleOrDefault<LoginInfor>());
             }
             if(account != null) { 
                 var claims = BuildClaims(account);
-            
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme); 
-
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
                     new AuthenticationProperties { IsPersistent = false});
 
-            return RedirectToAction("index", "Home");
+                return RedirectToAction("index", "Home");
             }
             return View(model);
         }
@@ -47,15 +45,14 @@ namespace HanbizaMVC.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, $"{account.StaffId}"),
-                new Claim("StaffName", account.StaffName),
-                new Claim("Dname", account.Dname),
-                new Claim("BizNum", account.BizNum),
-                new Claim("StaffID", $"{account.StaffId}"),
-                new Claim("DateNow",  DateTime.Now.ToShortDateString().Substring(0, 7)),
+                //new Claim("StaffName", account.StaffName),
+                //new Claim("Dname", account.Dname),
+                //new Claim("BizNum", account.BizNum),
+                //new Claim("StaffID", $"{account.StaffId}"),
+                //new Claim("DateNow",  DateTime.Now.ToShortDateString().Substring(0, 7)),
             };
             return claims;
         }
-
 
         public async Task<IActionResult> Logout()
         {

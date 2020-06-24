@@ -74,7 +74,7 @@
     <Build Include="dbo\Tables\sysdiagrams.sql" />
     <Build Include="dbo\Tables\Vacation_Approve.sql" />
     <Build Include="dbo\Tables\Vacation_List.sql" />
-    <Build Include="dbo\loginProcess.sql" />
+    <Build Include="dbo\login_Process.sql" />
     <Build Include="dbo\lastMonth.sql" />
     <Build Include="dbo\totalAttendence.sql" />
     <Build Include="dbo\attendRecord.sql" />
@@ -92,5 +92,6 @@
     <Build Include="dbo\approvalList.sql" />
     <Build Include="dbo\file_SaveSignature.sql" />
     <Build Include="dbo\OT_insert.sql" />
+    <Build Include="dbo\login_userDetail.sql" />
   </ItemGroup>
 </Project>

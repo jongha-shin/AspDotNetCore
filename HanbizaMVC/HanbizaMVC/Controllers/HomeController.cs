@@ -10,6 +10,7 @@ using HanbizaMVC.ViewModel;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HanbizaMVC.Controllers
 {
@@ -26,25 +27,14 @@ namespace HanbizaMVC.Controllers
 
         public void GetLoginUser()
         {
-            if (LoginUser == null)
+            if (User.Identity.IsAuthenticated)
             {
-                // 로그인으로 이동
-
-            }
-            if (HttpContext.Session.GetString("StaffId") != null)
-            {
-                var StaffId = (int)HttpContext.Session.GetInt32("StaffId");
-                var BizNum = HttpContext.Session.GetString("BizNum");
-                var LoginDate = HttpContext.Session.GetString("DateNow");
-
-
-                LoginUser = new LoginUser
+                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                using (var db = new HanbizaContext())
                 {
-                    StaffId = StaffId,
-                    BizNum = BizNum,
-                    LoginDate = LoginDate
-                };
-
+                    db.LoadStoredProc("login_userDetail").AddParam("StaffID", StaffID).Exec(r => LoginUser = r.SingleOrDefault<LoginUser>());
+                }
+                
             }
         }
 
@@ -139,6 +129,7 @@ namespace HanbizaMVC.Controllers
         }
 
         // 2. OT신청
+        [Authorize]
         public IActionResult Sub2()
         {
             GetLoginUser();
@@ -161,6 +152,7 @@ namespace HanbizaMVC.Controllers
         }
 
         //2-1 OT 신청 클릭
+        [Authorize]
         public IActionResult Sub2_1(AddTimeList addtime)
         {
             string jsonstring = "";
@@ -170,6 +162,7 @@ namespace HanbizaMVC.Controllers
         }
 
         // 3. 휴가신청
+        [Authorize]
         public IActionResult Sub3()
         {
             GetLoginUser();
@@ -190,6 +183,7 @@ namespace HanbizaMVC.Controllers
             return View();
         }
         // 3_1. ajax 메소드
+        [Authorize]
         [Route("/Home/Sub3_1/{SearchKey}/{SearchWord}")]
         public IActionResult Sub3_1(string SearchKey, string SearchWord)
         {
@@ -215,6 +209,7 @@ namespace HanbizaMVC.Controllers
             return new JsonResult(jsonString);
         }
         // 3_2. ajax 메소드
+        [Authorize]
         [Route("/Home/Sub3_2/{VacID}")]
         public IActionResult Sub3_2(string VacID)
         {
@@ -235,6 +230,7 @@ namespace HanbizaMVC.Controllers
         }
 
         // 4. 휴가결재
+        [Authorize]
         public IActionResult Sub4()
         {
             GetLoginUser();
@@ -255,6 +251,7 @@ namespace HanbizaMVC.Controllers
         }
 
         // 5. 연차보기
+        [Authorize]
         public IActionResult Sub5()
         {
             GetLoginUser();
@@ -291,6 +288,7 @@ namespace HanbizaMVC.Controllers
         }
 
         // 6. 급여명세서
+        [Authorize]
         public IActionResult Sub6()
         {
             GetLoginUser();
@@ -335,8 +333,6 @@ namespace HanbizaMVC.Controllers
 
             return View(plist);
         }
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

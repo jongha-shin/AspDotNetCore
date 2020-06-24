@@ -10,6 +10,7 @@ using StoredProcedureEFCore;
 using System.IO;
 using Microsoft.AspNetCore.WebUtilities;
 using HanbizaMVC.ViewModel;
+using System.Security.Claims;
 
 namespace HanbizaMVC.Controllers
 {
@@ -20,17 +21,14 @@ namespace HanbizaMVC.Controllers
 
         public void GetLoginUser()
         {
-            if (HttpContext.Session.GetString("StaffId") != null)
+            if (User.Identity.IsAuthenticated)
             {
-                var StaffId = (int)HttpContext.Session.GetInt32("StaffId");
-                var BizNum = HttpContext.Session.GetString("BizNum");
-                var LoginDate = HttpContext.Session.GetString("DateNow");
-                LoginUser = new LoginUser
+                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                using (var db = new HanbizaContext())
                 {
-                    StaffId = StaffId,
-                    BizNum = BizNum,
-                    LoginDate = LoginDate
-                };
+                    db.LoadStoredProc("login_userDetail").AddParam("StaffID", StaffID).Exec(r => LoginUser = r.SingleOrDefault<LoginUser>());
+                }
+
             }
         }
 
@@ -42,7 +40,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub7()
         {
             GetLoginUser();
-            _logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             using (var db = new HanbizaContext())
             {
                 List<문서함> mySign = null;
@@ -80,8 +78,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub8()
         {
             GetLoginUser();
-            
-            _logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             using (var db = new HanbizaContext())
             {
                 List<문서함> fileList = null;
@@ -105,44 +102,44 @@ namespace HanbizaMVC.Controllers
             Console.WriteLine("로그인 화면");
             return View();
         }
-        [HttpPost]
-        public IActionResult LogIn(OnlyLogin model)
-        {
-            _logger.LogInformation("LogInProcess: "+model.LoginID +" / "+ model.passW);
-            if (ModelState.IsValid)
-            {
-                using (var db = new HanbizaContext())
-                {
-                    //var user1 = from loginUser in db.LoginInfor
-                    //           where loginUser.LoginId == model.LoginID
-                    //           select  new { loginUser.BizNum, loginUser.StaffId };
+        //[HttpPost]
+        //public IActionResult LogIn(OnlyLogin model)
+        //{
+        //    _logger.LogInformation("LogInProcess: "+model.LoginID +" / "+ model.passW);
+        //    if (ModelState.IsValid)
+        //    {
+        //        using (var db = new HanbizaContext())
+        //        {
+        //            //var user1 = from loginUser in db.LoginInfor
+        //            //           where loginUser.LoginId == model.LoginID
+        //            //           select  new { loginUser.BizNum, loginUser.StaffId };
 
-                    List<LoginInfor> user = null;
-                    db.LoadStoredProc("dbo.loginProcess")
-                      .AddParam("loginID", model.LoginID)
-                      .AddParam("passW", model.passW)
-                      .Exec(r => user = r.ToList<LoginInfor>());
+        //            List<LoginInfor> user = null;
+        //            db.LoadStoredProc("dbo.loginProcess")
+        //              .AddParam("loginID", model.LoginID)
+        //              .AddParam("passW", model.passW)
+        //              .Exec(r => user = r.ToList<LoginInfor>());
                      
-                    // TODO Cookie 저장
-                    if(user != null)
-                    {
-                        foreach (var item in user)
-                        {
-                            HttpContext.Session.SetString("DateNow", DateTime.Now.ToShortDateString().Substring(0, 7));
-                            HttpContext.Session.SetString("BizNum", item.BizNum);
-                            HttpContext.Session.SetInt32("StaffId", item.StaffId);
-                            HttpContext.Session.SetString("StaffName", item.StaffName);
-                            HttpContext.Session.SetString("Dname", item.Dname);
-                        }
+        //            // TODO Cookie 저장
+        //            if(user != null)
+        //            {
+        //                foreach (var item in user)
+        //                {
+        //                    HttpContext.Session.SetString("DateNow", DateTime.Now.ToShortDateString().Substring(0, 7));
+        //                    HttpContext.Session.SetString("BizNum", item.BizNum);
+        //                    HttpContext.Session.SetInt32("StaffId", item.StaffId);
+        //                    HttpContext.Session.SetString("StaffName", item.StaffName);
+        //                    HttpContext.Session.SetString("Dname", item.Dname);
+        //                }
                         
-                        return new RedirectResult("/Home/Index");
-                    }
-                }
-                ModelState.AddModelError(string.Empty, "사용자 ID 혹은 비밀번호가 올바르지 않습니다.");
-            }
+        //                return new RedirectResult("/Home/Index");
+        //            }
+        //        }
+        //        ModelState.AddModelError(string.Empty, "사용자 ID 혹은 비밀번호가 올바르지 않습니다.");
+        //    }
              
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
