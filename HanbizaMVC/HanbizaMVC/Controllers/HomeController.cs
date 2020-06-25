@@ -247,6 +247,29 @@ namespace HanbizaMVC.Controllers
             }
             return new JsonResult(jsonString);
         }
+        // 3_3 휴가 신청 ajax
+        public string Sub3_3()
+        {
+            string rsString = "";
+            _logger.LogInformation("sub3_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / ");
+            using (var db = new HanbizaContext())
+            {
+                var rs = db.LoadStoredProc("dbo.OT_insert").AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
+                                                    .AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
+                                                    .AddParam("Gubun", ).AddParam("Snal", )
+                                                    .AddParam("Enal", ).AddParam("Reason", ).ExecNonQuery();
+                Console.WriteLine("Sub2_1 rs: " + rs);
+
+                if (rs > 0)
+                {
+                    rsString = "success";
+                    return rsString;
+                }
+            }
+
+                return rsString;
+
+        }
 
         // 4. 휴가결재
         [Authorize]
