@@ -78,7 +78,7 @@
                                 }
                             </select>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row" id="stepStaff">
 
                             <label class="col-sm-2 col-form-label">결재자</label>
                             <div id="" class="inputCls1 col-sm-10">
@@ -126,7 +126,7 @@
                 <div class="modal-dialog modal-primary modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <p class="modal-title"><span id="step"></span>단계 결재자 찾기</p>
+                            <p class="modal-title"><span id="stepModal"></span>단계 결재자 찾기</p>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -234,11 +234,46 @@
     
     <script>
         function getApproverTable(searchKey, searchWord) {
+            let Sstep_num = $("#stepModal").text();
+            let step_num = parseInt(Sstep_num);
+
+            let sf1 = $("#StaffID1").val();
+            let sf2 = $("#StaffID2").val();
+            let sf3 = $("#StaffID3").val();
+            let sf4 = $("#StaffID4").val();
+            let sf5 = $("#StaffID5").val();
+            
+            if(sf1 == "") { sf1 = "9999999" };
+            if(sf2 == "") { sf2 = "9999999" };
+            if(sf3 == "") { sf3 = "9999999" };
+            if(sf4 == "") { sf4 = "9999999" };
+            if(sf5 == "") { sf5 = "9999999" };
+
+            let keyArr = [sf1, sf2 , sf3, sf4, sf5]
+
+            let staffList = [];
+            
+            for (let i = 0; i < step_num; i++) {
+                if (i == step_num-1) {
+                    staffList += keyArr[i];
+                } else {
+                    staffList += keyArr[i] + ",";
+                }
+            }
+
+            //alert(searchKey + "/" + searchWord + "/" + step_num + "/" + staffList)
             $.ajax({
+                url: '/Home/Sub3_1/' + searchKey + "/" + searchWord + "/" + step_num + "/" + staffList,
                 type: 'GET',
-                url: '/Home/Sub3_1/' + searchKey + '/' + searchWord,
-                dataType: "JSON",
-                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                charset: "utf-8",
+                //date: {
+                //    "SearchKey" : searchKey,
+                //    "SearchWord" : searchWord,
+                //    "Step_num" : step_num,
+                //    "StaffList" : staffList
+                //},
                 success: function (result) {
                     var sjson = JSON.parse(result);
                     //alert("succ");
@@ -268,7 +303,7 @@
         function layer_open(id) {
             //alert(id);
             $("#searchWord").val("");
-            $("#step").html(id);
+            $("#stepModal").html(id);
             $("#findApproverModal").modal('show'); // 입력 및 수정 폼 모달 창 열기
         }
 
@@ -293,14 +328,15 @@
         // 동적 테이블 생성 후 클릭 이벤트
         $(document).on("click", "#approverTable tr", function () {
             //alert("");
-            var i = $("#step").text();
+            var step_num = $("#stepModal").text();
             var name = $(this).find("td").eq(1).text();
             var staffID = $(this).find("input").val();
-            alert(name + "/" + staffID + "/" + i);
+            alert(name + "/" + staffID + "/" + step_num);
 
-            $("#StaffID" + i).val(staffID);
-            $("#sign" + i).val(name);
+            $("#StaffID" + step_num).val(staffID);
+            $("#sign" + step_num).val(name);
             $("#findApproverModal").modal('toggle');
+            $("#result").html("");
 
         });
 

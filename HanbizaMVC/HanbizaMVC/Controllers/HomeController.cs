@@ -201,11 +201,12 @@ namespace HanbizaMVC.Controllers
         }
         // 3_1. ajax 메소드
         [Authorize]
-        [Route("/Home/Sub3_1/{SearchKey}/{SearchWord}")]
-        public IActionResult Sub3_1(string SearchKey, string SearchWord)
+        [Route("/Home/Sub3_1/{SearchKey}/{SearchWord}/{Step_num}/{StaffList}")]
+        public IActionResult Sub3_1(string SearchKey, string SearchWord, string Step_num, string StaffList)
         {
             //GetLoginUser();
-            _logger.LogInformation("sub3_1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + SearchKey + " / " + SearchWord);
+            _logger.LogInformation("sub3_1(): " + SearchKey + " / " + SearchWord + " / " + Step_num);
+            Console.WriteLine("list: "+ StaffList);
             var jsonString = "";
 
             if (SearchKey != null && SearchWord != null)
@@ -215,7 +216,8 @@ namespace HanbizaMVC.Controllers
                     using (var db = new HanbizaContext())
                     {
                         List<Approver> Datatable = null;
-                        db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("SearchKey", SearchKey).AddParam("SearchWord", SearchWord)
+                        db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
+                            .AddParam("SearchKey", SearchKey).AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
                           .Exec(r => Datatable = r.ToList<Approver>());
 
                         jsonString = JsonConvert.SerializeObject(Datatable);
