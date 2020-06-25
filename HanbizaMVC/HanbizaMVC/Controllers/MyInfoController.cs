@@ -105,7 +105,7 @@ namespace HanbizaMVC.Controllers
         //[HttpPost]
         //public IActionResult LogIn(OnlyLogin model)
         //{
-        //    _logger.LogInformation("LogInProcess: "+model.LoginID +" / "+ model.passW);
+        //    _logger.LogInformation("LogInProcess: " + model.LoginID + " / " + model.passW);
         //    if (ModelState.IsValid)
         //    {
         //        using (var db = new HanbizaContext())
@@ -119,9 +119,9 @@ namespace HanbizaMVC.Controllers
         //              .AddParam("loginID", model.LoginID)
         //              .AddParam("passW", model.passW)
         //              .Exec(r => user = r.ToList<LoginInfor>());
-                     
+
         //            // TODO Cookie 저장
-        //            if(user != null)
+        //            if (user != null)
         //            {
         //                foreach (var item in user)
         //                {
@@ -131,13 +131,13 @@ namespace HanbizaMVC.Controllers
         //                    HttpContext.Session.SetString("StaffName", item.StaffName);
         //                    HttpContext.Session.SetString("Dname", item.Dname);
         //                }
-                        
+
         //                return new RedirectResult("/Home/Index");
         //            }
         //        }
         //        ModelState.AddModelError(string.Empty, "사용자 ID 혹은 비밀번호가 올바르지 않습니다.");
         //    }
-             
+
         //    return View(model);
         //}
 

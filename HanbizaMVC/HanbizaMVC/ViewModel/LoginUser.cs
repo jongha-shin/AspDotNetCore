@@ -4,6 +4,7 @@
     {
         public string Dname { get; set; }
         public int StaffId { get; set; }
+        public string StaffName { get; set; }
         public string BizNum { get; set; }
         public string LoginDate { get; set; }
     }

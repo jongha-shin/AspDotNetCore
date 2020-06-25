@@ -17,7 +17,7 @@ namespace HanbizaMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private LoginUser LoginUser;
+        public static LoginUser LoginUser;
 
 
         public HomeController(ILogger<HomeController> logger)
@@ -52,7 +52,7 @@ namespace HanbizaMVC.Controllers
         {
             if(PrevNext == null) PrevNext = "";
             
-            GetLoginUser();
+            //GetLoginUser();
             //_logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.LoginDate);
 
             using (var db = new HanbizaContext())
@@ -132,7 +132,7 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub2()
         {
-            GetLoginUser();
+            //GetLoginUser();
 
             _logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
@@ -153,19 +153,36 @@ namespace HanbizaMVC.Controllers
 
         //2-1 OT 신청 클릭
         [Authorize]
-        public IActionResult Sub2_1(AddTimeList addtime)
+        public string Sub2_1(AddTimeList addtime)
         {
-            string jsonstring = "";
-            _logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal); // 신청x
+            string rsString = "";
+            _logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal + " / " + addtime.Reason); // 신청x
 
-            return new JsonResult(jsonstring);
+            using (var db = new HanbizaContext())
+            {
+               var rs = db.LoadStoredProc("dbo.OT_insert").AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
+                                                    .AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
+                                                    .AddParam("Gubun", addtime.Gubun).AddParam("Snal", addtime.Snal)
+                                                    .AddParam("Enal", addtime.Enal).AddParam("Reason", addtime.Reason).ExecNonQuery();
+                Console.WriteLine("Sub2_1 rs: "+ rs);
+
+                if (rs > 0)
+                {
+                    rsString = "success";
+                    return rsString;
+                }
+
+            }
+
+            rsString = "fail";
+            return rsString;
         }
 
         // 3. 휴가신청
         [Authorize]
         public IActionResult Sub3()
         {
-            GetLoginUser();
+            //GetLoginUser();
             _logger.LogInformation("sub3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             using (var db = new HanbizaContext())
@@ -187,7 +204,7 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub3_1/{SearchKey}/{SearchWord}")]
         public IActionResult Sub3_1(string SearchKey, string SearchWord)
         {
-            GetLoginUser();
+            //GetLoginUser();
             _logger.LogInformation("sub3_1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + SearchKey + " / " + SearchWord);
             var jsonString = "";
 
@@ -213,7 +230,7 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub3_2/{VacID}")]
         public IActionResult Sub3_2(string VacID)
         {
-            GetLoginUser();
+           // GetLoginUser();
             _logger.LogInformation("sub3_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + VacID);
             var jsonString = "";
 
@@ -233,7 +250,7 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub4()
         {
-            GetLoginUser();
+            //GetLoginUser();
             _logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             using (var db = new HanbizaContext())
             {
@@ -254,7 +271,7 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub5()
         {
-            GetLoginUser();
+            //GetLoginUser();
             _logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             using (var db = new HanbizaContext())
             {
@@ -291,7 +308,7 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub6()
         {
-            GetLoginUser();
+            //GetLoginUser();
             _logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<PayList> plist = null;

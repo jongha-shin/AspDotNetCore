@@ -7,10 +7,10 @@
         font-size: small;
     }
 
-        table > thead > tr > th {
-            background-color: #3763ab;
-            color: white;
-        }
+    table > thead > tr > th {
+        background-color: #3763ab;
+        color: white;
+    }
 </style>
 <div class="card col-lg-9 ">
     <div class="card-body p-3">
@@ -183,9 +183,23 @@
                 dataType: "text",
                 contentType: "application/x-www-form-urlencoded;charset=utf-8",
                 charset: "utf-8",
-                data: { "Gubun": Gubun, "SEQID": SEQID },
-                success: function () {
-                    alert("succ")
+                data: { "Gubun": Gubun, "Snal": Snal, "Enal": Enal, "Reason": Reason },
+                success: function (result) {
+                    //alert("succ")
+                    if (result == "success") {
+                        $("#Gubun").val("선택");
+                        $("#Snal").val("");
+                        $("#Snal_h").val("00");
+                        $("#Snal_m").val("00");
+                        $("#Enal_h").val("00");
+                        $("#Enal_m").val("00");
+                        $("#Reason").val("");
+
+                        alert("신청 완료");
+                        location.href = "Sub2";
+                    } else {
+                        alert("신청 실패")
+                    }
                 },
                 error: function () {
                     alert("err")
