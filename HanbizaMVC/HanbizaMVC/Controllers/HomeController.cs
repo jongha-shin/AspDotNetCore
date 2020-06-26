@@ -221,7 +221,7 @@ namespace HanbizaMVC.Controllers
                           .Exec(r => Datatable = r.ToList<Approver>());
 
                         jsonString = JsonConvert.SerializeObject(Datatable);
-                        _logger.LogInformation("json1: " + jsonString);
+                        //_logger.LogInformation("json1: " + jsonString);
                     }
                 }
             }
@@ -248,27 +248,49 @@ namespace HanbizaMVC.Controllers
             return new JsonResult(jsonString);
         }
         // 3_3 휴가 신청 ajax
-        public string Sub3_3()
+        public string Sub3_3(Vacation_List VaInfo)
         {
-            string rsString = "";
-            _logger.LogInformation("sub3_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / ");
+            string rsString;
+            _logger.LogInformation("sub3_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             using (var db = new HanbizaContext())
             {
-                var rs = db.LoadStoredProc("dbo.OT_insert").AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
-                                                    .AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
-                                                    .AddParam("Gubun", ).AddParam("Snal", )
-                                                    .AddParam("Enal", ).AddParam("Reason", ).ExecNonQuery();
+                var rs = db.LoadStoredProc("dbo.vacation_insert")
+                            .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
+                            .AddParam("StaffId", LoginUser.StaffId).AddParam("Vicname", VaInfo.Vicname).AddParam("UseTime", VaInfo.UseTime)
+                            .AddParam("Snal", VaInfo.Snal).AddParam("Enal", VaInfo.Enal).AddParam("ProCDeep", VaInfo.ProCDeep)
+                            .AddParam("VicReaSon", VaInfo.VicReason)
+                            .ExecNonQuery();
                 Console.WriteLine("Sub2_1 rs: " + rs);
-
+                
                 if (rs > 0)
                 {
                     rsString = "success";
                     return rsString;
                 }
             }
-
-                return rsString;
-
+            rsString = "fail";
+            return rsString;
+        }
+        // 3_4 등록된 휴가정보 결재자에게 전송
+        public string Sub3_4(Approve_Params approve_Params)
+        {
+            _logger.LogInformation("sub3_4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / "+ approve_Params.StaffID1);
+            string rsString = "";
+            using (var db = new HanbizaContext())
+            {
+               var rs = db.LoadStoredProc("vacation_insertEachApprover")
+                        .AddParam("ProCDeep", approve_Params.ProCDeep).AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname).AddParam("StaffName", LoginUser.StaffName)
+                        .AddParam("StaffID1", approve_Params.StaffID1).AddParam("StaffID2", approve_Params.StaffID2).AddParam("StaffID3", approve_Params.StaffID3).AddParam("StaffID4", approve_Params.StaffID4).AddParam("StaffID5", approve_Params.StaffID5)
+                        .AddParam("Sign1", approve_Params.Sign1).AddParam("Sign2", approve_Params.Sign2).AddParam("Sign3", approve_Params.Sign3).AddParam("Sign4", approve_Params.Sign4).AddParam("Sign5", approve_Params.Sign5)
+                        .ExecNonQuery();
+                if(rs > 0)
+                {
+                    rsString = "success";
+                    return rsString;
+                }
+            }
+            rsString = "fail";
+            return rsString;
         }
 
         // 4. 휴가결재
@@ -282,7 +304,7 @@ namespace HanbizaMVC.Controllers
                 List<ApproveList> Alist = null; ;
                 db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => Alist = r.ToList<ApproveList>());
-                Console.WriteLine("sub4 list count: " + Alist.Count());
+                //Console.WriteLine("sub4 list count: " + Alist.Count());
                 if (Alist != null)
                 {
                     return View(Alist);
@@ -342,7 +364,7 @@ namespace HanbizaMVC.Controllers
                 db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => plist = r.ToList<PayList>());
 
-                Console.WriteLine(plist[0].Yyyymm + "년 " + plist[0].Ncount + "회차");
+               // Console.WriteLine(plist[0].Yyyymm + "년 " + plist[0].Ncount + "회차");
 
                 var yyyymm = plist[0].Yyyymm;
                 var ncount = plist[0].Ncount;
@@ -356,12 +378,12 @@ namespace HanbizaMVC.Controllers
                 foreach (var item in plist)
                 {
                     item.SSvalue = string.Format("{0:n0}", item.Svalue);
-                    Console.WriteLine(item.Slist + "/" + item.SSvalue + "/" + item.Gubun + "/" + item.Fsort + "/  " + i);
+                    //Console.WriteLine(item.Slist + "/" + item.SSvalue + "/" + item.Gubun + "/" + item.Fsort + "/  " + i);
                     i++;
                     if (item.Gubun.Equals("0") && item.Fsort == 0) { a++; }
                     if (item.Gubun.Equals("1") && item.Fsort == 0) { b++; }
                 }
-                Console.WriteLine(a + " / " + b);
+                //Console.WriteLine(a + " / " + b);
                 if (a >= b)
                 {
                     ViewBag.Crows = a;

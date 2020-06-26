@@ -50,7 +50,7 @@ namespace HanbizaMVC.Controllers
                 if (mySign.Count > 0)
                 {
                     var stringify_byte = Convert.ToBase64String(mySign[0].FileBlob);
-                    Console.WriteLine("tobase64 : "+ stringify_byte);
+                    //Console.WriteLine("tobase64 : "+ stringify_byte);
                     
                     System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
                     System.Text.Decoder utf8Decode = encoder.GetDecoder();
@@ -60,7 +60,7 @@ namespace HanbizaMVC.Controllers
                     char[] decoded_char = new char[charCount];
                     utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
                     string result = new String(decoded_char);
-                    Console.WriteLine("result: "+result);
+                    //Console.WriteLine("result: "+result);
 
                     ViewBag.mySign = result;
                     ViewBag.SEQID = mySign[0].SeqId;

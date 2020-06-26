@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace HanbizaMVC.Models
 {
@@ -194,10 +195,43 @@ namespace HanbizaMVC.Models
             modelBuilder.Entity<Vacation_Approve>(entity =>
             {
                 entity.HasNoKey();
+                entity.Property(e => e.SEQID);
+                entity.Property(e => e.Dname);
+                entity.Property(e => e.BizNum);
+                entity.Property(e => e.VacID);
+                entity.Property(e => e.approveID);
+                entity.Property(e => e.approveName);
+                entity.Property(e => e.DeepNum);
+                entity.Property(e => e.processPoint);
+                entity.Property(e => e.RereaSon);
+                entity.Property(e => e.AResult);
+                entity.Property(e => e.Regdate);
+             
+
             });
             modelBuilder.Entity<Vacation_List>(entity =>
             {
+                /* 
+                SEQID, Dname, BizNum, StaffID, Vicname, UseTime, SNal, Enal, ProCDeep, AllProCess, VicReaSon, HbzMSend, HbzMYYMMDD, Regdate
+                  DATETIME -> datetime
+                 */
                 entity.HasNoKey();
+
+                entity.Property(e => e.SEQID);
+                entity.Property(e => e.Dname);
+                entity.Property(e => e.BizNum);
+                entity.Property(e => e.StaffID);
+                entity.Property(e => e.Vicname);
+                entity.Property(e => e.UseTime);
+                entity.Property(e => e.Snal).HasColumnName("SNal").HasColumnType("date");
+                entity.Property(e => e.Enal).HasColumnType("date");
+                entity.Property(e => e.ProCDeep);
+                entity.Property(e => e.AllProCess);
+                entity.Property(e => e.VicReason);
+                entity.Property(e => e.HbzMSend);
+                entity.Property(e => e.HbzMYYMMDD);
+                entity.Property(e => e.Regdate).HasColumnType("datetime");
+                
             });
 
             modelBuilder.Entity<공지사항>(entity =>

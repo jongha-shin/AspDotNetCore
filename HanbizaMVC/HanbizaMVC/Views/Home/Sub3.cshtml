@@ -424,6 +424,41 @@
         let Enal = $("#Enal").val();
         let VicReason = $("#VicReason").val();
         let ProCDeep = $("#ProCDeep ").val();
+
+        if (UseTime == "") UseTime = 0;
+        if (ProCDeep == "") ProCDeep = 0;
+        if (Vicname == "반차") Enal = Snal;
+
+        if (ProCDeep > 0) {
+            // 휴가정보 등록(Vacation_List)
+            $.ajax({
+                url: "/Home/Sub3_3",
+                type: "GET",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: "text",
+                data: {
+                    "Vicname": Vicname,
+                    "UseTime": UseTime,
+                    "Snal": Snal,
+                    "Enal": Enal,
+                    "ProCDeep": ProCDeep,
+                    "VicReaSon": VicReason
+                },
+                success: function (result) {
+                    if (result == "success") {
+                        insertApprover();
+                    } else {
+                        alert("신청 실패")
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+    function insertApprover() {
+        let ProCDeep = $("#ProCDeep ").val();
         let StaffID1 = $("#StaffID1").val();
         let StaffID2 = $("#StaffID2").val();
         let StaffID3 = $("#StaffID3").val();
@@ -435,19 +470,35 @@
         let sign4 = $("#sign4").val();
         let sign5 = $("#sign5").val();
 
-        if (UseTime == "") UseTime = 0;
-        if (ProCDeep == "") ProCDeep = 0;
-        if (Vicname == "반차") Enal = Snal;
-
-        if (ProCDeep > 0) {
-            // 휴가정보 등록(Vacation_List)
-
-            // 휴가 결재자 정보(Vacation_Approve)
-
-
-
-        }
-
+        $.ajax({
+            url: "/Home/Sub3_4",
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            data: {
+                "ProCDeep": ProCDeep,
+                "StaffID1": StaffID1,
+                "StaffID2": StaffID2,
+                "StaffID3": StaffID3,
+                "StaffID4": StaffID4,
+                "StaffID5": StaffID5,
+                "Sign1": sign1,
+                "Sign2": sign2,
+                "Sign3": sign3,
+                "Sign4": sign4,
+                "Sign5": sign5
+            },
+            success: function (result) {
+                if (result == "success") {
+                    alert("신청 완료");
+                } else {
+                    alert("신청 실패");
+                }
+            },
+            error: function () {
+                alert("통신실패");
+            }
+        });
 
 
     }

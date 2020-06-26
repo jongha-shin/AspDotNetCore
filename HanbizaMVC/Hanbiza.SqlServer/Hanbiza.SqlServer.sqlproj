@@ -93,5 +93,7 @@
     <Build Include="dbo\file_SaveSignature.sql" />
     <Build Include="dbo\OT_insert.sql" />
     <Build Include="dbo\login_userDetail.sql" />
+    <Build Include="dbo\vacation_insert.sql" />
+    <Build Include="dbo\vacation_insertEachApprover.sql" />
   </ItemGroup>
 </Project>
