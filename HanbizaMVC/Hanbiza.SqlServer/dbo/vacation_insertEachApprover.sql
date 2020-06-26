@@ -21,26 +21,52 @@ SET @i = 1
 
 WHILE @i <= @ProCDeep 
 BEGIN
-	SET @rs_StaffID = CONCAT('@', 'StaffID', @i)
-	SET @rs_Sign = CONCAT('@', 'Sign', @i)
+	--SET @rs_StaffID = CONCAT('@', 'StaffID', @i)
+	--SET @rs_Sign = CONCAT('@', 'Sign', @i)
 
 	IF(@i = 1) SET @processPoint = 'Y'
 	ELSE SET @processPoint = 'N'
 
-	EXEC('INSERT INTO Vacation_Approve(Dname, BizNum, VacID, approveID, approveName, DeepNum, processPoint, RereaSon, AResult, Regdate)
-	VALUES('+ @Dname+ ','+ @BizNum+ ','+ @VacID+ ', @StaffID'+@i+ ','+ @rs_Sign+ ','+ @i+ ','+ @processPoint+ ', ,'+ 'N, GETDATE())')
-
-	EXEC('INSERT INTO 공지사항(Dname, BizNum, 제목, 내용, 등록인, VacID, Regdate, LoginID)
-	VALUES('+ @Dname + ',' + @BizNum + ',' + @StaffName + '님의 휴가신청이 있습니다, 휴가결재에서 결재바랍니다,'+ @StaffName + ',' + @VacID + ', GETDATE(), @StaffID'+@i+')')
+	IF @i = 1 
+	BEGIN
+		INSERT INTO Vacation_Approve(Dname, BizNum, VacID, approveID, approveName, DeepNum, processPoint, RereaSon, AResult, Regdate)
+		VALUES(@Dname, @BizNum, @VacID, @StaffID1, @Sign1, @i, @processPoint, '', 'N', GETDATE())
+		INSERT INTO 공지사항(Dname, BizNum, 제목, 내용, 등록인, VacID, Regdate, LoginID)
+		VALUES(@Dname, @BizNum, @StaffName+'님의 휴가 신청이 있습니다.', '휴가결재에서 결재바랍니다', @StaffName, @VacID, GETDATE(), @StaffID1)
+	END
 	
-	
-	/*
-	INSERT INTO Vacation_Approve(Dname, BizNum, VacID, approveID, approveName, DeepNum, processPoint, RereaSon, AResult, Regdate)
-	VALUES(@Dname, @BizNum, @VacID, @rs_StaffID, @rs_Sign, @i, @processPoint, '', 'N', GETDATE())
+	IF @i = 2
+	BEGIN
+		INSERT INTO Vacation_Approve(Dname, BizNum, VacID, approveID, approveName, DeepNum, processPoint, RereaSon, AResult, Regdate)
+		VALUES(@Dname, @BizNum, @VacID, @StaffID2, @Sign2, @i, @processPoint, '', 'N', GETDATE())
+		INSERT INTO 공지사항(Dname, BizNum, 제목, 내용, 등록인, VacID, Regdate, LoginID)
+		VALUES(@Dname, @BizNum, @StaffName+'님의 휴가 신청이 있습니다.', '휴가결재에서 결재바랍니다', @StaffName, @VacID, GETDATE(), @StaffID2)
+	END
 
-	INSERT INTO 공지사항(Dname, BizNum, 제목, 내용, 등록인, VacID, Regdate, LoginID)
-	VALUES(@Dname, @BizNum, @StaffName+'님의 휴가신청이 있습니다', '휴가결재에서 결재바랍니다', @StaffName, @VacID, GETDATE(), @rs_StaffID)
-	*/
+	IF @i = 3
+	BEGIN
+		INSERT INTO Vacation_Approve(Dname, BizNum, VacID, approveID, approveName, DeepNum, processPoint, RereaSon, AResult, Regdate)
+		VALUES(@Dname, @BizNum, @VacID, @StaffID3, @Sign3, @i, @processPoint, '', 'N', GETDATE())
+		INSERT INTO 공지사항(Dname, BizNum, 제목, 내용, 등록인, VacID, Regdate, LoginID)
+		VALUES(@Dname, @BizNum, @StaffName+'님의 휴가 신청이 있습니다.', '휴가결재에서 결재바랍니다', @StaffName, @VacID, GETDATE(), @StaffID3)
+	END
+
+	IF @i = 4
+	BEGIN
+		INSERT INTO Vacation_Approve(Dname, BizNum, VacID, approveID, approveName, DeepNum, processPoint, RereaSon, AResult, Regdate)
+		VALUES(@Dname, @BizNum, @VacID, @StaffID4, @Sign4, @i, @processPoint, '', 'N', GETDATE()) 
+		INSERT INTO 공지사항(Dname, BizNum, 제목, 내용, 등록인, VacID, Regdate, LoginID)
+		VALUES(@Dname, @BizNum, @StaffName+'님의 휴가 신청이 있습니다.', '휴가결재에서 결재바랍니다', @StaffName, @VacID, GETDATE(), @StaffID4)
+	END
+
+	IF @i = 5
+	BEGIN
+		INSERT INTO Vacation_Approve(Dname, BizNum, VacID, approveID, approveName, DeepNum, processPoint, RereaSon, AResult, Regdate)
+		VALUES(@Dname, @BizNum, @VacID, @StaffID5, @Sign5, @i, @processPoint, '', 'N', GETDATE())
+		INSERT INTO 공지사항(Dname, BizNum, 제목, 내용, 등록인, VacID, Regdate, LoginID)
+		VALUES(@Dname, @BizNum, @StaffName+'님의 휴가 신청이 있습니다.', '휴가결재에서 결재바랍니다', @StaffName, @VacID, GETDATE(), @StaffID5)
+	END
+
 	SET @i = @i +1
 END
 
