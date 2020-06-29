@@ -25,6 +25,7 @@ namespace HanbizaMVC.Models
         public virtual DbSet<휴가대장> 휴가대장 { get; set; }
         public virtual DbSet<Vacation_Approve> Vacation_Approve { get; set; }
         public virtual DbSet<Vacation_List> Vacation_List { get; set; }
+        public virtual DbSet<회사별메뉴> 회사별메뉴 { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -475,6 +476,10 @@ namespace HanbizaMVC.Models
                 entity.Property(e => e.등록인)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+            modelBuilder.Entity<회사별메뉴>(entity =>
+            {
+                entity.HasNoKey();
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -39,7 +39,7 @@ namespace HanbizaMVC.Controllers
         }
 
 
-        // 0. 로그인 후 첫 화면 : 공지사항 + 메뉴 세팅
+        // 0. 로그인 후 첫 화면 : 공지사항 + 메뉴 세팅 !!!!!!!!!!!!!!!!!!!!!!!!!
         public IActionResult Index()
         {
             GetLoginUser();
@@ -47,7 +47,11 @@ namespace HanbizaMVC.Controllers
             
             using (var db = new HanbizaContext())
             {
-            
+                var menuList = db.회사별메뉴.ToList();
+                for (int i = 0; i < menuList.Count(); i++)
+                {
+                    Console.WriteLine(menuList[i]);
+                }
             }
 
                 return View();
