@@ -61,8 +61,7 @@ namespace HanbizaMVC.Controllers
             return RedirectToAction("Login", "MyInfo");
         }
 
-
-        // 로그인 정보 확인
+        /*  로그인 정보 확인
         public IActionResult LoginPartial()
         {
             string result = "";
@@ -80,6 +79,7 @@ namespace HanbizaMVC.Controllers
             }
             return Content(result, "text/html", Encoding.Default);
         }
+        */
 
     }
 }

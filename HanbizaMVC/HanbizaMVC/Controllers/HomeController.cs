@@ -39,13 +39,20 @@ namespace HanbizaMVC.Controllers
         }
 
 
-        // 0. 로그인 후 첫 화면 : 공지사항 
+        // 0. 로그인 후 첫 화면 : 공지사항 + 메뉴 세팅
         public IActionResult Index()
         {
             GetLoginUser();
             ViewBag.LoginUser = LoginUser;
-            return View();
+            
+            using (var db = new HanbizaContext())
+            {
+            
+            }
+
+                return View();
         }
+
         // 1. 근태보기
         [Authorize]
         public IActionResult Sub1(string PrevNext)
@@ -165,7 +172,7 @@ namespace HanbizaMVC.Controllers
                                                     .AddParam("Gubun", addtime.Gubun).AddParam("Snal", addtime.Snal)
                                                     .AddParam("Enal", addtime.Enal).AddParam("Reason", addtime.Reason).ExecNonQuery();
                 Console.WriteLine("Sub2_1 rs: "+ rs);
-
+                
                 if (rs > 0)
                 {
                     rsString = "success";

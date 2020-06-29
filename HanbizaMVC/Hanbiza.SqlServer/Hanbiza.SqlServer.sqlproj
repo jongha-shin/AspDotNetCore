@@ -95,5 +95,9 @@
     <Build Include="dbo\login_userDetail.sql" />
     <Build Include="dbo\vacation_insert.sql" />
     <Build Include="dbo\vacation_insertEachApprover.sql" />
+    <Build Include="dbo\Tables\회사별메뉴.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Hanbiza.SqlServer.refactorlog" />
   </ItemGroup>
 </Project>
