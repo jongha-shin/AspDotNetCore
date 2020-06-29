@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[출퇴근기록] (
-    [SEQID]   INT           NOT NULL,
+    [SEQID]   INT           IDENTITY(1,1) NOT NULL,
     [Dname]   VARCHAR (50)  NOT NULL,
     [BizNum]  CHAR (10)     NOT NULL,
     [StaffID] INT           NOT NULL,

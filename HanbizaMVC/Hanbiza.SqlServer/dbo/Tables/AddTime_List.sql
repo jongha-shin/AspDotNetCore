@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[AddTime_List] (
-    [SEQID]     INT            NOT NULL,
+    [SEQID]     INT            IDENTITY(1,1) NOT NULL,
     [DName]     VARCHAR (50)   NOT NULL,
     [BizNum]    CHAR (10)      NOT NULL,
     [StaffID]   INT            NOT NULL,
