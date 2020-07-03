@@ -2,17 +2,22 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using StoredProcedureEFCore;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HanbizaMVC.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IConfiguration _configuration;
+        public AccountController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<IActionResult> Login(OnlyLogin model)
         {
             Console.WriteLine("accoutn login 실행");
@@ -23,7 +28,7 @@ namespace HanbizaMVC.Controllers
 
             // db에서 비교해서 로그인 정보 가져오기
             LoginInfor account = null;
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 db.LoadStoredProc("dbo.login_Process").AddParam("loginID", model.LoginID).AddParam("passW", model.passW)
                   .Exec(r => account = r.SingleOrDefault<LoginInfor>());

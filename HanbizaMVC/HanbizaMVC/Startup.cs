@@ -21,6 +21,7 @@ namespace HanbizaMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           // services.AddTransient<IConfiguration>(Configuration);
             services.AddControllersWithViews();
             services.AddAuthentication("Cookies").AddCookie();  // optioin 추가가능
             services.ConfigureApplicationCookie(options =>
@@ -33,9 +34,11 @@ namespace HanbizaMVC
 
             services.AddDbContext<HanbizaContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("MyConnection")));
+                    Configuration.GetConnectionString("DefaultConnection")));
 
             // DI 의존성 주입
+            // 1. AddSingleton();  // 2. AddScoped<T>; // 3. AddTransient();
+
 
             // Identity
 

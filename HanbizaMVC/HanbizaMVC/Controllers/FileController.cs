@@ -6,26 +6,25 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using StoredProcedureEFCore;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Hosting;
 using System;
-using Microsoft.VisualBasic.CompilerServices;
+using Microsoft.Extensions.Configuration;
 
 namespace HanbizaMVC.Controllers
 {
     public class FileController : Controller
     {
         private readonly ILogger<FileController> _logger;
-        private IWebHostEnvironment _environment;
+        private readonly IConfiguration _configuration;
 
-        public FileController(ILogger<FileController> logger, IWebHostEnvironment environment)
+        public FileController(ILogger<FileController> logger, IConfiguration configuration)
         {
             _logger = logger;
-            _environment = environment;
+            _configuration = configuration;
         }
         public FileContentResult FileDownload(int id)
         {
             //_logger.LogInformation("FileDownload() " + id);
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
 
                 List<문서함> fileInfo = null;
@@ -66,7 +65,7 @@ namespace HanbizaMVC.Controllers
             string StaffName = HttpContext.Session.GetString("StaffName");
             string Dname = HttpContext.Session.GetString("Dname");
 
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 var rs = 
                     db.LoadStoredProc("file_SaveSignature").AddParam("BizNum", BizNum).AddParam("StaffID", StaffID).AddParam("Base64string", Base64string)

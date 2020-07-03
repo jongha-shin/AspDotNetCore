@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace HanbizaMVC.Models
 {
     public partial class HanbizaContext : DbContext
     {
-        public HanbizaContext()
+
+        private readonly IConfiguration _configuration;
+
+        public HanbizaContext(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
         public HanbizaContext(DbContextOptions<HanbizaContext> options)
@@ -26,15 +30,6 @@ namespace HanbizaMVC.Models
         public virtual DbSet<Vacation_Approve> Vacation_Approve { get; set; }
         public virtual DbSet<Vacation_List> Vacation_List { get; set; }
         public virtual DbSet<회사별메뉴> 회사별메뉴 { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                //optionsBuilder.UseSqlServer("name=MyConnection");
-                
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

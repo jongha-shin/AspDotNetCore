@@ -11,18 +11,21 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 
 namespace HanbizaMVC.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _configuration;
         public static LoginUser LoginUser;
 
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         public void GetLoginUser()
@@ -30,7 +33,7 @@ namespace HanbizaMVC.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                using (var db = new HanbizaContext())
+                using (var db = new HanbizaContext(_configuration))
                 {
                     db.LoadStoredProc("login_userDetail").AddParam("StaffID", StaffID).Exec(r => LoginUser = r.SingleOrDefault<LoginUser>());
                 }
@@ -45,7 +48,7 @@ namespace HanbizaMVC.Controllers
             GetLoginUser();
             ViewBag.LoginUser = LoginUser;
             
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 var menuList = db.회사별메뉴.ToList();
                 for (int i = 0; i < menuList.Count(); i++)
@@ -66,7 +69,7 @@ namespace HanbizaMVC.Controllers
             //GetLoginUser();
             //_logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.LoginDate);
 
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
 
                 // 최근 근태기록 월 구하기
@@ -147,7 +150,7 @@ namespace HanbizaMVC.Controllers
 
             _logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 // OT 신청내역
                 List<AddTimeList> OTlist = null;
@@ -169,7 +172,7 @@ namespace HanbizaMVC.Controllers
             string rsString = "";
             _logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal + " / " + addtime.Reason); // 신청x
 
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                var rs = db.LoadStoredProc("dbo.OT_insert").AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
                                                     .AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
@@ -196,7 +199,7 @@ namespace HanbizaMVC.Controllers
             //GetLoginUser();
             _logger.LogInformation("sub3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 List<Vacation_List> Vlist = null;
                 db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -224,7 +227,7 @@ namespace HanbizaMVC.Controllers
             {
                 if (!SearchKey.Equals("") && !SearchWord.Equals(""))
                 {
-                    using (var db = new HanbizaContext())
+                    using (var db = new HanbizaContext(_configuration))
                     {
                         List<Approver> Datatable = null;
                         db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
@@ -247,7 +250,7 @@ namespace HanbizaMVC.Controllers
             _logger.LogInformation("sub3_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + VacID);
             var jsonString = "";
 
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 List<Vacation_ProcessDetail> VPList = null; ;
                 db.LoadStoredProc("dbo.vacation_getDetail").AddParam("VacID", VacID)
@@ -263,7 +266,7 @@ namespace HanbizaMVC.Controllers
         {
             string rsString;
             _logger.LogInformation("sub3_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 var rs = db.LoadStoredProc("dbo.vacation_insert")
                             .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
@@ -287,7 +290,7 @@ namespace HanbizaMVC.Controllers
         {
             _logger.LogInformation("sub3_4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / "+ approve_Params.StaffID1);
             string rsString = "";
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                var rs = db.LoadStoredProc("vacation_insertEachApprover")
                         .AddParam("ProCDeep", approve_Params.ProCDeep).AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname).AddParam("StaffName", LoginUser.StaffName)
@@ -310,7 +313,7 @@ namespace HanbizaMVC.Controllers
         {
             //GetLoginUser();
             _logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 List<ApproveList> Alist = null; ;
                 db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -331,7 +334,7 @@ namespace HanbizaMVC.Controllers
         {
             //GetLoginUser();
             _logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 List<연차대장> vacationRecord = null;
                 db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -370,7 +373,7 @@ namespace HanbizaMVC.Controllers
             _logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<PayList> plist = null;
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => plist = r.ToList<PayList>());

@@ -7,24 +7,31 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using StoredProcedureEFCore;
-using System.IO;
-using Microsoft.AspNetCore.WebUtilities;
 using HanbizaMVC.ViewModel;
 using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 
 namespace HanbizaMVC.Controllers
 {
     public class MyInfoController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _configuration;
         private LoginUser LoginUser;
+
+
+        public MyInfoController(ILogger<HomeController> logger, IConfiguration configuration)
+        {
+            _logger = logger;
+            _configuration = configuration;
+        }
 
         public void GetLoginUser()
         {
             if (User.Identity.IsAuthenticated)
             {
                 string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                using (var db = new HanbizaContext())
+                using (var db = new HanbizaContext(_configuration))
                 {
                     db.LoadStoredProc("login_userDetail").AddParam("StaffID", StaffID).Exec(r => LoginUser = r.SingleOrDefault<LoginUser>());
                 }
@@ -32,16 +39,12 @@ namespace HanbizaMVC.Controllers
             }
         }
 
-        public MyInfoController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-// 확인서명
+        // 확인서명
         public IActionResult Sub7()
         {
             GetLoginUser();
             //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 List<문서함> mySign = null;
                 db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -79,7 +82,7 @@ namespace HanbizaMVC.Controllers
         {
             GetLoginUser();
             //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            using (var db = new HanbizaContext())
+            using (var db = new HanbizaContext(_configuration))
             {
                 List<문서함> fileList = null;
                 db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
