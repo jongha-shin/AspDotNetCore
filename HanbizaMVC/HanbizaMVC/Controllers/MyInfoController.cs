@@ -16,14 +16,13 @@ namespace HanbizaMVC.Controllers
     public class MyInfoController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IConfiguration _configuration;
+        private readonly HanbizaContext _db;
         private LoginUser LoginUser;
 
-
-        public MyInfoController(ILogger<HomeController> logger, IConfiguration configuration)
+        public MyInfoController(ILogger<HomeController> logger, HanbizaContext db)
         {
             _logger = logger;
-            _configuration = configuration;
+            _db = db;
         }
 
         public void GetLoginUser()
@@ -31,11 +30,8 @@ namespace HanbizaMVC.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                using (var db = new HanbizaContext(_configuration))
-                {
-                    db.LoadStoredProc("login_userDetail").AddParam("StaffID", StaffID).Exec(r => LoginUser = r.SingleOrDefault<LoginUser>());
-                }
 
+                _db.LoadStoredProc("login_userDetail").AddParam("StaffID", StaffID).Exec(r => LoginUser = r.SingleOrDefault<LoginUser>());
             }
         }
 
@@ -44,57 +40,52 @@ namespace HanbizaMVC.Controllers
         {
             GetLoginUser();
             //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            using (var db = new HanbizaContext(_configuration))
+
+            List<문서함> mySign = null;
+            _db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                .Exec(r => mySign = r.ToList<문서함>());
+
+            if (mySign.Count > 0)
             {
-                List<문서함> mySign = null;
-                db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .Exec(r => mySign = r.ToList<문서함>());
+                var stringify_byte = Convert.ToBase64String(mySign[0].FileBlob);
+                //Console.WriteLine("tobase64 : "+ stringify_byte);
 
-                if (mySign.Count > 0)
-                {
-                    var stringify_byte = Convert.ToBase64String(mySign[0].FileBlob);
-                    //Console.WriteLine("tobase64 : "+ stringify_byte);
-                    
-                    System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
-                    System.Text.Decoder utf8Decode = encoder.GetDecoder();
-                    
-                    byte[] todecode_byte = Convert.FromBase64String(stringify_byte);
-                    int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
-                    char[] decoded_char = new char[charCount];
-                    utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
-                    string result = new String(decoded_char);
-                    //Console.WriteLine("result: "+result);
+                System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
+                System.Text.Decoder utf8Decode = encoder.GetDecoder();
 
-                    ViewBag.mySign = result;
-                    ViewBag.SEQID = mySign[0].SeqId;
+                byte[] todecode_byte = Convert.FromBase64String(stringify_byte);
+                int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
+                char[] decoded_char = new char[charCount];
+                utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
+                string result = new String(decoded_char);
+                //Console.WriteLine("result: "+result);
 
-                    return View();
-                }
+                ViewBag.mySign = result;
+                ViewBag.SEQID = mySign[0].SeqId;
 
+                return View();
             }
-                 
+
             return View();
         }
 
 
-// 내 문서
+        // 내 문서
         public IActionResult Sub8()
         {
             GetLoginUser();
             //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            using (var db = new HanbizaContext(_configuration))
-            {
+            
                 List<문서함> fileList = null;
-                db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                _db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => fileList = r.ToList<문서함>());
 
-                if(fileList.Count > 0)
+                if (fileList.Count > 0)
                 {
                     return View(fileList);
                 }
-
-            }
-                return View();
+            
+            return View();
         }
         public IActionResult Sub9()
         {

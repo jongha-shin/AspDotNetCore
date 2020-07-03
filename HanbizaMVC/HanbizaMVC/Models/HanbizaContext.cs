@@ -5,12 +5,8 @@ namespace HanbizaMVC.Models
 {
     public partial class HanbizaContext : DbContext
     {
-
-        private readonly IConfiguration _configuration;
-
-        public HanbizaContext(IConfiguration configuration)
+        public HanbizaContext()
         {
-            _configuration = configuration;
         }
 
         public HanbizaContext(DbContextOptions<HanbizaContext> options)

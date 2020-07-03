@@ -39,7 +39,6 @@ namespace HanbizaMVC
             // DI 의존성 주입
             // 1. AddSingleton();  // 2. AddScoped<T>; // 3. AddTransient();
 
-
             // Identity
 
             // Web API 관련기능 등 
