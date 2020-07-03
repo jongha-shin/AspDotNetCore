@@ -17,213 +17,214 @@
             color: white;
         }
 </style>
-<div class="card mb-4 col-lg-9 ">
-    <div class="card-body pt-3">
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left">
-            <li class="nav-item">
-                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">휴가신청</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">휴가신청내역</a>
-            </li>
-        </ul>
-        <ul class="nav justify-content-end">
-            @ViewBag.최근월
-        </ul>
-    </div>
-    @* tap1 *@
-    <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-            <div class="table-responsive">
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">구분</label>
-
-                    <select class="form-control form-control-sm col-sm-4" id="Vicname" onchange="fn_timeHide()">
-                        <option value="선택" selected>선택</option>
-                        <option value="연차">연차</option>
-                        <option value="반차">반차</option>
-                        <option value="기타휴가">기타휴가</option>
-                    </select>&nbsp;
-                    <select class="form-control form-control-sm col-sm-4" id="UseTime">
-                        <option value="a" selected>시간</option>
-                        @for (int i = 1; i < 9; i++)
-                        {
-                            <option value="@i">@i 시간</option>
-                        }
-                    </select>
-
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">신청일</label>
-
-                    <input id="Snal" class="form-control form-control-sm col-sm-4" />
-
-                    &nbsp;~&nbsp;
-
-                    <input id="Enal" class="form-control form-control-sm col-sm-4" />
-
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">사유</label>
-                    <textarea class="form-control form-control-sm col-sm-10" id="VicReason" rows="5"></textarea>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">결재단계</label>
-                    <select class="form-control form-control-sm col-sm-10" id="ProCDeep">
-                        @{ int a; }
-                        @for (a = 1; a < 6; a++)
-                        {
-                            <option value="@a">@a 단계</option>
-                        }
-                    </select>
-                </div>
-                <div class="form-group row" id="stepStaff">
-                    <label class="col-sm-2 col-form-label">결재자</label>
-                    <div id="" class="inputCls1 col-sm-10">
-                        <input type="hidden" id="StaffID1">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
-                    </div>
-
-                    <label class="col-sm-2 col-form-label"></label>
-                    <div id="" class="inputCls2 col-sm-10" style="display:none;">
-                        <input type="hidden" id="StaffID2">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
-                    </div>
-
-                    <label class="col-sm-2 col-form-label"></label>
-                    <div id="" class="inputCls3 col-sm-10" style="display:none;">
-                        <input type="hidden" id="StaffID3">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
-                    </div>
-
-                    <label class="col-sm-2 col-form-label"></label>
-                    <div id="" class="inputCls4 col-sm-10" style="display:none;">
-                        <input type="hidden"id="StaffID4">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
-                    </div>
-
-                    <label class="col-sm-2 col-form-label"></label>
-                    <div id="" class="inputCls5 col-sm-10" style="display:none;">
-                        <input type="hidden" id="StaffID5">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
-                    </div>
-
-                </div>
-                <div>
-                    <button class="btn btn-primary btn-user btn-block" onclick="submitVacation()">신청 하기</button>
-                </div>
-            </div>
+<div class="container">
+    <div class="card mb-4">
+        <div class="card-body pt-3">
+            <ul class="nav nav-pills" id="pills-tab" role="tablist" style="float:left">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">휴가신청</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">휴가신청내역</a>
+                </li>
+            </ul>
+            <ul class="nav justify-content-end">
+                @ViewBag.최근월
+            </ul>
         </div>
-        @* layer1 *@
-        <!-- findApproverModal modal block -->
-        <div id="findApproverModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-primary modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <p class="modal-title"><span id="stepModal"></span>단계 결재자 찾기</p>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+        @* tap1 *@
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                <div class="table-responsive">
+                    <div class="form-group row col-12">
+                        <label class="col-sm-2 col-form-label">구분</label>
+
+                        <select class="form-control form-control-sm col-sm-4" id="Vicname" onchange="fn_timeHide()">
+                            <option value="선택" selected>선택</option>
+                            <option value="연차">연차</option>
+                            <option value="반차">반차</option>
+                            <option value="기타휴가">기타휴가</option>
+                        </select>&nbsp;
+                        <select class="form-control form-control-sm col-sm-4" id="UseTime">
+                            <option value="a" selected>시간</option>
+                            @for (int i = 1; i < 9; i++)
+                            {
+                                <option value="@i">@i 시간</option>
+                            }
+                        </select>
+
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <select class="form-control form-control-sm col-sm-1 mr-2" id="searchKey">
-                                <option value="부서" selected>부서</option>
-                                <option value="이름">이름</option>
-                            </select>
-                            <input class="form-control form-control-sm col-sm-8 mr-2" type="text" placeholder="검색어를 입력하세요" id="searchWord" />
-                            <input class="form-control form-control-sm col-sm-1" type="submit" value="검색" id="searchBtn" />
+                    <div class="form-group row col-12">
+                        <label class="col-sm-2 col-form-label">신청일</label>
+
+                        <input id="Snal" class="form-control form-control-sm col-sm-4" />
+
+                        &nbsp;~&nbsp;
+
+                        <input id="Enal" class="form-control form-control-sm col-sm-4" />
+
+                    </div>
+                    <div class="form-group row col-12">
+                        <label class="col-sm-2 col-form-label">사유</label>
+                        <textarea class="form-control form-control-sm col-sm-10" id="VicReason" rows="5"></textarea>
+                    </div>
+                    <div class="form-group row col-12">
+                        <label class="col-sm-2 col-form-label">결재단계</label>
+                        <select class="form-control form-control-sm col-sm-10" id="ProCDeep">
+                            @{ int a; }
+                            @for (a = 1; a < 6; a++)
+                            {
+                                <option value="@a">@a 단계</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group row col-12" id="stepStaff">
+                        <label class="col-sm-2 col-form-label">결재자</label>
+                        <div id="" class="inputCls1 col-sm-10">
+                            <input type="hidden" id="StaffID1">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
                         </div>
-                        @* ajax로 데이터 가져옴 *@
-                        <spand id="result"></spand>
+
+                        <label class="col-sm-2 col-form-label"></label>
+                        <div id="" class="inputCls2 col-sm-10" style="display:none;">
+                            <input type="hidden" id="StaffID2">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
+                        </div>
+
+                        <label class="col-sm-2 col-form-label"></label>
+                        <div id="" class="inputCls3 col-sm-10" style="display:none;">
+                            <input type="hidden" id="StaffID3">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
+                        </div>
+
+                        <label class="col-sm-2 col-form-label"></label>
+                        <div id="" class="inputCls4 col-sm-10" style="display:none;">
+                            <input type="hidden" id="StaffID4">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
+                        </div>
+
+                        <label class="col-sm-2 col-form-label"></label>
+                        <div id="" class="inputCls5 col-sm-10" style="display:none;">
+                            <input type="hidden" id="StaffID5">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
+                        </div>
+
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                    <div class="form-group row col-4 offset-4">
+                        <button class="btn btn-primary btn-user btn-block" onclick="submitVacation()">휴가신청</button>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- /findApproverModal modal block -->
-        @* tap2 *@
-        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-            <div class="table-responsive">
-                <table class="table-sm table-bordered table-hover" id="vacationTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>구분</th>
-                            <th>신청시간</th>
-                            <th>결재현황</th>
-                            <th>결과</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.Count == 0)
-                        {
+            @* layer1 *@
+            <!-- findApproverModal modal block -->
+            <div id="findApproverModal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-primary modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <p class="modal-title"><span id="stepModal"></span>단계 결재자 찾기</p>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="p-3 row">
+                                <select class="form-control form-control-sm col-2" id="searchKey">
+                                    <option value="부서" selected>부서</option>
+                                    <option value="이름">이름</option>
+                                </select>
+                                <input class="form-control form-control-sm col-8" type="text" placeholder="검색어를 입력하세요" id="searchWord" />
+                                <input class="form-control form-control-sm col-2" type="submit" value="검색" id="searchBtn" />
+                            </div>
+                            @* ajax로 데이터 가져옴 *@
+                            <spand id="result"></spand>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /findApproverModal modal block -->
+            @* tap2 *@
+            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <div class="table-responsive p-3">
+                    <table class="table-sm table-bordered table-hover" id="vacationTable" width="100%" cellspacing="0">
+                        <thead>
                             <tr>
-                                <td colspan="4">데이터가 없습니다</td>
+                                <th>구분</th>
+                                <th>신청시간</th>
+                                <th>결재현황</th>
+                                <th>결과</th>
                             </tr>
-                        }
-                        else
-                        {
-                            @foreach (var item in Model)
+                        </thead>
+                        <tbody>
+                            @if (Model.Count == 0)
                             {
                                 <tr>
-                                    <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
-                                    @if (item.Vicname.Equals("반차"))
-                                    {
-                                        <td>@item.Snal.ToShortDateString() (@item.UseTime 시간)</td>
-
-                                    }
-                                    else
-                                    {
-                                        <td>@item.Snal.ToShortDateString() ~ @item.Enal.ToShortDateString()</td>
-                                    }
-
-                                    <td> @item.DeepNum / @item.ProCDeep</td>
-
-                                    @if (@item.AllProCess.Equals("F"))
-                                    {
-                                        <td style="color:red">반려</td>
-                                    }
-                                    else if (@item.AllProCess.Equals("S"))
-                                    {
-                                        <td style="color:blue">승인</td>
-                                    }
-                                    else
-                                    {
-                                        <td style="color:grey">대기</td>
-                                    }
+                                    <td colspan="4">데이터가 없습니다</td>
                                 </tr>
                             }
-                        }
-                    </tbody>
+                            else
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
+                                        @if (item.Vicname.Equals("반차"))
+                                        {
+                                            <td>@item.Snal.ToShortDateString() (@item.UseTime 시간)</td>
 
-                </table>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.Snal.ToShortDateString() ~ @item.Enal.ToShortDateString()</td>
+                                        }
+
+                                        <td> @item.DeepNum / @item.ProCDeep</td>
+
+                                        @if (@item.AllProCess.Equals("F"))
+                                        {
+                                            <td style="color:red">반려</td>
+                                        }
+                                        else if (@item.AllProCess.Equals("S"))
+                                        {
+                                            <td style="color:blue">승인</td>
+                                        }
+                                        else
+                                        {
+                                            <td style="color:grey">대기</td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
             </div>
-        </div>
-        @* layer2 *@
-        <!-- ApproveDetail modal block -->
-        <div id="ApproveDetail" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <p class="modal-title" id="exampleModalLongTitle">휴가신청 세부내역</p>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <span id="result2"></span>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+            @* layer2 *@
+            <!-- ApproveDetail modal block -->
+            <div id="ApproveDetail" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <p class="modal-title" id="exampleModalLongTitle">휴가신청 세부내역</p>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <span id="result2"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!-- /ApproveDetail modal block -->
         </div>
-        <!-- /ApproveDetail modal block -->
     </div>
-
 </div>
 
 <script>
@@ -325,7 +326,7 @@
         var step_num = $("#stepModal").text();
         var name = $(this).find("td").eq(1).text();
         var staffID = $(this).find("input").val();
-        alert(name + "/" + staffID + "/" + step_num);
+        //alert(name + "/" + staffID + "/" + step_num);
 
         $("#StaffID" + step_num).val(staffID);
         $("#sign" + step_num).val(name);
@@ -359,7 +360,7 @@
                     if (sjson.length == 0) {
                         s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
                     } else {
-                        //TODO: 신청 사유 적기 + 색깔입히기 - 거절시 앞단계 회색처리
+//TODO: 신청 사유 적기 + 색깔입히기 - 거절시 앞단계 회색처리
                         for (var i = 0; i < sjson.length; i++) {
                             var f_color = '';
                             if (sjson[i].AResult == 'N' && sjson[i].processPoint == 'N') f_color = "gray";

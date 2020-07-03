@@ -10,6 +10,7 @@ using StoredProcedureEFCore;
 using HanbizaMVC.ViewModel;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HanbizaMVC.Controllers
 {
@@ -36,6 +37,7 @@ namespace HanbizaMVC.Controllers
         }
 
         // 확인서명
+        [Authorize]
         public IActionResult Sub7()
         {
             GetLoginUser();
@@ -71,6 +73,7 @@ namespace HanbizaMVC.Controllers
 
 
         // 내 문서
+        [Authorize]
         public IActionResult Sub8()
         {
             GetLoginUser();
@@ -87,6 +90,7 @@ namespace HanbizaMVC.Controllers
             
             return View();
         }
+        [Authorize]
         public IActionResult Sub9()
         {
             return View();
