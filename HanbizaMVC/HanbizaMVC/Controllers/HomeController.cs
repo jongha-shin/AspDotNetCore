@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using Microsoft.Extensions.Configuration;
+using System.Dynamic;
 
 namespace HanbizaMVC.Controllers
 {
@@ -54,34 +54,38 @@ namespace HanbizaMVC.Controllers
 
         // 1. 근태보기
         [Authorize]
-        public IActionResult Sub1(string PrevNext)
+        [Route("/Home/Sub1")]
+        [Route("/Home/Sub1/{dateMonth}")]
+        public IActionResult Sub1(string dateMonth)
         {
-            if (PrevNext == null) PrevNext = "";
-
-
             // 최근 근태기록 월 구하기
             List<출퇴근기록> Months = null;
-            _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => Months = r.ToList<출퇴근기록>());
-
-            int selectMonth = 0;
-            if (PrevNext.Equals("-"))
+            if (dateMonth == null)
             {
-                // TODO
+                dateMonth = "";
+                _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                    .Exec(r => Months = r.ToList<출퇴근기록>());
+
+                dateMonth = Months[0].월;
+                ViewBag.선택월 = dateMonth;
             }
-            else // +
+            else
             {
-                // TODO
+                _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                    .Exec(r => Months = r.ToList<출퇴근기록>());
+                ViewBag.선택월 = dateMonth;
             }
-
-            var dateMonth = Months[selectMonth].월;
-
-            ViewBag.최근월 = dateMonth;
+            Console.WriteLine("1 선택월: " + dateMonth);
 
             // 월별근태내역 - 근무/휴가
-            var CulTable = from data in _db.출퇴근기록집계표
-                           where data.StaffId == LoginUser.StaffId
-                           select data;
+            List<출퇴근기록집계표> CulTable = null;
+            //Console.WriteLine(dateMonth);
+            _db.LoadStoredProc("attend_MonthlyRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
+                .Exec(r => CulTable = r.ToList<출퇴근기록집계표>());
+
+            //var CulTable = from data in _db.출퇴근기록집계표
+            //               where data.StaffId == LoginUser.StaffId 
+            //               select data;
 
             foreach (var i in CulTable)
             {
@@ -112,21 +116,40 @@ namespace HanbizaMVC.Controllers
                 ViewBag.휴일연장 = i.휴일연장;
                 ViewBag.휴일야간 = i.휴일야간;
             }
+            return View(Months);
+        }
+        [Authorize]
+        [Route("/Home/Sub1_1")]
+        [Route("/Home/Sub1_1/{dateMonth}")]
+        public IActionResult Sub1_1(string dateMonth)
+        {
+            dynamic mymodel = new ExpandoObject();
+            // 최근 근태기록 월 구하기
+            List<출퇴근기록> Months = null;
+            if (dateMonth == null)
+            {
+                dateMonth = "";
+                _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                    .Exec(r => Months = r.ToList<출퇴근기록>());
 
+                dateMonth = Months[0].월;
+                ViewBag.선택월 = dateMonth;
+            }
+            else
+            {
+                _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                   .Exec(r => Months = r.ToList<출퇴근기록>());
+                ViewBag.선택월 = dateMonth;
+            }
+            Console.WriteLine("1_1 선택월: " + dateMonth);
             // 출퇴근기록
             List<출퇴근기록> recordTable = null;
             _db.LoadStoredProc("dbo.attendRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
                 .Exec(r => recordTable = r.ToList<출퇴근기록>());
 
-            ViewBag.recordTable = recordTable;
-
-            if (CulTable != null && recordTable != null && totalTable != null)
-            {
-                return View(recordTable);
-            }
-
-
-            return View();
+            mymodel.monthList = Months;
+            mymodel.recordTable = recordTable;
+            return View(mymodel);
         }
 
         // 2. OT신청
