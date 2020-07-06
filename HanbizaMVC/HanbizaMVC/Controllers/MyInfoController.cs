@@ -95,7 +95,7 @@ namespace HanbizaMVC.Controllers
         {
             return View();
         }
-        public IActionResult LogIn()
+        public IActionResult startLogIn()
         {
             Console.WriteLine("로그인 화면");
             return View();

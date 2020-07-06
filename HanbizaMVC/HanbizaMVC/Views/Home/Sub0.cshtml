@@ -1,0 +1,41 @@
+﻿@model List<공지사항>
+@{
+    ViewData["Title"] = "공지사항";
+}
+<style>
+    table {
+        font-size: small;
+    }
+
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
+        }
+</style>
+<div class="text-center container">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>제목</th>
+                            <th>내용</th>
+                            <th>등록일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.제목</td>
+                                <td>@item.내용</td>
+                                <td>@item.Regdate</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

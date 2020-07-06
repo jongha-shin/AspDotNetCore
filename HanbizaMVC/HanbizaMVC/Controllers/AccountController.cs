@@ -41,7 +41,7 @@ namespace HanbizaMVC.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
                     new AuthenticationProperties { IsPersistent = false});
 
-                return RedirectToAction("index", "Home");
+                return RedirectToAction("Sub0", "Home");
             }
             return View(model);
         }
@@ -63,7 +63,7 @@ namespace HanbizaMVC.Controllers
         {
             await HttpContext.SignOutAsync("Cookies");
 
-            return RedirectToAction("Login", "MyInfo");
+            return RedirectToAction("startLogIn", "MyInfo");
         }
 
         /*  로그인 정보 확인

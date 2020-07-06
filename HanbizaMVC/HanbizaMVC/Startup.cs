@@ -70,7 +70,7 @@ namespace HanbizaMVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=MyInfo}/{action=Login}/{id?}");
+                    pattern: "{controller=MyInfo}/{action=startLogIn}/{id?}");
             });
         }
     }

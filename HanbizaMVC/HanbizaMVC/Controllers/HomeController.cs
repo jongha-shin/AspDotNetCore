@@ -38,18 +38,21 @@ namespace HanbizaMVC.Controllers
         }
 
         // 0. 로그인 후 첫 화면 : 공지사항 + 메뉴 세팅 !!!!!!!!!!!!!!!!!!!!!!!!!
-        public IActionResult Index()
+        public IActionResult Sub0()
         {
             GetLoginUser();
             ViewBag.LoginUser = LoginUser;
 
-            var menuList = _db.회사별메뉴.ToList();
-            for (int i = 0; i < menuList.Count(); i++)
-            {
-                Console.WriteLine(menuList[i]);
-            }
+            var menuList = _db.회사별메뉴.Where(r=>r.BizNum == LoginUser.BizNum).ToList();
+            Console.WriteLine("1: "+menuList.Count);
+            ViewBag.menuList = menuList;
 
-            return View();
+            List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId).ToList<공지사항>();
+            Console.WriteLine("2: "+noticeList.Count);
+            //_db.LoadStoredProc("notice_getList").AddParam("BizNum", LoginUser.BizNum).AddParam("LoginID", LoginUser.LoginID)
+            //    .Exec(r => noticeList = r.ToList<공지사항>());
+
+            return View(noticeList);
         }
 
         // 1. 근태보기

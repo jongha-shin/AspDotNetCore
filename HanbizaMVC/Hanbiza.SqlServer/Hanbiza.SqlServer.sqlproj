@@ -97,6 +97,7 @@
     <Build Include="dbo\vacation_insertEachApprover.sql" />
     <Build Include="dbo\Tables\회사별메뉴.sql" />
     <Build Include="dbo\attend_MonthlyRecord.sql" />
+    <Build Include="dbo\notice_getList.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Hanbiza.SqlServer.refactorlog" />

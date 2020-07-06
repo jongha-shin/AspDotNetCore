@@ -13,6 +13,6 @@ namespace HanbizaMVC.Models
         public string 등록인 { get; set; }
         public int? VacId { get; set; }
         public DateTime? Regdate { get; set; }
-        public int? LoginId { get; set; }
+        public int LoginId { get; set; }
     }
 }
