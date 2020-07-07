@@ -21,27 +21,38 @@ namespace HanbizaMVC.Controllers
         }
         public async Task<IActionResult> Login(OnlyLogin model)
         {
-            Console.WriteLine("accoutn login 실행");
+            Console.WriteLine("accoutn login 실행 / model.auto: " + model.Auto_save);
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
+
             // db에서 비교해서 로그인 정보 가져오기
             LoginInfor account = null;
-           
-                _db.LoadStoredProc("dbo.login_Process").AddParam("loginID", model.LoginID).AddParam("passW", model.passW)
-                  .Exec(r => account = r.SingleOrDefault<LoginInfor>());
-            
-            if(account != null) { 
+
+            _db.LoadStoredProc("dbo.login_Process").AddParam("loginID", model.LoginID).AddParam("passW", model.passW)
+              .Exec(r => account = r.SingleOrDefault<LoginInfor>());
+
+            if (account != null)
+            {
                 var claims = BuildClaims(account);
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme); 
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
-                    new AuthenticationProperties { IsPersistent = false});
+                if (model.Auto_save == null || model.Auto_save.Equals(""))
+                {
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+                        new AuthenticationProperties { IsPersistent = false });
+                }
+                else
+                {
+                   Console.WriteLine("------auto_save------");
+                   await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+                        new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(30) });
+                }
+                    return RedirectToAction("Sub0", "Home");
 
-                return RedirectToAction("Sub0", "Home");
             }
             return View(model);
         }

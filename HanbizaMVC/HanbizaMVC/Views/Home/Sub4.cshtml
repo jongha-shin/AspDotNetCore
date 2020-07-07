@@ -10,114 +10,184 @@
         font-size: small;
     }
 
-    table > thead > tr > th {
-        background-color: #3763ab;
-        color: white;
-    }
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
+        }
 </style>
 
-    <div class="text-center container">
-        <div class="card mb-4">
-            <div class="card-body">
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">대기</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">승인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="pills-profile2-tab" data-toggle="pill" href="#pills-profile2" role="tab" aria-controls="pills-profile2" aria-selected="false">반려</a>
-                    </li>
-                </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                        <div class="table-responsive">
-                            <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox"></th>
-                                        <th>신청자</th>
-                                        <th>기간 및 사유</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
+<div class="text-center container">
+    <div class="card mb-4">
+        <div class="card-body">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">대기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">승인</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile2-tab" data-toggle="pill" href="#pills-profile2" role="tab" aria-controls="pills-profile2" aria-selected="false">반려</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div class="table-responsive">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkBox_head"></th>
+                                    <th>신청자</th>
+                                    <th>기간 및 사유</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
                                     {
-                                        if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
-                                        {
-                                            <tr>
-                                                <td><input type="checkbox" /></td>
-                                                <td>@item.Staffname</td>
-                                                <td>
-                                                    @item.Vicname : @item.SNal.ToShortDateString() ~ @item.ENal.ToShortDateString()<br />
-                                                    <span style="color:black">@item.VicReaSon</span><br />
-                                                </td>
-                                            </tr>
-                                        }
+                                        <tr>
+                                            <td><input type="checkbox" class="checkBox_body" value="@item.VacID" /></td>
+                                            <td>@item.Staffname</td>
+                                            <td>
+                                                @item.Vicname : @item.SNal.ToShortDateString() ~ @item.ENal.ToShortDateString()<br />
+                                                <span style="color:black">@item.VicReaSon</span><br />
+                                                <div class="input-group reason" style="display: none">
+                                                    <input class="form-control small bg-light border col-12" type="text" name="@item.VacID" placeholder="반려사유를 입력해 주세요"
+                                                           style="font-size: small; float:left" />
+                                                    <a class="input-group-append m-2" href="#">취소</a>
+                                                    <a class="input-group-append m-2" href="#">저장</a>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     }
-                                </tbody>
-                            </table>
-                        </div>
+                                }
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        <div class="table-responsive">
-                            <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>신청자</th>
-                                        <th>기간 및 사유</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        if (item.AResult.Equals("Y"))
-                                        {
-                                            <tr>
-                                                <td>@item.Staffname</td>
-                                                <td>
-                                                    @item.Vicname : @item.SNal.ToShortDateString() ~ @item.ENal.ToShortDateString()<br />
-                                                    <span style="color:black">@item.VicReaSon</span><br />
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-                                </tbody>
-                            </table>
+                    <div class="row p-3">
+                        <button class="btn btn-primary btn-user btn-block col-4" onclick="allowVacation(0)">승인</button>
+                        <div class="col-4 offset-4" id="beforeReason">
+                            <button class="btn btn-danger btn-user btn-block" id="beforeReason" onclick="displayReason()">반려</button>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        <div class="table-responsive">
-                            <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>신청자</th>
-                                        <th>기간 및 사유</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        if (item.AResult.Equals("F"))
-                                        {
-                                            <tr>
-                                                <td>@item.Staffname</td>
-                                                <td>
-                                                    @item.Vicname : @item.SNal.ToShortDateString() ~ @item.ENal.ToShortDateString()<br />
-                                                    <span style="color:black">@item.VicReaSon</span><br />
-                                                    <span style="color:red">@item.RereaSon</span>
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-                                </tbody>
-                            </table>
+                        <div class="col-6 offset-2 row" id="afterReason" style="display:none">
+                            <button class="btn btn-danger btn-user btn-block col-5" id="" onclick="displayReason()">전체 취소</button>
+                            <button class="btn btn-danger btn-user btn-block col-5 offset-1" id="" onclick="displayReason()">반려</button>
                         </div>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="table-responsive">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>신청자</th>
+                                    <th>기간 및 사유</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    if (item.AResult.Equals("Y"))
+                                    {
+                                        <tr>
+                                            <td>@item.Staffname</td>
+                                            <td>
+                                                @item.Vicname : @item.SNal.ToShortDateString() ~ @item.ENal.ToShortDateString()<br />
+                                                <span style="color:black">@item.VicReaSon</span><br />
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="table-responsive">
+                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>신청자</th>
+                                    <th>기간 및 사유</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    if (item.AResult.Equals("F"))
+                                    {
+                                        <tr>
+                                            <td>@item.Staffname</td>
+                                            <td>
+                                                @if (item.Vicname.Equals("연차"))@*반차일 경우 시간. 연차일 경우 날짜가 나오게. db부터 확인해야함*@
+                                                {
+                                                    <span>@item.Vicname : @item.SNal.ToShortDateString() ~ @item.ENal.ToShortDateString()</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>@item.Vicname : @item.SNal ~ @item.ENal</span>
+                                                }
+                                                <br />
+                                                <span style="color:black">@item.VicReaSon</span><br />
+                                                <span style="color:red">@item.RereaSon</span>
 
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-
         </div>
     </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#checkBox_head").change(function () {
+            if ($("#checkBox_head").is(":checked")) {
+                $(".checkBox_body").each(function () {
+                    this.checked = true;
+                });
+            } else {
+                $(".checkBox_body").each(function () {
+                    this.checked = false;
+                });
+            }
+        });
+
+    })
+    function allowVacation(Gubun) { // Gubun == 0 : 승인, == 1 : 거절
+        let checkedVacId = "";
+        $(".checkBox_body:checked").each(function () {
+            checkedVacId += $(this).val() + ",";
+        })
+        checkedVacId = checkedVacId.substring(0, checkedVacId.lastIndexOf(","));
+        if (checkedVacId == '') { alert('선택한 내용이 없습니다'); return; }
+
+        $.ajax({
+            url: "/Home/Sub4_1/" + checkedVacId + "/" + Gubun,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            success: function (result) {
+                alert("선택한 데이터가 승인되었습니다.");
+                location.href = "/Home/Sub4";
+            },
+            error: function () {
+                alert("err");
+            }
+        });
+    }
+    function displayReason() {
+        $("#beforeReason").hide();
+        $("#afterReason").show();
+
+        $(".checkBox_body:checked").each(function () {
+            $(this).parent().parent().find("div.reason").show();
+        })
+
+    }
+</script>

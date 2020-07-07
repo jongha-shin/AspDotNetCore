@@ -320,7 +320,29 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
-
+        [Route("/Home/Sub4_1/{checkedVacId}/{Gubun}")]
+        public string Sub4_1(string checkedVacId, string Gubun)
+        {
+            _logger.LogInformation("sub4_1(): " + checkedVacId);
+            string[] arrVacId = checkedVacId.Split(",");
+            int count = 0;
+            for (int i = 0; i < arrVacId.Length; i++)
+            {
+                var rs = _db.LoadStoredProc("vacation_process").AddParam("approveID", LoginUser.StaffId).AddParam("VacID", arrVacId[i]).AddParam("Gubun", Gubun).ExecNonQuery();
+                if (rs > 0) count++;
+            }
+            string result;
+            if (count == arrVacId.Length)
+            {
+                result = "success";
+                return result;
+            }
+            else
+            {
+                result = "fail";
+                return result;
+            }
+        }
         // 5. 연차보기
         [Authorize]
         public IActionResult Sub5()
