@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[vacation_process]
+﻿CREATE PROCEDURE [dbo].[vacation_process_allow]
 	@approveID int,
 	@VacID int,
 	@Gubun int

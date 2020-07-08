@@ -98,7 +98,8 @@
     <Build Include="dbo\Tables\회사별메뉴.sql" />
     <Build Include="dbo\attend_MonthlyRecord.sql" />
     <Build Include="dbo\notice_getList.sql" />
-    <Build Include="dbo\vacation_process.sql" />
+    <Build Include="dbo\vacation_process_allow.sql" />
+    <Build Include="dbo\vacation_process_reject.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Hanbiza.SqlServer.refactorlog" />

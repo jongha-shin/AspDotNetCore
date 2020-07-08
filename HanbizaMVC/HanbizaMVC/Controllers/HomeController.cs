@@ -328,7 +328,7 @@ namespace HanbizaMVC.Controllers
             int count = 0;
             for (int i = 0; i < arrVacId.Length; i++)
             {
-                var rs = _db.LoadStoredProc("vacation_process").AddParam("approveID", LoginUser.StaffId).AddParam("VacID", arrVacId[i]).AddParam("Gubun", Gubun).ExecNonQuery();
+                var rs = _db.LoadStoredProc("vacation_process_allow").AddParam("approveID", LoginUser.StaffId).AddParam("VacID", arrVacId[i]).AddParam("Gubun", Gubun).ExecNonQuery();
                 if (rs > 0) count++;
             }
             string result;
@@ -343,8 +343,21 @@ namespace HanbizaMVC.Controllers
                 return result;
             }
         }
-        // 5. 연차보기
-        [Authorize]
+        [Route("/Home/Sub4_2/{VacID}/{RereaSon}")]
+        public string Sub4_2(string VacID, string RereaSon)
+        {
+            string result;
+            _logger.LogInformation("sub4_2(): " + VacID+" / "+ RereaSon);
+            var rs = _db.LoadStoredProc("vacation_process_reject").AddParam("approveID", LoginUser.StaffId).AddParam("VacID", VacID).AddParam("RereaSon", RereaSon).ExecNonQuery();
+            if (rs > 0) { 
+                result = "success";
+                return result;
+            }
+            result = "fail";
+            return result;
+        }
+            // 5. 연차보기
+            [Authorize]
         public IActionResult Sub5()
         {
             //GetLoginUser();
