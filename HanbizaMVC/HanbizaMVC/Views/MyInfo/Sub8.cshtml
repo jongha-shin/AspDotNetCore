@@ -3,39 +3,36 @@
 }
 @model List<문서함>
 
-<div class="container text-center" >
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table-sm table-bordered" style="width:100%" >
-                    <thead>
-                        <tr style="background-color: #3763ab; color:white">
-                            <th>수신일</th>
-                            <th>파일명</th>
-                            <th>다운</th>
+<div class="text-center col-12 col-sm-10 offset-sm-1 p-2" style="background-color:white">
+    <div class="table-responsive">
+        <table class="table-sm table-bordered" style="width:100%">
+            <thead>
+                <tr style="background-color: #3763ab; color:white">
+                    <th>수신일</th>
+                    <th>파일명</th>
+                    <th>다운</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null)
+                {
+                    <tr>
+                        <td colspan="3">데이터가 없습니다</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Regdate.ToShortDateString()</td>
+                            <td>@item.FileName</td>
+                            <td><a href="/File/FileDownload/@item.SeqId"><i class="fas fa-fw fa-download"></i><span>저장하기</span></a></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model == null)
-                        {
-                            <tr>
-                                <td colspan="3">데이터가 없습니다</td>
-                            </tr>
-                        }
-                        else
-                        {
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>@item.Regdate.ToShortDateString()</td>
-                                    <td>@item.FileName</td>
-                                    <td><a href="/File/FileDownload/@item.SeqId"><i class="fas fa-fw fa-download"></i><span>저장하기</span></a></td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    }
+                }
+            </tbody>
+        </table>
     </div>
 </div>
+        

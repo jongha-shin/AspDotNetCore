@@ -7,83 +7,80 @@
         font-size: small;
     }
 
-    table > thead > tr > th {
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
+        }
+
+    .nav-pills .nav-link.active {
         background-color: #3763ab;
-        color: white;
     }
 </style>
-<div class="text-center container">
-    <div class="card mb-4">
-        <div class="card-body">
-                <input type="hidden" id="monthList" value=""/>
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
-                <li class="nav-item">
-                    <a class="nav-link " href="/Home/Sub1/@ViewBag.선택월" aria-selected="false">월별근태내역</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/Home/Sub1_1/@ViewBag.선택월" aria-selected="true">출퇴근기록</a>
-                </li>
-            </ul>
-            <ul class="nav justify-content-end" style="font-size:small">
-                <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px"/></a>
-                    <span style="margin:5px">@ViewBag.선택월</span>
-                <a href="#" id="nextBtn"onclick="changeMonth('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
-            </ul>
-            <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                    <div class="table-responsive">
-                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
+<div class="text-center col-12 col-sm-10 offset-sm-1 p-2" style="background-color:white">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
+        <li class="nav-item">
+            <a class="nav-link " href="/Home/Sub1/@ViewBag.선택월" aria-selected="false">월별근태내역</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="/Home/Sub1_1/@ViewBag.선택월" aria-selected="true">출퇴근기록</a>
+        </li>
+    </ul>
+    <ul class="nav justify-content-end" style="font-size:small">
+        <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+        <span style="margin:5px">@ViewBag.선택월</span>
+        <a href="#" id="nextBtn" onclick="changeMonth('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="table-responsive">
+                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>날짜</th>
+                            <th>출근</th>
+                            <th>퇴근</th>
+                            <th>총근로</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.recordTable.Count == 0)
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var attend in Model.recordTable)
+                            {
                                 <tr>
-                                    <th>날짜</th>
-                                    <th>출근</th>
-                                    <th>퇴근</th>
-                                    <th>총근로</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.recordTable.Count == 0)
-                                {
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                }
-                                else
-                                {
-                                    @foreach (var attend in Model.recordTable)
+
+                                    @if (attend.날짜.DayOfWeek.ToString("d").Equals("0"))
                                     {
-                                        <tr>
-
-                                            @if (attend.날짜.DayOfWeek.ToString("d").Equals("0"))
-                                            {
-                                            <th style="color:red">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
-                                            }
-                                            else if (attend.날짜.DayOfWeek.ToString("d").Equals("6"))
-                                            {
-                                        <th style="color:blue">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
-                                            }
-                                            else
-                                            {
-                                            <th>@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
-                                            }
-
-                                            <td>@attend.출근</td>
-                                            <td>@attend.퇴근</td>
-                                            <td>@attend.총근로</td>
-                                        </tr>
+                                        <th style="color:red">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
                                     }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                    else if (attend.날짜.DayOfWeek.ToString("d").Equals("6"))
+                                    {
+                                        <th style="color:blue">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
+                                    }
+                                    else
+                                    {
+                                        <th>@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
+                                    }
+
+                                    <td>@attend.출근</td>
+                                    <td>@attend.퇴근</td>
+                                    <td>@attend.총근로</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             </div>
-
         </div>
-
     </div>
 </div>
 <script type="text/javascript">

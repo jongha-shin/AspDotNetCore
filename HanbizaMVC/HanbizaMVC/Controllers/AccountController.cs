@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using StoredProcedureEFCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -51,7 +52,11 @@ namespace HanbizaMVC.Controllers
                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
                         new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(30) });
                 }
-                    return RedirectToAction("Sub0", "Home");
+
+                var menulist = _db.회사별메뉴.Where(r => r.BizNum == account.BizNum).ToList();
+                Console.WriteLine("1: " + menulist[0].비밀번호변경);
+                ViewBag.menulist = menulist;
+                return RedirectToAction("Sub0", "Home");
 
             }
             return View(model);

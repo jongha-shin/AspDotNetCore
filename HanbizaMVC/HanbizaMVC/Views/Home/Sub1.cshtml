@@ -11,92 +11,92 @@
         background-color: #3763ab;
         color: white;
     }
+
+    .nav-pills .nav-link.active {
+        background-color: #3763ab;
+    }
 </style>
-<div class="text-center container">
-    <div class="card mb-4">
-        <div class="card-body">
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/Home/Sub1/@ViewBag.선택월" aria-selected="true">월별근태내역</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/Home/Sub1_1/@ViewBag.선택월" aria-selected="false">출퇴근기록</a>
-                </li>
-            </ul>
-            <ul class="nav justify-content-end" style="font-size:small">
-                <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px"/></a>
-                    <span style="margin:5px">@ViewBag.선택월</span>
-                <a href="#" id="nextBtn"onclick="changeMonth('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
-            </ul>
-            <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                    <div class="table-responsive">
-                        <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">근무/휴가</th>
-                                    <th colspan="2">근무외시수</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>기준일</td>
-                                    <td>@ViewBag.기준일</td>
-                                    <td>총근로</td>
-                                    <td>@ViewBag.총근로</td>
-                                </tr>
-                                <tr>
-                                    <td>근무일</td>
-                                    <td>@ViewBag.근무일</td>
-                                    <td>소정근로</td>
-                                    <td>@ViewBag.소정근로</td>
-                                </tr>
-                                <tr>
-                                    <td>결근일</td>
-                                    <td>@ViewBag.결근일</td>
-                                    <td>근태조정</td>
-                                    <td>@ViewBag.근태조정</td>
-                                </tr>
-                                <tr>
-                                    <td>휴무일</td>
-                                    <td>@ViewBag.휴무일</td>
-                                    <td>초과근로</td>
-                                    <td>@ViewBag.초과근로</td>
-                                </tr>
-                                <tr>
-                                    <td>주휴일</td>
-                                    <td>@ViewBag.주휴일</td>
-                                    <td>연장근로</td>
-                                    <td>@ViewBag.연장근로</td>
-                                </tr>
-                                <tr>
-                                    <td>유급휴가</td>
-                                    <td>@ViewBag.유급휴일</td>
-                                    <td>야간근로</td>
-                                    <td>@ViewBag.야간근로</td>
-                                </tr>
-                                <tr>
-                                    <td>무급휴가</td>
-                                    <td>@ViewBag.무급휴가휴일</td>
-                                    <td>휴일근로</td>
-                                    <td>@ViewBag.휴일근로</td>
-                                </tr>
-                                <tr>
-                                    <td>유급주휴일</td>
-                                    <td>@ViewBag.유급주휴일</td>
-                                    <td>휴일연장</td>
-                                    <td>@ViewBag.휴일연장</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>휴일야간</td>
-                                    <td>@ViewBag.휴일야간</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+<div class="text-center col-12 col-sm-10 offset-sm-1 p-2" style="background-color:white">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
+        <li class="nav-item">
+            <a class="nav-link active" href="/Home/Sub1/@ViewBag.선택월" aria-selected="true">월별근태내역</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/Home/Sub1_1/@ViewBag.선택월" aria-selected="false">출퇴근기록</a>
+        </li>
+    </ul>
+    <ul class="nav justify-content-end" style="font-size:small">
+        <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+        <span style="margin:5px">@ViewBag.선택월</span>
+        <a href="#" id="nextBtn" onclick="changeMonth('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="table-responsive">
+                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th colspan="2">근무/휴가</th>
+                            <th colspan="2">근무외시수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>기준일</td>
+                            <td>@ViewBag.기준일</td>
+                            <td>총근로</td>
+                            <td>@ViewBag.총근로</td>
+                        </tr>
+                        <tr>
+                            <td>근무일</td>
+                            <td>@ViewBag.근무일</td>
+                            <td>소정근로</td>
+                            <td>@ViewBag.소정근로</td>
+                        </tr>
+                        <tr>
+                            <td>결근일</td>
+                            <td>@ViewBag.결근일</td>
+                            <td>근태조정</td>
+                            <td>@ViewBag.근태조정</td>
+                        </tr>
+                        <tr>
+                            <td>휴무일</td>
+                            <td>@ViewBag.휴무일</td>
+                            <td>초과근로</td>
+                            <td>@ViewBag.초과근로</td>
+                        </tr>
+                        <tr>
+                            <td>주휴일</td>
+                            <td>@ViewBag.주휴일</td>
+                            <td>연장근로</td>
+                            <td>@ViewBag.연장근로</td>
+                        </tr>
+                        <tr>
+                            <td>유급휴가</td>
+                            <td>@ViewBag.유급휴일</td>
+                            <td>야간근로</td>
+                            <td>@ViewBag.야간근로</td>
+                        </tr>
+                        <tr>
+                            <td>무급휴가</td>
+                            <td>@ViewBag.무급휴가휴일</td>
+                            <td>휴일근로</td>
+                            <td>@ViewBag.휴일근로</td>
+                        </tr>
+                        <tr>
+                            <td>유급주휴일</td>
+                            <td>@ViewBag.유급주휴일</td>
+                            <td>휴일연장</td>
+                            <td>@ViewBag.휴일연장</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>휴일야간</td>
+                            <td>@ViewBag.휴일야간</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
