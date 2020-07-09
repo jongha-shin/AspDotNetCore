@@ -59,15 +59,15 @@
 
                                             @if (attend.날짜.DayOfWeek.ToString("d").Equals("0"))
                                             {
-                                            <th style="color:red">@attend.날짜.ToShortDateString() @attend.요일</th>
+                                            <th style="color:red">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
                                             }
                                             else if (attend.날짜.DayOfWeek.ToString("d").Equals("6"))
                                             {
-                                        <th style="color:blue">@attend.날짜.ToShortDateString() @attend.요일</th>
+                                        <th style="color:blue">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
                                             }
                                             else
                                             {
-                                            <th>@attend.날짜.ToShortDateString() @attend.요일</th>
+                                            <th>@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
                                             }
 
                                             <td>@attend.출근</td>

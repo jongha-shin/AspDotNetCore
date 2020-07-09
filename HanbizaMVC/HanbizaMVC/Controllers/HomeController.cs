@@ -43,14 +43,11 @@ namespace HanbizaMVC.Controllers
             GetLoginUser();
             ViewBag.LoginUser = LoginUser;
 
-            //var menuList = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
-            //Console.WriteLine("1: " + menuList.Count);
-            //ViewBag.menuList = menuList;
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            Console.WriteLine("1: " + menulist.Count);
+            ViewBag.menulist = menulist;
 
             List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId).ToList<공지사항>();
-            Console.WriteLine("2: " + noticeList.Count);
-            //_db.LoadStoredProc("notice_getList").AddParam("BizNum", LoginUser.BizNum).AddParam("LoginID", LoginUser.LoginID)
-            //    .Exec(r => noticeList = r.ToList<공지사항>());
 
             return View(noticeList);
         }
@@ -370,13 +367,13 @@ namespace HanbizaMVC.Controllers
 
             foreach (var i in vacationRecord)
             {
-                ViewBag.입사일 = i.입사일.ToShortDateString();
-                ViewBag.연차발생일 = i.연차발생일.ToShortDateString();
+                ViewBag.입사일 = string.Format("{0:yyyy-MM-dd}", i.입사일);
+                ViewBag.연차발생일 = string.Format("{0:yyyy-MM-dd}", i.연차발생일);
                 ViewBag.근속연수 = i.근속년수;
                 ViewBag.발생연차 = i.발생연차;
                 ViewBag.사용연차 = i.발생연차 - i.잔여일수;
                 ViewBag.잔여연차 = i.잔여일수;
-                ViewBag.Regdate = i.Regdate.ToShortDateString();
+                ViewBag.Regdate = string.Format("{0:yyyy-MM-dd}", i.Regdate);
             }
 
             List<휴가대장> vacationList = null;

@@ -14,7 +14,7 @@
 <div class="text-center container">
     <div class="card mb-4">
         <div class="card-body">
-                <p class="text-right">회계년도 기준 업데이트: @ViewBag.Regdate</p>
+            <p class="text-right">회계년도 기준 업데이트: @ViewBag.Regdate</p>
                 <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -66,7 +66,7 @@
                         {
                             <tr>
                                 <td>@item.번호</td>
-                                <td>@item.날짜.ToShortDateString()</td>
+                                <td>@string.Format("{0:yyyy-MM-dd}", item.날짜)</td>
                                 <td>@item.반차</td>
                             </tr>
                         }

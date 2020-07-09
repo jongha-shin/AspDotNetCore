@@ -7,8 +7,9 @@
       "secretStore": "AzureAppSettings"
     },
     "mssql2": {
+      "resourceId": null,
       "type": "mssql.onprem",
-      "connectionId": "DBConncection",
+      "connectionId": "HanbizaConncection",
       "secretStore": "AzureAppSettings"
     }
   }

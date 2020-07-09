@@ -116,7 +116,7 @@
                                     @foreach (var item in Model)
                                     {
                                         <tr>
-                                            <td>@item.Regdate</td>
+                                            <td>@string.Format("{0:yyyy-MM-dd HH:mm:ss}", item.Regdate)</td>
                                             <td>@item.Snals ~ @item.Enals</td>
                                             <td>@item.Reason</td>
                                         </tr>

@@ -172,12 +172,12 @@
                                         <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
                                         @if (item.Vicname.Equals("반차"))
                                         {
-                                            <td>@item.Snal.ToShortDateString() (@item.UseTime 시간)</td>
+                                            <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
 
                                         }
                                         else
                                         {
-                                            <td>@item.Snal.ToShortDateString() ~ @item.Enal.ToShortDateString()</td>
+                                            <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</td>
                                         }
 
                                         <td> @item.DeepNum / @item.ProCDeep</td>
