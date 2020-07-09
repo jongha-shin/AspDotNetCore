@@ -111,7 +111,7 @@
 
                     </div>
                     <div class="form-group row col-4 offset-4">
-                        <button class="btn btn-primary btn-user btn-block" onclick="submitVacation()">휴가신청</button>
+                        <button class="btn btn-primary btn-user btn-block" onclick="checkInput()">휴가신청</button>
                     </div>
                 </div>
             </div>
@@ -360,7 +360,7 @@
                     if (sjson.length == 0) {
                         s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
                     } else {
-//TODO: 신청 사유 적기 + 색깔입히기 - 거절시 앞단계 회색처리
+                        //TODO: 신청 사유 적기 + 색깔입히기 - 거절시 앞단계 회색처리
                         for (var i = 0; i < sjson.length; i++) {
                             var f_color = '';
                             if (sjson[i].AResult == 'N' && sjson[i].processPoint == 'N') f_color = "gray";
@@ -419,6 +419,7 @@
 
     function submitVacation() {
         //alert("휴가 신청")
+
         let Vicname = $("#Vicname").val();
         let UseTime = $("#UseTime").val();
         let Snal = $("#Snal").val();
@@ -447,7 +448,9 @@
                 },
                 success: function (result) {
                     if (result == "success") {
+
                         insertApprover();
+
                         $("#Vicname").val("선택");
                         $("#UseTime").val("시간");
                         $("#Snal").val("");
@@ -504,6 +507,7 @@
             success: function (result) {
                 if (result == "success") {
                     alert("신청 완료");
+                    location.href = "/Home/Sub3";
                 } else {
                     alert("신청 실패");
                 }
@@ -515,5 +519,56 @@
 
 
     }
+    function checkInput() {
+        //let ProCDeep = $("#ProCDeep ").val();
+        if ($("#Vicname").val() == "선택") {
+            alert("휴가구분을 선택해주세요");
+            $("#Vicname").focus();
+            return;
+        }
+        if ($("#Snal").val() == "") {
+            alert("휴가기간을 선택해주세요");
+            $("#Snal").focus();
+            return;
+        }
+        if ($("#Vicname").val() != "반차") {
+            if ($("#Enal").val() == "") {
+                alert("휴가기간을 선택해주세요");
+                $("#Enal").focus();
+                return;
+            }
+            if ($("#Snal").val().trim() > $("#Enal").val().trim()) {
+                alert("종료일이 시작일보다 작습니다.");
+                $("#Enal").focus();
+                return;
+            }
+        }
+        if ($("#Vicname").val() == "반차") {
+            if ($("#UseTime").val() == "시간") {
+                alert("반차 시간을 선택해주세요");
+                $("#UseTime").focus();
+                return;
+            }
+        }
+        if ($("#VicReason").val() == "") {
+            alert("사유를 입력해 주세요");
+            $("#UseTime").focus();
+            return;
+        }
 
+        var optionValue = $("#ProCDeep option:selected").val();
+        for (var i = 1; i <= 5; i++) {
+            if (i <= optionValue) {
+                if ($("#sign" + i).val() == "") {
+                    alert(i + "단계 결재자를 입력해 주세요")
+                    $("#sign" + i).focus();
+                    return;
+                }
+            } else {
+                $(".inputCls" + i).hide();
+            }
+        }
+
+        submitVacation();
+    }
 </script>

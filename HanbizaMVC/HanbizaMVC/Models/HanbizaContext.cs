@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace HanbizaMVC.Models
 {
@@ -68,7 +67,7 @@ namespace HanbizaMVC.Models
 
                 entity.Property(e => e.Reason).HasMaxLength(100);
 
-                entity.Property(e => e.Regdate).HasColumnType("datetime");
+                entity.Property(e => e.Regdate).HasColumnType("string");
 
                 entity.Property(e => e.Seqid).HasColumnName("SEQID");
 

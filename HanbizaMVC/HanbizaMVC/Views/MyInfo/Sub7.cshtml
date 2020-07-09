@@ -2,36 +2,35 @@
     ViewData["Title"] = "확인서명";
 }
 
-<div class="row justify-content-center">
-        <div class="col-xl-4 col-sm-12">
+<div class="container">
+    <div class="card" style="width:300px; margin: 0 auto">
+        <input type="hidden" id="SEQID" value="@ViewBag.SEQID" />
+        <div class="card-body p-0">
             <div class="text-center">
-                <div class="card" style="width:300px">
-                    <input type="hidden" id="SEQID" value="@ViewBag.SEQID"/>
-                    <div class="card-body p-0">
-                        @if (ViewBag.mySign == null)
-                        {
-                            <canvas id="drawCanvas" width="300" height="182" style="border:0px solid #d0eaf8;" align="center">Canvas not supported</canvas>
-                            <canvas id='blank' width="300" height="182" style='display:none'></canvas>
-                            <div class="btn_div">
-                                <button id="btnClear">취소하기</button>
-                                <button id="btnSave">등록하기</button>
-                            </div>
-                            <br />
-                            <div class="sign_txt">
-                                등록 후 수정이 불가하니 <br />
-                                신중하게 서명하시기 바랍니다!
-                            </div>
-                        }
-                        else
-                        {
-                            <img src="@ViewBag.mySign" alt="Alternate Text" />
-                            <div class="sign_txt">등록된 서명입니다!</div>
-                        }
+                @if (ViewBag.mySign == null)
+                {
+                    <canvas id="drawCanvas" width="300" height="182" style="border:0px solid #d0eaf8;" align="center">Canvas not supported</canvas>
+                    <canvas id='blank' width="300" height="182" style='display:none'></canvas>
+                    <div class="btn_div">
+                        <button id="btnClear">취소하기</button>
+                        <button id="btnSave">등록하기</button>
                     </div>
-
-                </div>
+                    <br />
+                    <div class="sign_txt">
+                        등록 후 수정이 불가하니 <br />
+                        신중하게 서명하시기 바랍니다!
+                    </div>
+                }
+                else
+                {
+                    <img src="@ViewBag.mySign" alt="Alternate Text" />
+                    <div class="sign_txt">등록된 서명입니다!</div>
+                }
             </div>
+
         </div>
+    </div>
+
 </div>
 
 <script>
@@ -156,7 +155,7 @@
         }
 
         var canvas_chk = document.getElementById('drawCanvas');
-            document.getElementById('btnSave').addEventListener('click', function () {
+        document.getElementById('btnSave').addEventListener('click', function () {
             if (canvas_chk.toDataURL() == document.getElementById('blank').toDataURL()) {
                 alert('서명을 등록해 주세요!'); return false;
             } else {
@@ -173,7 +172,7 @@
             console.log("2: " + Pic);
 
             var SEQID = $("#SEQID").val();
-                console.log("3: "+SEQID)
+            console.log("3: " + SEQID)
             alert("===일시정지===")
             //TODO: url 지정 저장컨트롤러 작성
             $.ajax({

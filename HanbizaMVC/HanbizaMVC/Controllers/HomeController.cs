@@ -43,12 +43,12 @@ namespace HanbizaMVC.Controllers
             GetLoginUser();
             ViewBag.LoginUser = LoginUser;
 
-            var menuList = _db.회사별메뉴.Where(r=>r.BizNum == LoginUser.BizNum).ToList();
-            Console.WriteLine("1: "+menuList.Count);
-            ViewBag.menuList = menuList;
+            //var menuList = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            //Console.WriteLine("1: " + menuList.Count);
+            //ViewBag.menuList = menuList;
 
             List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId).ToList<공지사항>();
-            Console.WriteLine("2: "+noticeList.Count);
+            Console.WriteLine("2: " + noticeList.Count);
             //_db.LoadStoredProc("notice_getList").AddParam("BizNum", LoginUser.BizNum).AddParam("LoginID", LoginUser.LoginID)
             //    .Exec(r => noticeList = r.ToList<공지사항>());
 
@@ -347,17 +347,18 @@ namespace HanbizaMVC.Controllers
         public string Sub4_2(string VacID, string RereaSon)
         {
             string result;
-            _logger.LogInformation("sub4_2(): " + VacID+" / "+ RereaSon);
+            _logger.LogInformation("sub4_2(): " + VacID + " / " + RereaSon);
             var rs = _db.LoadStoredProc("vacation_process_reject").AddParam("approveID", LoginUser.StaffId).AddParam("VacID", VacID).AddParam("RereaSon", RereaSon).ExecNonQuery();
-            if (rs > 0) { 
+            if (rs > 0)
+            {
                 result = "success";
                 return result;
             }
             result = "fail";
             return result;
         }
-            // 5. 연차보기
-            [Authorize]
+        // 5. 연차보기
+        [Authorize]
         public IActionResult Sub5()
         {
             //GetLoginUser();
@@ -394,23 +395,41 @@ namespace HanbizaMVC.Controllers
 
         // 6. 급여명세서
         [Authorize]
-        public IActionResult Sub6()
+        [Route("/Home/Sub6")]
+        [Route("/Home/Sub6/{Yyyymm}/{Ncount}")]
+        public IActionResult Sub6(string Yyyymm, string Ncount)
         {
-            //GetLoginUser();
             _logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
+            dynamic mymodel = new ExpandoObject();
             List<PayList> plist = null;
+            List<PayList> monthList = null;
+            if (Yyyymm == null || Ncount == null)
+            {
+                _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                    .Exec(r => monthList = r.ToList<PayList>());
 
-            _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => plist = r.ToList<PayList>());
+                // Console.WriteLine(plist[0].Yyyymm + "년 " + plist[0].Ncount + "회차");
 
-            // Console.WriteLine(plist[0].Yyyymm + "년 " + plist[0].Ncount + "회차");
+                ViewBag.선택월 = monthList[0].Yyyymm;
+                ViewBag.선택회차 = monthList[0].Ncount;
 
-            var yyyymm = plist[0].Yyyymm;
-            var ncount = plist[0].Ncount;
+                _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                    .AddParam("Yyyymm", monthList[0].Yyyymm).AddParam("Ncount", monthList[0].Ncount).Exec(r => plist = r.ToList<PayList>());
+            }
+            else
+            {
+                ViewBag.선택월 = Yyyymm;
+                ViewBag.선택회차 = Ncount;
 
-            _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .AddParam("Yyyymm", yyyymm).AddParam("Ncount", ncount).Exec(r => plist = r.ToList<PayList>());
+                _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                    .Exec(r => monthList = r.ToList<PayList>());
+                _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                    .AddParam("Yyyymm", Yyyymm).AddParam("Ncount", Ncount).Exec(r => plist = r.ToList<PayList>());
+            }
+
+            mymodel.plist = plist;
+            mymodel.monthList = monthList;
 
             int a = 0;
             int b = 0;
@@ -433,7 +452,7 @@ namespace HanbizaMVC.Controllers
                 ViewBag.Crows = b;
             }
 
-            return View(plist);
+            return View(mymodel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

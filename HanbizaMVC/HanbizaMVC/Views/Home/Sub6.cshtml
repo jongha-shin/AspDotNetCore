@@ -1,19 +1,23 @@
 ﻿@{
     ViewData["Title"] = "급여명세서";
 }
-@model List<PayList>
+@model dynamic
 <style>
     table > thead > tr > th {
         background-color: #3763ab;
-        color:white;
+        color: white;
     }
 
     table > tbody > tr:last-child {
-        
     }
 </style>
 <div class="container">
     <div class="card mb-4">
+        <ul class="nav justify-content-end" style="font-size:small; padding-top:20px; padding-right:20px">
+            <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+            <span style="margin:5px">@ViewBag.선택월 - @ViewBag.선택회차 회차</span>
+            <a href="#" id="nextBtn" onclick="changeMonth('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        </ul>
         <div class="card-body">
             <div class="text-center">
 
@@ -27,7 +31,7 @@
                     </thead>
                     <tbody>
                         @{int a = 0; }
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.plist)
                         {
                             @if (item.Gubun.Equals("0") && item.Fsort == 0)
                             {
@@ -64,7 +68,7 @@
                     </thead>
                     <tbody>
                         @{int b = 0; }
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.plist)
                         {
                             @if (item.Gubun.Equals("1") && item.Fsort == 0)
                             {
@@ -96,7 +100,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.plist)
                         {
                             @if (item.Fsort > 0)
                             {
@@ -115,9 +119,32 @@
         </div>
     </div>
 </div>
-        <script>
-            function asdf() {
-                alert("agasg");
+<script>
+    function changeMonth(sign) {
+        let monthList = [];
+        let NcountList = [];
+        @foreach (var item in Model.monthList)
+        {
+            @:monthList.push('@item.Yyyymm');
+            @:NcountList.push('@item.Ncount');
+        }
+        let current_num = monthList.indexOf('@ViewBag.선택월');
+        //alert("현재index: " + current_num + " / 배열길이: " + monthList.length)
+        if (sign == '+') { // 배열 index 감소
+            if (current_num - 1 < 0) {
+                alert("데이터가 없습니다.")
             }
+            else {
+                location.href = "/Home/Sub6/" + monthList[current_num - 1] + "/" + NcountList[current_num - 1];
+            }
+        } else {    // '-' 배열 index 증가
+            if (current_num + 1 > monthList.length -1) {
+                alert("데이터가 없습니다.")
+            }
+            else {
+                location.href = "/Home/Sub6/" + monthList[current_num + 1] + "/" + NcountList[current_num + 1];
+            }
+        }
+    }
 
-        </script>
+</script>

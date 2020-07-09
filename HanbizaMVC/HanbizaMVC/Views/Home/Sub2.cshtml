@@ -212,7 +212,7 @@
         });
     }
     function checkInput() {
-        if ($("#Gubun").val() == "") {
+        if ($("#Gubun").val() == "S") {
             alert("OT를 선택해주세요");
             $("#Gubun").focus();
             return;
@@ -225,6 +225,7 @@
         if ($("#Snal_h").val() == $("#Enal_h").val()
             && $("#Snal_m").val() == $("#Enal_m").val()) {
             alert("시작시간과 종료시간이 같습니다");
+            $("#Enal_h").focus();
             return;
         }
         if ($("#Reason").val() == "") {

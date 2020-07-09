@@ -14,8 +14,8 @@ namespace HanbizaMVC.Models
         public DateTime Enal { get; set; }
         public string Reason { get; set; }
         public string HbzMsend { get; set; }
-        public DateTime? HbzYymmdd { get; set; }
-        public DateTime? Regdate { get; set; }
+        public DateTime HbzYymmdd { get; set; }
+        public string Regdate { get; set; }
 
         public string Snals { get; set; }
         public string Enals { get; set; }

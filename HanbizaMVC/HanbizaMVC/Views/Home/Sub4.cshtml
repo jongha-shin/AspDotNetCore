@@ -144,7 +144,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(function () {
+$(function () {
         $("#checkBox_head").change(function () {
             if ($("#checkBox_head").is(":checked")) {
                 $(".checkBox_body").each(function () {
@@ -158,7 +158,7 @@
         });
         $(".checkBox_body").on("change", function () {
             $(this).parent().parent().find("div.reason_Div").hide();
-
+            $(this).parent().parent().find("div.reason_Div").removeClass("openReason");
             let checked_Num = $(".checkBox_body:checked").length
             if (checked_Num == 0) {
                 $("#checkBox_head").prop("checked", false);
@@ -200,30 +200,34 @@
         checkedVacId = checkedVacId.substring(0, checkedVacId.lastIndexOf(","));
         if (checkedVacId == '') { alert('선택한 내용이 없습니다'); return; }
 
-        $.ajax({
-            url: "/Home/Sub4_1/" + checkedVacId + "/" + Gubun,
-            type: "GET",
-            contentType: "application/x-www-form-urlencoded; charset=utf-8",
-            dataType: "text",
-            success: function () {
-                alert("선택한 휴가 정보가 승인되었습니다.");
-                location.href = "/Home/Sub4";
-            },
-            error: function () {
-                alert("err");
+        if (confirm("선택한 휴가신청을 승인하시겠습니까?")) {
+            if ($(".openReason").length > 0) {
+                alert("반려 중인 신청이 있습니다.")
+                return;
             }
-        });
+            $.ajax({
+                url: "/Home/Sub4_1/" + checkedVacId + "/" + Gubun,
+                type: "GET",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: "text",
+                success: function () {
+                    alert("선택한 휴가 정보가 승인되었습니다.");
+                    location.href = "/Home/Sub4";
+                },
+                error: function () {
+                    alert("err");
+                }
+            });
+        }
     }
     function displayReason() {
         let checked_Num = $(".checkBox_body:checked").length
-        if (checked_Num == 0) {
-            alert("데이터를 선택해 주세요");
-            return;
-        }
+        if (checked_Num == 0) { alert("선택한 내용이 없습니다"); return; }
 
         $("#beforeReason").hide();
         $("#afterReason").show();
         $(".checkBox_body:checked").each(function () {
+            $(this).parent().parent().find("div.reason_Div").addClass("openReason");
             $(this).parent().parent().find("div.reason_Div").show();
         })
     }
