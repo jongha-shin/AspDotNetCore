@@ -53,9 +53,6 @@ namespace HanbizaMVC.Controllers
                         new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(30) });
                 }
 
-                var menulist = _db.회사별메뉴.Where(r => r.BizNum == account.BizNum).ToList();
-                Console.WriteLine("1: " + menulist[0].비밀번호변경);
-                ViewBag.menulist = menulist;
                 return RedirectToAction("Sub0", "Home");
 
             }
@@ -80,6 +77,12 @@ namespace HanbizaMVC.Controllers
             await HttpContext.SignOutAsync("Cookies");
 
             return RedirectToAction("startLogIn", "MyInfo");
+        }
+
+
+        public ActionResult SideMenu()
+        {
+            return PartialView("SideMenu");
         }
 
         /*  로그인 정보 확인

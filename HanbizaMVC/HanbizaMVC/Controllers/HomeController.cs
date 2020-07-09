@@ -20,7 +20,7 @@ namespace HanbizaMVC.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly HanbizaContext _db;
         public static LoginUser LoginUser;
-
+        
         public HomeController(ILogger<HomeController> logger, HanbizaContext db)
         {
             _logger = logger;
@@ -33,6 +33,7 @@ namespace HanbizaMVC.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                
                 _db.LoadStoredProc("login_userDetail").AddParam("StaffID", StaffID).Exec(r => LoginUser = r.SingleOrDefault<LoginUser>());
             }
         }
@@ -45,6 +46,10 @@ namespace HanbizaMVC.Controllers
             Console.WriteLine("sub0");
             List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId).ToList<공지사항>();
 
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
+
+
             return View(noticeList);
         }
 
@@ -54,6 +59,8 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub1/{dateMonth}")]
         public IActionResult Sub1(string dateMonth)
         {
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             // 최근 근태기록 월 구하기
             List<출퇴근기록> Months = null;
             if (dateMonth == null)
@@ -112,6 +119,7 @@ namespace HanbizaMVC.Controllers
                 ViewBag.휴일연장 = i.휴일연장;
                 ViewBag.휴일야간 = i.휴일야간;
             }
+
             return View(Months);
         }
         [Authorize]
@@ -119,6 +127,8 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub1_1/{dateMonth}")]
         public IActionResult Sub1_1(string dateMonth)
         {
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             dynamic mymodel = new ExpandoObject();
             // 최근 근태기록 월 구하기
             List<출퇴근기록> Months = null;
@@ -152,6 +162,8 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub2()
         {
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             _logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             // OT 신청내역
@@ -194,6 +206,8 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub3()
         {
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             //GetLoginUser();
             _logger.LogInformation("sub3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
@@ -213,6 +227,8 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub3_1/{SearchKey}/{SearchWord}/{Step_num}/{StaffList}")]
         public IActionResult Sub3_1(string SearchKey, string SearchWord, string Step_num, string StaffList)
         {
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             //GetLoginUser();
             _logger.LogInformation("sub3_1(): " + SearchKey + " / " + SearchWord + " / " + Step_num);
             Console.WriteLine("list: " + StaffList);
@@ -238,6 +254,8 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub3_2/{VacID}")]
         public IActionResult Sub3_2(string VacID)
         {
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             // GetLoginUser();
             _logger.LogInformation("sub3_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + VacID);
             var jsonString = "";
@@ -299,6 +317,8 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub4()
         {
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             //GetLoginUser();
             _logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
@@ -354,6 +374,8 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub5()
         {
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             //GetLoginUser();
             _logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
@@ -392,6 +414,8 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub6/{Yyyymm}/{Ncount}")]
         public IActionResult Sub6(string Yyyymm, string Ncount)
         {
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             _logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             dynamic mymodel = new ExpandoObject();

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using StoredProcedureEFCore;
 using HanbizaMVC.ViewModel;
 using System.Security.Claims;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 
 namespace HanbizaMVC.Controllers
@@ -41,6 +40,8 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub7()
         {
             GetLoginUser();
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<문서함> mySign = null;
@@ -77,6 +78,8 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub8()
         {
             GetLoginUser();
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             
                 List<문서함> fileList = null;
@@ -93,6 +96,9 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub9()
         {
+            GetLoginUser();
+            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+            ViewBag.menulist = menulist;
             return View();
         }
         public IActionResult startLogIn()

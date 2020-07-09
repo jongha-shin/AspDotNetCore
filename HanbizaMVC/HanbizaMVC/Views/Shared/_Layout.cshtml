@@ -40,95 +40,8 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/Home/Sub0">
-                <img src="~/img/logo_main.png" alt="한비자" />
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            @* html.Partial("_myMenuLayout") *@
-
-            <li class="nav-item">
-                <a class="nav-link" href="/Home/Sub1">
-                    <i class="fas fa-fw fa-user-check"></i>
-                    <span>근태보기</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/Home/Sub2">
-                    <i class="fas fa-fw fa-plus"></i>
-                    <span>OT신청</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/Home/Sub3">
-                    <i class="fas fa-fw fa-plane-departure"></i>
-                    <span>휴가신청</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/Home/Sub4">
-                    <i class="fas fa-fw fa-pen"></i>
-                    <span>휴가결재</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/Home/Sub5">
-                    <i class="fas fa-fw fa-calendar-alt"></i>
-                    <span>연차보기</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/Home/Sub6">
-                    <i class="fas fa-fw fa-coins"></i>
-                    <span>급여명세서</span>
-                </a>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                내 정보
-            </div>
-            <li class="nav-item">
-                <a class="nav-link" href="/MyInfo/Sub7">
-                    <i class="fas fa-fw fa-signature"></i>
-                    <span>확인서명</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/MyInfo/Sub8">
-                    <i class="fas fa-fw fa-file-alt"></i>
-                    <span>내문서</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/MyInfo/Sub9">
-                    <i class="fas fa-fw fa-key"></i>
-                    <span>비밀번호변경</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/Account/Logout">
-                    <i class="fas fa-fw fa-sign-out-alt"></i>
-                    <span>로그아웃</span>
-                </a>
-            </li>
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-        </ul>
-        <!-- End of Sidebar -->
+        <partial name="SideMenu.cshtml" />
+        
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
@@ -208,8 +121,6 @@
     <script>
         $(function () {
 
-
-
             $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {
                 //alert("g");
                 $("body").toggleClass("sidebar-toggled");
@@ -226,7 +137,7 @@
                 alert(seq)
             });
         });
-
+        
     </script>
 </body>
 </html>
