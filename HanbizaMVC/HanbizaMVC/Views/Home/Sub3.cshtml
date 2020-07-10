@@ -38,23 +38,27 @@
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive col-12">
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">구분</label>
-
-                    <select class="form-control form-control-sm col-sm-6" id="Vicname" onchange="fn_timeHide()">
-                        <option value="선택" selected>선택</option>
-                        <option value="연차">연차</option>
-                        <option value="반차">반차</option>
-                        <option value="기타휴가">기타휴가</option>
-                    </select>
-                    <div>
-                        <label class="col-sm-2 col-form-label">시간</label>
-                        <select class="form-control form-control-sm col-sm-4" id="UseTime" style="display:none">
-                            <option value="시간" selected>선택</option>
-                            @for (int i = 1; i < 9; i++)
-                            {
-                                <option value="@i">@i 시간</option>
-                            }
-                        </select>
+                    <label class="col-sm-2 col-form-label">휴가</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <label class="col-3 col-lg-2 col-form-label">구분</label>
+                            <select class="form-control form-control-sm col-9 col-sm-5" id="Vicname" onchange="fn_timeHide()">
+                                <option value="선택" selected>선택</option>
+                                <option value="연차">연차</option>
+                                <option value="반차">반차</option>
+                                <option value="기타휴가">기타휴가</option>
+                            </select>
+                        </div>
+                        <div class="row" id="ShowTime" style="display:none">
+                            <label class="col-3 col-lg-2 col-form-label">시간</label>
+                            <select class="form-control form-control-sm col-9 col-sm-5" id="UseTime">
+                                <option value="시간" selected>선택</option>
+                                @for (int i = 1; i < 9; i++)
+                                {
+                                    <option value="@i">@i 시간</option>
+                                }
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -62,11 +66,11 @@
                     <div class="col-sm-10">
                         <div class="row">
                             <label class="col-3 col-lg-2 col-form-label">시작</label>
-                            <input id="Snal" class="form-control form-control-sm col-5" />
+                            <input id="Snal" class="form-control form-control-sm col-9 col-sm-5" />
                         </div>
                         <div class="row">
                             <label class="col-3 col-lg-2 col-form-label">종료</label>
-                            <input id="Enal" class="form-control form-control-sm col-5" />
+                            <input id="Enal" class="form-control form-control-sm col-9 col-sm-5" />
                         </div>
                     </div>
                 </div>
@@ -350,9 +354,9 @@
 
         $("#Vicname").change(function () {
             if ($("#Vicname").val() == '반차') {
-                $("#UseTime").show();
+                $("#ShowTime").show();
             } else {
-                $("#UseTime").hide();
+                $("#ShowTime").hide();
             }
         })
 
