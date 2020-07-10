@@ -19,38 +19,24 @@ namespace HanbizaMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HanbizaContext _db;
-        public static LoginUser LoginUser;
-        public static List<회사별메뉴> menulist;
+        private readonly LoginInfor LoginUser = AccountController.LoginUser;
+        private readonly List<회사별메뉴> menulist = AccountController.menulist;
 
 
         public HomeController(ILogger<HomeController> logger, HanbizaContext db)
         {
             _logger = logger;
             _db = db;
-
-        }
-
-        public void GetLoginUser()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                
-                _db.LoadStoredProc("login_userDetail").AddParam("StaffID", StaffID).Exec(r => LoginUser = r.SingleOrDefault<LoginUser>());
-               menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
-            }
         }
 
         // 0. 로그인 후 첫 화면 : 공지사항 + 메뉴 세팅 !!!!!!!!!!!!!!!!!!!!!!!!!
         public IActionResult Sub0()
         {
-            GetLoginUser();
             ViewBag.LoginUser = LoginUser;
             Console.WriteLine("sub0");
             List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId).ToList<공지사항>();
            
             ViewBag.menulist = menulist;
-
 
             return View(noticeList);
         }

@@ -17,8 +17,8 @@ namespace HanbizaMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HanbizaContext _db;
-        private LoginUser LoginUser = HomeController.LoginUser;
-        private List<회사별메뉴> menulist = HomeController.menulist;
+        private readonly LoginInfor LoginUser = AccountController.LoginUser;
+        private readonly List<회사별메뉴> menulist = AccountController.menulist;
 
         public MyInfoController(ILogger<HomeController> logger, HanbizaContext db)
         {
@@ -86,11 +86,7 @@ namespace HanbizaMVC.Controllers
             ViewBag.menulist = menulist;
             return View();
         }
-        public IActionResult startLogIn()
-        {
-            Console.WriteLine("로그인 화면");
-            return View();
-        }
+       
         //[HttpPost]
         //public IActionResult LogIn(OnlyLogin model)
         //{

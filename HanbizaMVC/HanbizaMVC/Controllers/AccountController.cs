@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using StoredProcedureEFCore;
 using System;
 using System.Collections.Generic;
@@ -15,49 +14,66 @@ namespace HanbizaMVC.Controllers
     public class AccountController : Controller
     {
         private readonly HanbizaContext _db;
+        public static LoginInfor LoginUser;
+        public static List<회사별메뉴> menulist;
 
         public AccountController(HanbizaContext db)
         {
             _db = db;
         }
-        public async Task<IActionResult> Login(OnlyLogin model)
+        public IActionResult StartLogin()
         {
-            Console.WriteLine("accoutn login 실행 / model.auto: " + model.Auto_save);
-            if (!ModelState.IsValid)
+            // 쿠키 체크, 정보 가져오기
+            Console.WriteLine("로그인 화면");
+            if (User.Identity.IsAuthenticated)
             {
-                return View(model);
+                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var loginId = from info in _db.LoginInfor
+                              where info.StaffId == int.Parse(StaffID)
+                              select info;
+
+                foreach (var item in loginId)
+                {
+                    ViewBag.loginID = item.LoginId;
+                }
             }
 
+            return View();
 
-            // db에서 비교해서 로그인 정보 가져오기
-            LoginInfor account = null;
-
-            _db.LoadStoredProc("dbo.login_Process").AddParam("loginID", model.LoginID).AddParam("passW", model.passW)
-              .Exec(r => account = r.SingleOrDefault<LoginInfor>());
-
-            if (account != null)
+        }
+        [Route("/Account/Login/{userID}/{userPWD}/{autoSave}")]
+        public string Login(string userID, string userPWD, string autoSave)
+        {
+            _db.LoadStoredProc("dbo.login_Process").AddParam("loginID", userID).AddParam("passW", userPWD)
+              .Exec(r => LoginUser = r.SingleOrDefault<LoginInfor>());
+            string rs;
+            if (LoginUser != null)
             {
-                var claims = BuildClaims(account);
+                rs = "success";
+                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+                var claims = BuildClaims(LoginUser);
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                if (model.Auto_save == null || model.Auto_save.Equals(""))
+                if (autoSave == null || autoSave.Equals(""))
                 {
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
                         new AuthenticationProperties { IsPersistent = false });
                 }
                 else
                 {
-                   Console.WriteLine("------auto_save------");
-                   await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
-                        new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(30) });
+                    Console.WriteLine("------auto_save------");
+                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+                         new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(30) });
                 }
-
-                return RedirectToAction("Sub0", "Home");
-
             }
-            return View(model);
+            else
+            {
+                rs = "fail";
+            }
+            return rs;
         }
+
         private IList<Claim> BuildClaims(LoginInfor account)
         {
             var claims = new List<Claim>
@@ -76,7 +92,7 @@ namespace HanbizaMVC.Controllers
         {
             await HttpContext.SignOutAsync("Cookies");
 
-            return RedirectToAction("startLogIn", "MyInfo");
+            return RedirectToAction("StartLogIn", "Account");
         }
 
 
@@ -84,26 +100,5 @@ namespace HanbizaMVC.Controllers
         {
             return PartialView("SideMenu");
         }
-
-        /*  로그인 정보 확인
-        public IActionResult LoginPartial()
-        {
-            string result = "";
-            if (User.Identity.IsAuthenticated)
-            {
-                result = $"<h3>{User.Identity.Name}</h3>";
-                foreach (var claim in User.Claims)
-                {
-                    result += $"{claim.Type} - {claim.Value}<br />";
-                }
-            }
-            else
-            {
-                result = "로그인하지 않았습니다.";
-            }
-            return Content(result, "text/html", Encoding.Default);
-        }
-        */
-
     }
 }

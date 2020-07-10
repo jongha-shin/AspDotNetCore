@@ -8,7 +8,7 @@ CREATE PROCEDURE dbo.login_Process
 	@loginID  VARCHAR(50),
 	@passW VARCHAR(50)
 AS
-	SELECT StaffID, BizNum
+	SELECT Dname, BizNum, StaffID, StaffName, CONVERT(char(23), GETDATE(), 23) as LoginDate, loginID
 	FROM Login_infor
 	WHERE (loginID = @loginID) AND PWDCOMPARE(LOWER(@passW), PassW) = 1
 Go
