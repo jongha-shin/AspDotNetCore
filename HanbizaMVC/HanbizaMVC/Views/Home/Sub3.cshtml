@@ -138,8 +138,8 @@
                                 <option value="부서" selected>부서</option>
                                 <option value="이름">이름</option>
                             </select>
-                            <input class="form-control form-control-sm col-8" type="text" placeholder="검색어를 입력하세요" id="searchWord" />
-                            <input class="form-control form-control-sm col-2" type="submit" value="검색" id="searchBtn" />
+                            <input class="form-control form-control-sm col-8" type="text" placeholder="검색어를 입력하세요" id="searchWord"  onkeyup="enterkey()"/>
+                            <input class="form-control form-control-sm col-2" type="submit" value="검색" id="searchBtn"/>
                         </div>
                         @* ajax로 데이터 가져옴 *@
                         <spand id="result"></spand>
@@ -233,6 +233,14 @@
 </div>
 
 <script>
+    function enterkey() {
+        var searchKey = $("#searchKey").val();
+        var searchWord = $("#searchWord").val().trim();
+        if (window.event.keyCode == 13) {
+            getApproverTable(searchKey, searchWord);
+        }
+    }
+
     function getApproverTable(searchKey, searchWord) {
         let Sstep_num = $("#stepModal").text();
         let step_num = parseInt(Sstep_num);
@@ -339,7 +347,7 @@
         $("#result").html("");
 
     });
-
+    
     $(function () {
         $("#Snal").datepicker({
             language: 'ko'

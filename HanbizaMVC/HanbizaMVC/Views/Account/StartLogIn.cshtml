@@ -45,10 +45,10 @@
                                         <img src="~/img/한비자-2.png" />
                                     </div>
                                     <div class="form-group">
-                                        <input id="userID" type="password" class="form-control form-control-user" placeholder="사용자 ID를 입력하세요">
+                                        <input id="userID" type="password" class="form-control form-control-user" placeholder="사용자 ID를 입력하세요" onkeyup="enterkey()" value="01011111111">
                                     </div>
                                     <div class="form-group">
-                                        <input id="userPWD" type="password" class="form-control form-control-user" placeholder="비밀번호를 입력하세요">
+                                        <input id="userPWD" type="password" class="form-control form-control-user" placeholder="비밀번호를 입력하세요" onkeyup="enterkey()" value="801111">
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox small">
@@ -86,7 +86,13 @@
                     $("#customCheck").val("not_save");
                 }
             });
+
         })
+        function enterkey() {
+            if (window.event.keyCode == 13) {
+                checkinput();
+            }
+        }
         function checkCookie() {
             //alert(@ViewBag.loginID);
             $("#userID").val("@ViewBag.loginID");
@@ -109,7 +115,7 @@
         }
 
         function loginProcess(userID, userPWD) {
-            
+
             let autoSave = $("#customCheck").val();
 
             $.ajax({
@@ -130,7 +136,7 @@
                 }
             })
         }
-       
+
     </script>
 </body>
 </html>
