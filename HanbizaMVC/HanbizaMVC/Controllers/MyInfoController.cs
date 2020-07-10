@@ -17,7 +17,8 @@ namespace HanbizaMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HanbizaContext _db;
-        private LoginUser LoginUser;
+        private LoginUser LoginUser = HomeController.LoginUser;
+        private List<회사별메뉴> menulist = HomeController.menulist;
 
         public MyInfoController(ILogger<HomeController> logger, HanbizaContext db)
         {
@@ -25,22 +26,10 @@ namespace HanbizaMVC.Controllers
             _db = db;
         }
 
-        public void GetLoginUser()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-                _db.LoadStoredProc("login_userDetail").AddParam("StaffID", StaffID).Exec(r => LoginUser = r.SingleOrDefault<LoginUser>());
-            }
-        }
-
         // 확인서명
         [Authorize]
         public IActionResult Sub7()
         {
-            GetLoginUser();
-            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
             ViewBag.menulist = menulist;
             //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
@@ -77,27 +66,23 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub8()
         {
-            GetLoginUser();
-            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
             ViewBag.menulist = menulist;
             //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            
-                List<문서함> fileList = null;
-                _db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .Exec(r => fileList = r.ToList<문서함>());
 
-                if (fileList.Count > 0)
-                {
-                    return View(fileList);
-                }
-            
+            List<문서함> fileList = null;
+            _db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                .Exec(r => fileList = r.ToList<문서함>());
+
+            if (fileList.Count > 0)
+            {
+                return View(fileList);
+            }
+
             return View();
         }
         [Authorize]
         public IActionResult Sub9()
         {
-            GetLoginUser();
-            var menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
             ViewBag.menulist = menulist;
             return View();
         }

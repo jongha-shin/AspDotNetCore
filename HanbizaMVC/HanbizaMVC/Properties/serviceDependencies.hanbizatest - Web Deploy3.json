@@ -9,7 +9,7 @@
     "mssql2": {
       "resourceId": null,
       "type": "mssql.onprem",
-      "connectionId": "HanbizaConncection",
+      "connectionId": "HanbizaConnection",
       "secretStore": "AzureAppSettings"
     }
   }

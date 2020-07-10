@@ -21,8 +21,8 @@
         background-color: #3763ab;
     }
 </style>
-<div class="text-center col-12 col-sm-10 offset-sm-1 p-2" style="background-color:white">
-    <ul class="nav nav-pills  mb-3" id="pills-tab" role="tablist" style="float:left">
+<div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left">
         <li class="nav-item">
             <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">휴가신청</a>
         </li>
@@ -33,7 +33,6 @@
     <ul class="nav justify-content-end">
         @ViewBag.최근월
     </ul>
-
     @* tap1 *@
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -41,36 +40,41 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">구분</label>
 
-                    <select class="form-control form-control-sm col-sm-4" id="Vicname" onchange="fn_timeHide()">
+                    <select class="form-control form-control-sm col-sm-6" id="Vicname" onchange="fn_timeHide()">
                         <option value="선택" selected>선택</option>
                         <option value="연차">연차</option>
                         <option value="반차">반차</option>
                         <option value="기타휴가">기타휴가</option>
-                    </select>&nbsp;
-                    <select class="form-control form-control-sm col-sm-4" id="UseTime">
-                        <option value="시간" selected>시간</option>
-                        @for (int i = 1; i < 9; i++)
-                        {
-                            <option value="@i">@i 시간</option>
-                        }
                     </select>
-
+                    <div>
+                        <label class="col-sm-2 col-form-label">시간</label>
+                        <select class="form-control form-control-sm col-sm-4" id="UseTime" style="display:none">
+                            <option value="시간" selected>선택</option>
+                            @for (int i = 1; i < 9; i++)
+                            {
+                                <option value="@i">@i 시간</option>
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group row col-12">
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label">신청일</label>
-
-                    <input id="Snal" class="form-control form-control-sm col-sm-4" />
-
-                    &nbsp;~&nbsp;
-
-                    <input id="Enal" class="form-control form-control-sm col-sm-4" />
-
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <label class="col-3 col-lg-2 col-form-label">시작</label>
+                            <input id="Snal" class="form-control form-control-sm col-5" />
+                        </div>
+                        <div class="row">
+                            <label class="col-3 col-lg-2 col-form-label">종료</label>
+                            <input id="Enal" class="form-control form-control-sm col-5" />
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group row col-12">
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label">사유</label>
                     <textarea class="form-control form-control-sm col-sm-10" id="VicReason" rows="5"></textarea>
                 </div>
-                <div class="form-group row col-12">
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label">결재단계</label>
                     <select class="form-control form-control-sm col-sm-10" id="ProCDeep">
                         @{ int a; }
@@ -80,7 +84,7 @@
                         }
                     </select>
                 </div>
-                <div class="form-group row col-12" id="stepStaff">
+                <div class="form-group row" id="stepStaff">
                     <label class="col-sm-2 col-form-label">결재자</label>
                     <div id="" class="inputCls1 col-sm-10" style="text-align:left">
                         <input type="hidden" id="StaffID1">
@@ -113,7 +117,7 @@
 
                 </div>
                 <div class="form-group row col-4 offset-4">
-                    <button class="btn btn-primary btn-user btn-block" onclick="checkInput()">휴가신청</button>
+                    <button class="btn btn-sm btn-primary btn-user btn-block" onclick="checkInput()">휴가신청</button>
                 </div>
             </div>
         </div>
@@ -227,6 +231,7 @@
         <!-- /ApproveDetail modal block -->
     </div>
 </div>
+
 <script>
     function getApproverTable(searchKey, searchWord) {
         let Sstep_num = $("#stepModal").text();
@@ -342,6 +347,14 @@
         $("#Enal").datepicker({
             language: 'ko'
         });
+
+        $("#Vicname").change(function () {
+            if ($("#Vicname").val() == '반차') {
+                $("#UseTime").show();
+            } else {
+                $("#UseTime").hide();
+            }
+        })
 
         $("#vacationTable tr").click(function () {
             var VacID = $(this).find("input").val();
