@@ -381,16 +381,15 @@
                     if (sjson.length == 0) {
                         s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
                     } else {
-                        //TODO: 신청 사유 적기 + 색깔입히기 - 거절시 앞단계 회색처리
                         for (var i = 0; i < sjson.length; i++) {
                             var f_color = '';
                             if (sjson[i].AResult == 'N' && sjson[i].processPoint == 'N') f_color = "gray";
                             if (sjson[i].AResult == 'Y' && sjson[i].processPoint == 'N') f_color = "blue";
                             if (sjson[i].AResult == 'F' && sjson[i].processPoint == 'N') {
                                 f_color = "red";
-                                //var DeepNumChk = Number(sjson[i].DeepNum);
-                                //if (0 < DeepNumChk < Number(sjson[i].DeepNum)-1 ) f_color = "gray";
+                                var DeepNumChk = Number(sjson[i].DeepNum);
                             }
+                            if (DeepNumChk < Number(sjson[i].DeepNum)) f_color = "gray";
                             s += "<tr>";
                             s += "<td style='color:" + f_color + "'>" + sjson[i].DeepNum + "</td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].approveName + "</td>"
