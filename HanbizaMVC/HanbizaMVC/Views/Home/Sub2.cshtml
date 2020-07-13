@@ -20,6 +20,11 @@
     .nav-tabs .nav-link {
         color: grey;
     }
+
+    label {
+        font-weight: bold;
+        
+    }
 </style>
 
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
@@ -37,66 +42,68 @@
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive col-12">
-                <div class="form-group row">
+                <div class="form-group row mb-4 mt-3">
                     <label class="col-sm-2 col-form-label">구분</label>
-                    <div class="col-sm-5">
+                    <div class="col-sm-4">
                         <select id="Gubun" class="form-control form-control-sm">
                             <option value="S">선택</option>
                             <option value="C">평일근로</option>
                             <option value="R">휴일근로</option>
                         </select>
                     </div>
-                </div>
-                <div class="form-group row">
                     <label class="col-sm-2 col-form-label">신청일</label>
-                    <div class="col-sm-5">
-                        <input id="Snal" class="form-control form-control-sm" />
+                    <div class="col-sm-4">
+                        <input id="Snal" class="form-control form-control-sm" autocomplete="off" />
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">OT 신청시간</label>
-                    <div class="col-sm-10">
-                        <div class="row">
-                            <label class="col-3 col-lg-2 col-form-label">시작</label>
-                            <select id="Snal_h" class="form-control form-control-sm col-3">
-                                @for (int i = 0; i < 24; i++)
-                                {
-                                    <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-                                }
-                            </select>
-                            &nbsp;: &nbsp;
-                            <select id="Snal_m" class="form-control form-control-sm col-3">
-                                <option value="00">00</option>
-                                <option value="15">15</option>
-                                <option value="30">30</option>
-                                <option value="45">45</option>
-                            </select>
+                @*<div class="form-group row">
+                        <label class="col-sm-3 col-form-label">신청일</label>
+                        <div class="col-sm-3">
+                            <input id="Snal" class="form-control form-control-sm" />
                         </div>
-                        <div class="row">
-                            <label class="col-3 col-lg-2 col-form-label">종료</label>
-                            <select id="Enal_h" class="form-control form-control-sm col-3">
-                                @for (int i = 0; i < 24; i++)
-                                {
-                                    <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-                                }
-                            </select>
-                            &nbsp;: &nbsp;
-                            <select id="Enal_m" class="form-control form-control-sm col-3">
-                                <option value="00">00</option>
-                                <option value="15">15</option>
-                                <option value="30">30</option>
-                                <option value="45">45</option>
-                            </select>
-                        </div>
+                    </div>*@
+
+                <div class="form-group row mb-4">
+                    <label class="col-2 col-form-label">시작</label>
+                    <div class="col-10 col-md-4">
+                        <select id="Snal_h" class="form-control form-control-sm col-5" style="float:left">
+                            @for (int i = 0; i < 24; i++)
+                            {
+                                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                            }
+                        </select>
+                        &nbsp;: &nbsp;
+                        <select id="Snal_m" class="form-control form-control-sm col-5" style="float:right">
+                            <option value="00">00</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="45">45</option>
+                        </select>
+                    </div>
+                    <label class="col-2 col-form-label">종료</label>
+                    <div class="col-10 col-md-4">
+                        <select id="Enal_h" class="form-control form-control-sm col-5" style="float:left">
+                            @for (int i = 0; i < 24; i++)
+                            {
+                                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                            }
+                        </select>
+                        &nbsp;: &nbsp;
+                        <select id="Enal_m" class="form-control form-control-sm col-5" style="float:right">
+                            <option value="00">00</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="45">45</option>
+                        </select>
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="form-group row mb-4">
                     <label class="col-sm-2 col-form-label">사유</label>
                     <div class="col-sm-10">
                         <textarea id="Reason" class="form-control form-control-sm"></textarea>
                     </div>
                 </div>
-                <div class="col-4 offset-4">
+                <div class="col-4 offset-4 mb-2">
                     <button class="btn btn-primary btn-user btn-block" onclick="checkInput()">신청하기</button>
                 </div>
             </div>

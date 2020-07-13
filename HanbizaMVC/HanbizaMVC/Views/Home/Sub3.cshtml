@@ -25,6 +25,9 @@
     .nav-tabs .nav-link {
         color: grey;
     }
+    label{
+        font-weight:bold
+    }
 </style>
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
@@ -40,83 +43,68 @@
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive col-12">
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">휴가</label>
-                    <div class="col-sm-10">
-                        <div class="row">
-                            <label class="col-3 col-lg-2 col-form-label">구분</label>
-                            <select class="form-control form-control-sm col-9 col-sm-5" id="Vicname" onchange="fn_timeHide()">
-                                <option value="선택" selected>선택</option>
-                                <option value="연차">연차</option>
-                                <option value="반차">반차</option>
-                                <option value="기타휴가">기타휴가</option>
-                            </select>
-                        </div>
-                        <div class="row" id="ShowTime" style="display:none">
-                            <label class="col-3 col-lg-2 col-form-label">시간</label>
-                            <select class="form-control form-control-sm col-9 col-sm-5" id="UseTime">
-                                <option value="시간" selected>선택</option>
-                                @for (int i = 1; i < 9; i++)
-                                {
-                                    <option value="@i">@i 시간</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
+                    <label class="col-sm-2 col-form-label">구분</label>
+                    <select class="form-control form-control-sm col-sm-4" id="Vicname" onchange="fn_timeHide()">
+                        <option value="선택" selected>선택</option>
+                        <option value="연차">연차</option>
+                        <option value="반차">반차</option>
+                        <option value="기타휴가">기타휴가</option>
+                    </select>
+                    <label class="col-sm-2 col-form-label">시간</label>
+                    <select class="form-control form-control-sm col-sm-4" id="UseTime">
+                        <option value="시간" selected>선택</option>
+                        @for (int i = 1; i < 9; i++)
+                        {
+                            <option value="@i">@i 시간</option>
+                        }
+                    </select>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">신청일</label>
-                    <div class="col-sm-10">
-                        <div class="row">
-                            <label class="col-3 col-lg-2 col-form-label">시작</label>
-                            <input id="Snal" class="form-control form-control-sm col-9 col-sm-5" />
-                        </div>
-                        <div class="row">
-                            <label class="col-3 col-lg-2 col-form-label">종료</label>
-                            <input id="Enal" class="form-control form-control-sm col-9 col-sm-5" />
-                        </div>
-                    </div>
+                    <label class="col-sm-2 col-form-label">시작</label>
+                    <input id="Snal" class="form-control form-control-sm col-sm-4" autocomplete="off"/>
+                    <label class="col-sm-2 col-form-label">종료</label>
+                    <input id="Enal" class="form-control form-control-sm col-sm-4" autocomplete="off"/>
                 </div>
+                
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">사유</label>
                     <textarea class="form-control form-control-sm col-sm-10" id="VicReason" rows="5"></textarea>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">결재단계</label>
-                    <select class="form-control form-control-sm col-sm-10" id="ProCDeep">
+                    <select class="form-control form-control-sm col-sm-4" id="ProCDeep">
                         @{ int a; }
                         @for (a = 1; a < 6; a++)
                         {
                             <option value="@a">@a 단계</option>
                         }
                     </select>
-                </div>
-                <div class="form-group row" id="stepStaff">
-                    <label class="col-sm-2 col-form-label">결재자</label>
-                    <div id="" class="inputCls1 col-sm-10" style="text-align:left">
-                        <input type="hidden" id="StaffID1">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
-                    </div>
-                    
-                    <div id="" class="inputCls2 col-sm-10 offset-sm-2 mt-2 mt-sm-0" style="display:none; text-align:left; margin-bottom:7px;">
-                        <input type="hidden" id="StaffID2">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
-                    </div>
+                   
+                        <label class="col-sm-2 col-form-label">결재자</label>
+                        <div id="" class="inputCls1 col-sm-4" style="text-align:left">
+                            <input type="hidden" id="StaffID1">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
+                        </div>
 
-                    <div id="" class="inputCls3 col-sm-10 offset-sm-2" style="display:none; text-align:left; margin-bottom:7px;">
-                        <input type="hidden" id="StaffID3">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
-                    </div>
+                        <div id="" class="inputCls2 col-sm-4 offset-sm-8 mt-2 mt-sm-0" style="display:none; text-align:left; margin-bottom:7px;">
+                            <input type="hidden" id="StaffID2">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
+                        </div>
 
-                    <div id="" class="inputCls4 col-sm-10 offset-sm-2" style="display:none; text-align:left; margin-bottom:7px;">
-                        <input type="hidden" id="StaffID4">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
-                    </div>
+                        <div id="" class="inputCls3 col-sm-4 offset-sm-8" style="display:none; text-align:left; margin-bottom:7px;">
+                            <input type="hidden" id="StaffID3">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
+                        </div>
 
-                    <div id="" class="inputCls5 col-sm-10 offset-sm-2" style="display:none; text-align:left; margin-bottom:7px;">
-                        <input type="hidden" id="StaffID5">
-                        <input type="text" style="text-align:center;cursor:pointer;" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
-                    </div>
+                        <div id="" class="inputCls4 col-sm-4 offset-sm-8" style="display:none; text-align:left; margin-bottom:7px;">
+                            <input type="hidden" id="StaffID4">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
+                        </div>
 
+                        <div id="" class="inputCls5 col-sm-4 offset-sm-8" style="display:none; text-align:left; margin-bottom:7px;">
+                            <input type="hidden" id="StaffID5">
+                            <input type="text" style="text-align:center;cursor:pointer;" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
+                        </div>
                 </div>
                 <div class="form-group row col-4 offset-4">
                     <button class="btn btn-sm btn-primary btn-user btn-block" onclick="checkInput()">휴가신청</button>
@@ -140,8 +128,8 @@
                                 <option value="부서" selected>부서</option>
                                 <option value="이름">이름</option>
                             </select>
-                            <input class="form-control form-control-sm col-8" type="text" placeholder="검색어를 입력하세요" id="searchWord"  onkeyup="enterkey()"/>
-                            <input class="form-control form-control-sm col-2" type="submit" value="검색" id="searchBtn"/>
+                            <input class="form-control form-control-sm col-8" type="text" placeholder="검색어를 입력하세요" id="searchWord" onkeyup="enterkey()" />
+                            <input class="form-control form-control-sm col-2" type="submit" value="검색" id="searchBtn" />
                         </div>
                         @* ajax로 데이터 가져옴 *@
                         <spand id="result"></spand>
@@ -349,7 +337,7 @@
         $("#result").html("");
 
     });
-    
+
     $(function () {
         $("#Snal").datepicker({
             language: 'ko'
