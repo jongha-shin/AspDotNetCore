@@ -8,40 +8,101 @@
         background-color: #3763ab;
         color: white;
     }
+
+    .card.border-primary {
+        float: left;
+        padding: 0px;
+        margin: 10px;
+        min-width: 100px;
+        max-width: 140px;
+    }
+
+    .card-header {
+        padding: 5px;
+    }
+
+    .card-body {
+        padding: 5px;
+    }
 </style>
 
-<div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
+<div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white;">
     <p class="text-right">회계년도 기준 업데이트: @ViewBag.Regdate</p>
-    <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
-        <thead>
-            <tr>
-                <th width="33%">입사일</th>
-                <th width="34%">연차발생일</th>
-                <th width="33%">근속연수</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@ViewBag.입사일</td>
-                <td>@ViewBag.연차발생일</td>
-                <td>@ViewBag.근속연수</td>
-            </tr>
-        </tbody>
-        <thead>
-            <tr>
-                <th>발생연차</th>
-                <th>사용연차</th>
-                <th>잔여연차</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@ViewBag.발생연차</td>
-                <td>@ViewBag.사용연차</td>
-                <td>@ViewBag.잔여연차</td>
-            </tr>
-        </tbody>
-    </table>
+    <div style="margin-left:8%">
+        <div class="card border-primary mb-3 col-4 col-sm-2">
+            <div class="card-header">입사일</div>
+            <div class="card-body text-primary">
+                @*<h5 class="card-title">@ViewBag.입사일</h5>*@
+                <p class="card-text">@ViewBag.입사일</p>
+            </div>
+        </div>
+        <div class="card border-primary mb-3 col-4 col-sm-2">
+            <div class="card-header">연차발생일</div>
+            <div class="card-body text-primary">
+                @*<h5 class="card-title">@ViewBag.입사일</h5>*@
+                <p class="card-text">@ViewBag.연차발생일</p>
+            </div>
+        </div>
+        <div class="card border-primary mb-3 col-4 col-sm-2">
+            <div class="card-header">근속연수</div>
+            <div class="card-body text-primary">
+                @*<h5 class="card-title">@ViewBag.입사일</h5>*@
+                <p class="card-text">@ViewBag.근속연수</p>
+            </div>
+        </div>
+        <div class="card border-primary mb-3 col-4 col-sm-2">
+            <div class="card-header">발생연차</div>
+            <div class="card-body text-primary">
+                @*<h5 class="card-title">@ViewBag.입사일</h5>*@
+                <p class="card-text">@ViewBag.발생연차</p>
+            </div>
+        </div>
+        <div class="card border-primary mb-3 col-4 col-sm-2">
+            <div class="card-header">사용연차</div>
+            <div class="card-body text-primary">
+                @*<h5 class="card-title">@ViewBag.입사일</h5>*@
+                <p class="card-text">@ViewBag.사용연차</p>
+            </div>
+        </div>
+        <div class="card border-primary mb-3 col-4 col-sm-2">
+            <div class="card-header">잔여연차</div>
+            <div class="card-body text-primary">
+                @*<h5 class="card-title">@ViewBag.입사일</h5>*@
+                <p class="card-text">@ViewBag.잔여연차</p>
+            </div>
+        </div>
+    </div>
+
+    @*<table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th width="33%">입사일</th>
+                    <th width="34%">연차발생일</th>
+                    <th width="33%">근속연수</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@ViewBag.입사일</td>
+                    <td>@ViewBag.연차발생일</td>
+                    <td>@ViewBag.근속연수</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                    <th>발생연차</th>
+                    <th>사용연차</th>
+                    <th>잔여연차</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@ViewBag.발생연차</td>
+                    <td>@ViewBag.사용연차</td>
+                    <td>@ViewBag.잔여연차</td>
+                </tr>
+            </tbody>
+        </table>*@
 
     <table class="table table-bordered table-sm">
         <thead>

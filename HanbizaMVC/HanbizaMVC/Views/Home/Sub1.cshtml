@@ -7,29 +7,36 @@
         font-size: small;
     }
 
-    table > thead > tr > th {
-        background-color: #3763ab;
-        color: white;
-    }
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
+        }
 
-    .nav-pills .nav-link.active {
-        background-color: #3763ab;
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+        color: #214085
+    }
+    .nav-tabs .nav-link {
+        background-color: #fff;
+        border-bottom: 1px solid #bbbcbb;
+        color: grey;
     }
 </style>
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
-    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
+    <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style="font-size:small;">
         <li class="nav-item">
             <a class="nav-link active" href="/Home/Sub1/@ViewBag.선택월" aria-selected="true">월별근태내역</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/Home/Sub1_1/@ViewBag.선택월" aria-selected="false">출퇴근기록</a>
+            <a class="nav-link " href="/Home/Sub1_1/@ViewBag.선택월" aria-selected="false">출퇴근기록</a>
         </li>
+        <ul class="nav justify-content-end" style="font-size:small; position:absolute; right:0px">
+            <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+            <span style="margin:5px">@ViewBag.선택월</span>
+            <a href="#" id="nextBtn" onclick="changeMonth('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        </ul>
     </ul>
-    <ul class="nav justify-content-end" style="font-size:small">
-        <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
-        <span style="margin:5px">@ViewBag.선택월</span>
-        <a href="#" id="nextBtn" onclick="changeMonth('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
-    </ul>
+
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive">

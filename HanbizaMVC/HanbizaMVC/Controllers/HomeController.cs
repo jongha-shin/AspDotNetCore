@@ -29,7 +29,7 @@ namespace HanbizaMVC.Controllers
             _db = db;
         }
 
-        // 0. 로그인 후 첫 화면 : 공지사항 + 메뉴 세팅 !!!!!!!!!!!!!!!!!!!!!!!!!
+        // 0. 로그인 후 첫 화면 
         public IActionResult Sub0()
         {
             ViewBag.LoginUser = LoginUser;

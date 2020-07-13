@@ -15,13 +15,18 @@
             color: white;
         }
 
-    .nav-pills .nav-link.active {
-        background-color: #3763ab;
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+        color: #214085
+    }
+
+    .nav-tabs .nav-link {
+       color: grey;
     }
 </style>
 
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white" ">
-    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="float:left; font-size:small">
+    <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style="font-size:small">
         <li class="nav-item">
             <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">대기</a>
         </li>
@@ -68,7 +73,7 @@
                 </table>
             </div>
             <div class="row p-3">
-                <button class="btn btn-primary btn-user btn-block col-4" onclick="allowVacation(0)">승인</button>
+                <button id="allowBtn" class="btn btn-primary btn-user btn-block col-4" onclick="allowVacation(0)">승인</button>
                 <div class="col-4 offset-4 p-0" id="beforeReason">
                     <button class="btn btn-danger btn-user btn-block" id="beforeReason" onclick="displayReason()">반려</button>
                 </div>
@@ -164,6 +169,7 @@
                 $("#checkBox_head").prop("checked", false);
                 $("#beforeReason").show();
                 $("#afterReason").hide();
+                $("#allowBtn").show();
             }
         });
 
@@ -224,6 +230,7 @@
         let checked_Num = $(".checkBox_body:checked").length
         if (checked_Num == 0) { alert("선택한 내용이 없습니다"); return; }
 
+        $("#allowBtn").hide();
         $("#beforeReason").hide();
         $("#afterReason").show();
         $(".checkBox_body:checked").each(function () {
@@ -237,6 +244,7 @@
             this.checked = false;
         });
         $(".RereaSon").val("");
+        $("#allowBtn").show();
         $("#beforeReason").show();
         $("#afterReason").hide();
         $(".reason_Div").hide();
