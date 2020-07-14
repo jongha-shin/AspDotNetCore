@@ -34,7 +34,7 @@ namespace HanbizaMVC
 
             services.AddDbContext<HanbizaContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("HanbizaConnection")));
 
             // DI 의존성 주입
             // 1. AddSingleton();  // 2. AddScoped<T>; // 3. AddTransient();

@@ -25,11 +25,12 @@
     .nav-tabs .nav-link {
         color: grey;
     }
-    label{
-        font-weight:bold
+
+    label {
+        font-weight: bold
     }
 </style>
-<div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
+<div class="text-center col-12 col-md-8 offset-md-2 p-2" style="background-color:white">
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">휴가신청</a>
@@ -42,69 +43,69 @@
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive col-12">
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">구분</label>
-                    <select class="form-control form-control-sm col-sm-4" id="Vicname" onchange="fn_timeHide()">
-                        <option value="선택" selected>선택</option>
+                <div class="form-group row mb-4 mt-3">
+                    <label class="col-md-2 col-form-label">구분</label>
+                    <select class="form-control form-control-sm col-md-4" id="Vicname" onchange="fn_timeHide()">
+                        <option value="선택" selected disabled>선택</option>
                         <option value="연차">연차</option>
                         <option value="반차">반차</option>
                         <option value="기타휴가">기타휴가</option>
                     </select>
-                    <label class="col-sm-2 col-form-label">시간</label>
-                    <select class="form-control form-control-sm col-sm-4" id="UseTime">
+                    <label class="col-md-2 col-form-label" id="UseTimeLabel">시간</label>
+                    <select class="form-control form-control-sm col-md-4" id="UseTime">
                         <option value="시간" selected>선택</option>
                         @for (int i = 1; i < 9; i++)
                         {
-                            <option value="@i">@i 시간</option>
+                        <option value="@i">@i 시간</option>
                         }
                     </select>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">시작</label>
-                    <input id="Snal" class="form-control form-control-sm col-sm-4" autocomplete="off"/>
-                    <label class="col-sm-2 col-form-label">종료</label>
-                    <input id="Enal" class="form-control form-control-sm col-sm-4" autocomplete="off"/>
+                    <label class="col-2 col-form-label">시작</label>
+                    <input id="Snal" class="form-control form-control-sm col-10 col-md-4" autocomplete="off" />
+                    <label id="EnalLabel" class="col-2 col-form-label">종료</label>
+                    <input id="Enal" class="form-control form-control-sm col-10 col-md-4" autocomplete="off" />
                 </div>
-                
+
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">사유</label>
-                    <textarea class="form-control form-control-sm col-sm-10" id="VicReason" rows="5"></textarea>
+                    <label class="col-md-2 col-form-label">사유</label>
+                    <textarea class="form-control form-control-sm col-md-10" id="VicReason" rows="5"></textarea>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">결재단계</label>
-                    <select class="form-control form-control-sm col-sm-4" id="ProCDeep">
+                    <label class="col-md-2 col-form-label">결재단계</label>
+                    <select class="form-control form-control-sm col-md-4" id="ProCDeep">
                         @{ int a; }
                         @for (a = 1; a < 6; a++)
                         {
-                            <option value="@a">@a 단계</option>
+                        <option value="@a">@a 단계</option>
                         }
                     </select>
-                   
-                        <label class="col-sm-2 col-form-label">결재자</label>
-                        <div id="" class="inputCls1 col-sm-4" style="text-align:left">
-                            <input type="hidden" id="StaffID1">
-                            <input type="text" style="text-align:center;cursor:pointer;" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
-                        </div>
 
-                        <div id="" class="inputCls2 col-sm-4 offset-sm-8 mt-2 mt-sm-0" style="display:none; text-align:left; margin-bottom:7px;">
-                            <input type="hidden" id="StaffID2">
-                            <input type="text" style="text-align:center;cursor:pointer;" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
-                        </div>
+                    <label class="col-md-2 col-form-label">결재자</label>
+                    <div id="" class="inputCls1 col-md-4" style="text-align:left">
+                        <input type="hidden" id="StaffID1">
+                        <input type="text" style="text-align:center;cursor:pointer;" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
+                    </div>
 
-                        <div id="" class="inputCls3 col-sm-4 offset-sm-8" style="display:none; text-align:left; margin-bottom:7px;">
-                            <input type="hidden" id="StaffID3">
-                            <input type="text" style="text-align:center;cursor:pointer;" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
-                        </div>
+                    <div id="" class="inputCls2 col-md-4 offset-md-8 mt-2 mt-md-0" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID2">
+                        <input type="text" style="text-align:center;cursor:pointer;" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
+                    </div>
 
-                        <div id="" class="inputCls4 col-sm-4 offset-sm-8" style="display:none; text-align:left; margin-bottom:7px;">
-                            <input type="hidden" id="StaffID4">
-                            <input type="text" style="text-align:center;cursor:pointer;" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
-                        </div>
+                    <div id="" class="inputCls3 col-md-4 offset-md-8" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID3">
+                        <input type="text" style="text-align:center;cursor:pointer;" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
+                    </div>
 
-                        <div id="" class="inputCls5 col-sm-4 offset-sm-8" style="display:none; text-align:left; margin-bottom:7px;">
-                            <input type="hidden" id="StaffID5">
-                            <input type="text" style="text-align:center;cursor:pointer;" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
-                        </div>
+                    <div id="" class="inputCls4 col-md-4 offset-md-8" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID4">
+                        <input type="text" style="text-align:center;cursor:pointer;" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
+                    </div>
+
+                    <div id="" class="inputCls5 col-md-4 offset-md-8" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID5">
+                        <input type="text" style="text-align:center;cursor:pointer;" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
+                    </div>
                 </div>
                 <div class="form-group row col-4 offset-4">
                     <button class="btn btn-sm btn-primary btn-user btn-block" onclick="checkInput()">휴가신청</button>
@@ -156,41 +157,41 @@
                     <tbody>
                         @if (Model.Count == 0)
                         {
-                            <tr>
-                                <td colspan="4">데이터가 없습니다</td>
-                            </tr>
+                        <tr>
+                            <td colspan="4">데이터가 없습니다</td>
+                        </tr>
                         }
                         else
                         {
-                            @foreach (var item in Model)
+                        @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
-                                    @if (item.Vicname.Equals("반차"))
+                        <tr>
+                            <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
+                            @if (item.Vicname.Equals("반차"))
                                     {
-                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
+                            <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
 
                                     }
                                     else
                                     {
-                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</td>
+                            <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</td>
                                     }
 
-                                    <td> @item.DeepNum / @item.ProCDeep</td>
+                            <td> @item.DeepNum / @item.ProCDeep</td>
 
-                                    @if (@item.AllProCess.Equals("F"))
+                            @if (@item.AllProCess.Equals("F"))
                                     {
-                                        <td style="color:red">반려</td>
+                            <td style="color:red">반려</td>
                                     }
                                     else if (@item.AllProCess.Equals("S"))
                                     {
-                                        <td style="color:blue">승인</td>
+                            <td style="color:blue">승인</td>
                                     }
                                     else
                                     {
-                                        <td style="color:grey">대기</td>
+                            <td style="color:grey">대기</td>
                                     }
-                                </tr>
+                        </tr>
                             }
                         }
                     </tbody>
@@ -309,17 +310,27 @@
         $("#div_msg").html("");
         if ($("#Vicname").val() == "반차") {
             $("#UseTime").attr("disabled", false);
-            $("#UseTime").css("background", "#fff");
+            //$("#UseTime").css("background", "#fff");
             $("#Enal").attr("disabled", true);
-            $("#Enal").css("background", "#ccc");
+            //$("#Enal").css("background", "#ccc");
             $("#Enal").val("");
+
+            $("#Enal").hide();
+            $("#EnalLabel").hide();
+            $("#UseTime").show();
+            $("#UseTimeLabel").show();
             $("#UseTime").focus();
             return
         } else {
             $("#UseTime").attr("disabled", true);
-            $("#UseTime").css("background", "#ccc");
+            //$("#UseTime").css("background", "#ccc");
             $("#Enal").attr("disabled", false);
-            $("#Enal").css("background", "#fff");
+            //$("#Enal").css("background", "#fff");
+
+            $("#UseTime").hide();
+            $("#UseTimeLabel").hide();
+            $("#Enal").show();
+            $("#EnalLabel").show();
         }
     }
 

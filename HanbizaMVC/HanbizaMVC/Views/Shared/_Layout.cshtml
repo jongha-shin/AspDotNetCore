@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
     <title>Hanbiza</title>
 
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -33,9 +35,11 @@
             background-image: linear-gradient(180deg,#214085 100%,#214085 100%);
             background-size: cover;
         }
-        .datepicker th{
-            border-radius:0px;
+
+        .datepicker th {
+            border-radius: 0px;
         }
+
         .datepicker .next:hover, .datepicker .prev:hover, .datepicker .datepicker-switch:hover {
             background-color: #5783c3;
         }
