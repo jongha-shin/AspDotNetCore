@@ -46,14 +46,14 @@
                 <div class="form-group row mb-4 mt-3">
                     <label class="col-md-2 col-form-label">구분</label>
                     <select class="form-control form-control-sm col-md-4" id="Vicname" onchange="fn_timeHide()">
-                        <option value="선택" selected disabled>선택</option>
+                        <option value="선택" selected disabled>휴가종류를 선택하세요</option>
                         <option value="연차">연차</option>
                         <option value="반차">반차</option>
                         <option value="기타휴가">기타휴가</option>
                     </select>
                     <label class="col-md-2 col-form-label" id="UseTimeLabel">시간</label>
                     <select class="form-control form-control-sm col-md-4" id="UseTime">
-                        <option value="시간" selected>선택</option>
+                        <option value="시간" selected disabled>시간을 선택하세요</option>
                         @for (int i = 1; i < 9; i++)
                         {
                         <option value="@i">@i 시간</option>
@@ -125,11 +125,11 @@
                     </div>
                     <div class="modal-body">
                         <div class="p-3 row">
-                            <select class="form-control form-control-sm col-2" id="searchKey">
+                            @*<select class="form-control form-control-sm col-2" id="searchKey">
                                 <option value="부서" selected>부서</option>
                                 <option value="이름">이름</option>
-                            </select>
-                            <input class="form-control form-control-sm col-8" type="text" placeholder="검색어를 입력하세요" id="searchWord" onkeyup="enterkey()" />
+                            </select>*@
+                            <input class="form-control form-control-sm col-8" type="text" placeholder="이름 또는 부서명을 입력하세요" id="searchWord" onkeyup="enterkey()" />
                             <input class="form-control form-control-sm col-2" type="submit" value="검색" id="searchBtn" />
                         </div>
                         @* ajax로 데이터 가져옴 *@
@@ -225,14 +225,14 @@
 
 <script>
     function enterkey() {
-        var searchKey = $("#searchKey").val();
+        //var searchKey = $("#searchKey").val();
         var searchWord = $("#searchWord").val().trim();
         if (window.event.keyCode == 13) {
-            getApproverTable(searchKey, searchWord);
+            getApproverTable(/*searchKey,*/ searchWord);
         }
     }
 
-    function getApproverTable(searchKey, searchWord) {
+    function getApproverTable(/*searchKey,*/ searchWord) {
         let Sstep_num = $("#stepModal").text();
         let step_num = parseInt(Sstep_num);
 
@@ -262,7 +262,7 @@
 
         //alert(searchKey + "/" + searchWord + "/" + step_num + "/" + staffList)
         $.ajax({
-            url: '/Home/Sub3_1/' + searchKey + "/" + searchWord + "/" + step_num + "/" + staffList,
+            url: '/Home/Sub3_1/'/* + searchKey + "/"*/ + searchWord + "/" + step_num + "/" + staffList,
             type: 'GET',
             dataType: "json",
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -424,14 +424,14 @@
         });
 
         $("#searchBtn").click(function () {
-            var searchKey = $("#searchKey").val();
+            //var searchKey = $("#searchKey").val();
             var searchWord = $("#searchWord").val().trim();
             //alert(searchKey + "/" + searchWord);
             if (searchWord == null || searchWord == "") {
                 alert("검색어를 입력해 주세요");
                 this.focus();
             } else {
-                getApproverTable(searchKey, searchWord);
+                getApproverTable(/*searchKey,*/ searchWord);
             }
 
         });

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using StoredProcedureEFCore;
 using System.Collections.Generic;
 using System;
-using Microsoft.Extensions.Configuration;
 
 namespace HanbizaMVC.Controllers
 {
@@ -15,6 +14,7 @@ namespace HanbizaMVC.Controllers
     {
         private readonly ILogger<FileController> _logger;
         private readonly HanbizaContext _db;
+        private readonly LoginInfor LoginUser = AccountController.LoginUser;
         public FileController(ILogger<FileController> logger, HanbizaContext db)
         {
             _logger = logger;
@@ -54,14 +54,14 @@ namespace HanbizaMVC.Controllers
             int SeqID = Int32.Parse(SEQID);
             _logger.LogInformation("SaveSign()1 " + imageData + "\n seqid: " + SEQID);
 
-            string BizNum = HttpContext.Session.GetString("BizNum");
-            int StaffID = (int)HttpContext.Session.GetInt32("StaffId");
+
+            string BizNum = LoginUser.BizNum;
+            int StaffID = LoginUser.StaffId;
             string Base64string = imageData;
             string ImageFileName = "sign_" + StaffID + ".jpg";
             string ImageDir = "FileBox/" + BizNum;
-            string StaffName = HttpContext.Session.GetString("StaffName");
-            string Dname = HttpContext.Session.GetString("Dname");
-
+            string StaffName = LoginUser.StaffName;
+            string Dname = LoginUser.Dname;
 
             var rs =
                 _db.LoadStoredProc("file_SaveSignature").AddParam("BizNum", BizNum).AddParam("StaffID", StaffID).AddParam("Base64string", Base64string)

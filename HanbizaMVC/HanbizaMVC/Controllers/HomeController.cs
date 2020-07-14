@@ -208,22 +208,23 @@ namespace HanbizaMVC.Controllers
         }
         // 3_1. ajax 메소드
         [Authorize]
-        [Route("/Home/Sub3_1/{SearchKey}/{SearchWord}/{Step_num}/{StaffList}")]
-        public IActionResult Sub3_1(string SearchKey, string SearchWord, string Step_num, string StaffList)
+        //[Route("/Home/Sub3_1/{SearchKey}/{SearchWord}/{Step_num}/{StaffList}")]
+        [Route("/Home/Sub3_1/{SearchWord}/{Step_num}/{StaffList}")]
+        public IActionResult Sub3_1(/*string SearchKey,*/ string SearchWord, string Step_num, string StaffList)
         {
             ViewBag.menulist = menulist;
             //GetLoginUser();
-            _logger.LogInformation("sub3_1(): " + SearchKey + " / " + SearchWord + " / " + Step_num);
+            _logger.LogInformation("sub3_1(): " /*+ SearchKey + " / "*/ + SearchWord + " / " + Step_num);
             Console.WriteLine("list: " + StaffList);
             var jsonString = "";
 
-            if (SearchKey != null && SearchWord != null)
+            if (/*SearchKey != null &&*/ SearchWord != null)
             {
-                if (!SearchKey.Equals("") && !SearchWord.Equals(""))
+                if (/*!SearchKey.Equals("") &&*/ !SearchWord.Equals(""))
                 {
                     List<Approver> Datatable = null;
                     _db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
-                        .AddParam("SearchKey", SearchKey).AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
+                        /*.AddParam("SearchKey", SearchKey)*/.AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
                       .Exec(r => Datatable = r.ToList<Approver>());
 
                     jsonString = JsonConvert.SerializeObject(Datatable);
