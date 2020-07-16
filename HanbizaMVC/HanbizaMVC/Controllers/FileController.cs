@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using StoredProcedureEFCore;
 using System.Collections.Generic;
 using System;
+using HanbizaMVC.ViewModel;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace HanbizaMVC.Controllers
 {
@@ -15,6 +18,10 @@ namespace HanbizaMVC.Controllers
         private readonly ILogger<FileController> _logger;
         private readonly HanbizaContext _db;
         private readonly LoginInfor LoginUser = AccountController.LoginUser;
+        //static public string ToReadableByteArray(byte[] bytes)
+        //{
+        //    return string.Join(", ", bytes);
+        //}
         public FileController(ILogger<FileController> logger, HanbizaContext db)
         {
             _logger = logger;
@@ -32,48 +39,58 @@ namespace HanbizaMVC.Controllers
             {
                 FileDownloadName = fileInfo[0].FileName
             };
-
-            //List<GB_INT_GET_APPR_FILE_INFO_Result> file = db2.GB_INT_GET_APPR_FILE_INFO(appr_no, file_seq).ToList();
-            //var fileRes = new FileContentResult(file[0].file_attach.ToArray(), "application/octet-stream");
-            //fileRes.FileDownloadName = file[0].file_name;
-
             return fileRes;
-
-            //byte[] fileBytes = System.IO.File.ReadAllBytes(
-            //    Path.Combine(
-            //        _environment.WebRootPath, "files") + "\\" + fileName);
-
-            //return File(fileBytes, "application/octet-stream", fileName);
-
-        }
+       }
         [HttpPost]
-        public string SaveSign(string imageData, string SEQID)
+        public async Task<IActionResult> SaveSign()
         {
+            var form = await Request.ReadFormAsync(); 
+            var file = form.Files.First();
+            var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
 
-            if (SEQID == null) SEQID = "0";
-            int SeqID = Int32.Parse(SEQID);
-            _logger.LogInformation("SaveSign()1 " + imageData + "\n seqid: " + SEQID);
-
+            _logger.LogInformation("SaveSign()1 :" + bytes);
+            var fileBytes = new byte[file.OpenReadStream().Length];
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+                
+                // act on the Base64 data
+            }
+            int SeqID = 0;
 
             string BizNum = LoginUser.BizNum;
             int StaffID = LoginUser.StaffId;
-            string Base64string = imageData;
-            string ImageFileName = "sign_" + StaffID + ".jpg";
+            //string ImageFileName = "sign_" + StaffID + ".jpeg";
+            string ImageFileName = "sign_" + StaffID + ".png";
             string ImageDir = "FileBox/" + BizNum;
-            string StaffName = LoginUser.StaffName;
-            string Dname = LoginUser.Dname;
 
             var rs =
-                _db.LoadStoredProc("file_SaveSignature").AddParam("BizNum", BizNum).AddParam("StaffID", StaffID).AddParam("Base64string", Base64string)
-                .AddParam("ImageFileName", ImageFileName).AddParam("ImageDir", ImageDir).AddParam("StaffName", StaffName).AddParam("Dname", Dname).AddParam("SEQID", SeqID)
-                .ExecNonQuery();
+                _db.LoadStoredProc("file_SaveSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
+                    .AddParam("Base64string", fileBytes).AddParam("ImageFileName", ImageFileName).AddParam("ImageDir", ImageDir)
+                    .AddParam("StaffName", LoginUser.StaffName).AddParam("Dname", LoginUser.Dname).AddParam("SEQID", SeqID)
+                    .ExecNonQuery();
 
-            if (rs > 0) return "success";
-
-            return "fail";
+            string reponse = "fail";
+            if (rs > 0) reponse = "success";
+            return Json(reponse);
+            
         }
 
+        public FileContentResult SignDownload(int id)
+        {
+            Console.WriteLine("sign down: seq ="+id);
+            List<문서함> mySign = null;
+            _db.LoadStoredProc("file_data").AddParam("SeqID", id).Exec(r => mySign = r.ToList<문서함>());
 
+            Console.WriteLine("byte[] : " + mySign[0].FileBlob.ToArray());
+           
+            var fileRes = new FileContentResult(mySign[0].FileBlob.ToArray(), "application/octet-stream")
+            {
+                FileDownloadName = mySign[0].FileName
+            };
+            return fileRes;
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

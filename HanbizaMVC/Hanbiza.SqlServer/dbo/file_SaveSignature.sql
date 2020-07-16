@@ -51,7 +51,7 @@ AS
 			'서명',
 			@ImageDir,
 			@ImageFileName,
-			'data:image/jpeg;base64,'+ @Base64String,
+			'data:image/png;base64,'+ @Base64String,
 			@StaffName,
 			GETDATE(),
 			'Y', 'N', 'Y', '', 0
@@ -64,7 +64,7 @@ ELSE
 			등록인 = @StaffName, 
 			FilePath = @ImageDir, 
 			FileName = @ImageFileName, 
-			FileBLOB = 'data:image/jpeg;base64'+@Base64String, 
+			FileBLOB = 'data:image/png;base64'+@Base64String, 
 			Edit_yn = 'N'
 		WHERE SeqID = @SEQID
 	END

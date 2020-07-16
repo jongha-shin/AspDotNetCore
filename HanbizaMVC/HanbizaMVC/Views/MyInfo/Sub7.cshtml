@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "확인서명";
 }
-
+@model 문서함
 <div class="container">
     <div class="card" style="width:300px; margin: 0 auto">
         <input type="hidden" id="SEQID" value="@ViewBag.SEQID" />
@@ -9,7 +9,7 @@
             <div class="text-center">
                 @if (ViewBag.mySign == null)
                 {
-                    <canvas id="drawCanvas" width="300" height="182" style="border:0px solid #d0eaf8;" align="center">Canvas not supported</canvas>
+                    <canvas id="drawCanvas" width="300" height="182" style="border:0px solid #d0eaf8;" align="center" @*src="~/img/canvas_empty.jpg"*@>Canvas not supported</canvas>
                     <canvas id='blank' width="300" height="182" style='display:none'></canvas>
                     <div class="btn_div">
                         <button id="btnClear">취소하기</button>
@@ -23,35 +23,44 @@
                 }
                 else
                 {
-                    <img src="@ViewBag.mySign" alt="Alternate Text" />
+                    <img src="@ViewBag.mySign" alt="서명" />
                     <div class="sign_txt">등록된 서명입니다!</div>
                 }
-            </div>
-
+                </div>
+            @*<button type="button" onclick="signDown(@ViewBag.SEQID)">button다운</button>
+            <a id="link"></a>*@
         </div>
     </div>
-
 </div>
 
 <script>
+    //function signDown(SEQID) {
+        //alert(SEQID);
+        //var link = document.getElementById('link');
+        //link.setAttribute('download', 'MintyPaper.png');
+        //link.setAttribute('href', document.getElementById("drawCanvas").toDataURL("image/png").replace("image/png", "image/octet-stream"));
+        //alert(link);
+        //link.click();
+
+    //    location.href = "/File/SignDownload/" + SEQID;
+    //}
+
     $(document).ready(function () {
+        var SEQID = $("#SEQID").val();
+        if (SEQID == null) SEQID = "0";
+    
         var drawCanvas = document.getElementById('drawCanvas');
         var drawBackup = new Array();
 
         if (typeof drawCanvas.getContext == 'function') {
             var ctx = drawCanvas.getContext('2d');
+            ctx.fillStyle = '#fff';  /// set white fill style
+            ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
             var isDraw = false;
             var width = "4";
             var color = "#000";
             var pDraw = $('#drawCanvas').offset();
             var currP = null;
-
-            // 저장된 이미지 호출
-            if (localStorage['imgCanvas']) {
-                loadImage();
-            } else {
-                ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-            }
 
             // Event (마우스)
             $('#drawCanvas').on('mousedown', function (e) {
@@ -108,25 +117,6 @@
                 ctx.stroke();
             }
 
-            function loadImage() { // reload from localStorage
-                var img = new Image();
-                img.onload = function () {
-                    ctx.drawImage(img, 0, 0);
-                }
-                img.src = localStorage.getItem('imgCanvas');
-            }
-
-
-            //function saveImage() { // save to localStorage
-            //    var canvas = document.getElementById('drawCanvas');
-            //    localStorage.setItem('imgCanvas', canvas.toDataURL('image/png'));
-            //    var img = document.getElementById('saveImg');
-            //    img.src = canvas.toDataURL('image/jpg');
-            //    var tmp = $('<a>').attr('download', 'test1.png').attr('href', img.src);
-            //    tmp[0].click();
-            //    tmp.remove();
-            //}
-
             function clearCanvas() {
                 ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
                 ctx.beginPath();
@@ -137,21 +127,10 @@
                 drawBackup.push(ctx.getImageData(0, 0, drawCanvas.width, drawCanvas.height));
             }
 
-            function prevCanvas() {
-                ctx.putImageData(drawBackup.pop(), 0, 0);
-            }
-
-            $('#btnPrev').click(function () {
-                prevCanvas();
-            });
-
             $('#btnClear').click(function () {
                 clearCanvas();
             });
 
-            $('#btnRefresh').click(function () {
-                draw();
-            });
         }
 
         var canvas_chk = document.getElementById('drawCanvas');
@@ -163,39 +142,52 @@
             }
         });
 
-
         function UploadPic() {
-            //	generate the image data
-            var Pic = document.getElementById("drawCanvas").toDataURL("image/jpg");
-            console.log("1: " + Pic);
-            Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
-            console.log("2: " + Pic);
+            ////	generate the image data
+            //var Pic = document.getElementById("drawCanvas").toDataURL("image/png")/*.replace("image/png", "image/octet-stream")*/;
+            //console.log("1 toDataURL: " + Pic);
+            ////window.location.href = Pic;
+
+            //Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
+            //console.log("2: " + Pic);
 
             var SEQID = $("#SEQID").val();
+            if (SEQID == null) SEQID = "0";
             console.log("3: " + SEQID)
-            alert("===일시정지===")
-            //TODO: url 지정 저장컨트롤러 작성
+
+            //var imgDataUrl = document.getElementById("drawCanvas").toDataURL("image/jpeg", 1.0); // 캔버스 이미지 정보를 base64 문자열로 변환 jpeg
+            var imgDataUrl = document.getElementById("drawCanvas").toDataURL("image/png"); // 캔버스 이미지 정보를 base64 문자열로 변환 png
+
+            var blobBin = atob(imgDataUrl.split(',')[1]);     // base64 header 와 body 분리
+            //var blobBin = atob(imgDataUrl);// base64를 디코딩하여 이진데이터로 전환
+            var array = [];
+            for (var i = 0; i < blobBin.length; i++) {
+                array.push(blobBin.charCodeAt(i));
+            }
+
+            //var file = new Blob([new Uint8Array(array)], { type: 'image/jpeg' });	// Blob 생성 jpeg
+            var file = new Blob([new Uint8Array(array)], { type: 'image/png' });	// Blob 생성 png
+
+            var formData = new FormData();	// formData 생성
+            formData.append("file", file);	// file data 추가
+
+            //alert("===일시정지===" + formData.get("file").size)
+
             $.ajax({
-                url: "/File/SaveSign/",
+                url: "/File/SaveSign",
                 type: "POST",
-                dataType: "text",
-                contentType: "application/x-www-form-urlencoded;charset=utf-8",
-                charset: "utf-8",
-                data: { "imageData": Pic, "SEQID": SEQID }
-            })
-                .done(function (msg) {
+                processData: false,	// data 파라미터 강제 string 변환 방지!!
+                contentType: false,	// application/x-www-form-urlencoded; 방지!!
+                data: formData,
+                success: function (rs) {
                     alert("서명이 등록되었습니다!");
                     location.reload(true);
-                })
-                .fail(function (xhr, status, errorThrown) {
+                },
+                error: function (rs) {
                     alert("요청 실패");
-                    $("#text").html("오류가 발생했습니다.<br>")
-                        .append("오류명: " + errorThrown + "<br>")
-                        .append("상태: " + status);
-                })
-                .always(function () {
-                    // alert("요청 완료");
-                });
+                }
+            })
+
         }
     });
 </script>
