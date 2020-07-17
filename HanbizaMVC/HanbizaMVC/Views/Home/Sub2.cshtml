@@ -35,9 +35,6 @@
             <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">OT신청내역</a>
         </li>
     </ul>
-    <ul class="nav justify-content-end">
-        @ViewBag.최근월
-    </ul>
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive col-12">
@@ -118,7 +115,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Count == 0)
+                        @if (Model == null)
                         {
                             <tr>
                                 <td colspan="3">데이터가 없습니다</td>

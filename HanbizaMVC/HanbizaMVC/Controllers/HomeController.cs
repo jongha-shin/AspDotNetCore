@@ -55,8 +55,14 @@ namespace HanbizaMVC.Controllers
                 dateMonth = "";
                 _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                     .Exec(r => Months = r.ToList<출퇴근기록>());
-
-                dateMonth = Months[0].월;
+                if (Months.Count() == 0)
+                {
+                    dateMonth = DateTime.Now.ToString("yyyy-MM");
+                }
+                else
+                {
+                    dateMonth = Months[0].월;
+                }
                 ViewBag.선택월 = dateMonth;
             }
             else
@@ -76,18 +82,33 @@ namespace HanbizaMVC.Controllers
             //var CulTable = from data in _db.출퇴근기록집계표
             //               where data.StaffId == LoginUser.StaffId 
             //               select data;
-
-            foreach (var i in CulTable)
+            if(CulTable.Count == 0)
             {
-                ViewBag.기준일 = i.기준일;
-                ViewBag.근무일 = i.근무일;
-                ViewBag.결근일 = i.결근일;
-                ViewBag.휴무일 = i.휴무일;
-                ViewBag.주휴일 = i.주휴일;
-                ViewBag.유급휴일 = i.유급휴가휴일 + i.유급휴일;
-                ViewBag.무급휴가휴일 = i.무급휴가휴일;
-                ViewBag.유급주휴일 = i.유급주휴일;
+                    ViewBag.기준일 = 0;
+                    ViewBag.근무일 = 0;
+                    ViewBag.결근일 = 0;
+                    ViewBag.휴무일 = 0;
+                    ViewBag.주휴일 = 0;
+                    ViewBag.유급휴일 = 0;
+                    ViewBag.무급휴가휴일 = 0;
+                    ViewBag.유급주휴일 = 0;
             }
+            else
+            {
+                foreach (var i in CulTable)
+                {
+                    ViewBag.기준일 = i.기준일;
+                    ViewBag.근무일 = i.근무일;
+                    ViewBag.결근일 = i.결근일;
+                    ViewBag.휴무일 = i.휴무일;
+                    ViewBag.주휴일 = i.주휴일;
+                    ViewBag.유급휴일 = i.유급휴가휴일 + i.유급휴일;
+                    ViewBag.무급휴가휴일 = i.무급휴가휴일;
+                    ViewBag.유급주휴일 = i.유급주휴일;
+                }
+            }
+
+            
 
             // 월별근태내역 - 근무외시수
             List<TotalAttendence> totalTable = null;
@@ -133,7 +154,7 @@ namespace HanbizaMVC.Controllers
                    .Exec(r => Months = r.ToList<출퇴근기록>());
                 ViewBag.선택월 = dateMonth;
             }
-            Console.WriteLine("1_1 선택월: " + dateMonth);
+            //Console.WriteLine("1_1 선택월: " + dateMonth);
             // 출퇴근기록
             List<출퇴근기록> recordTable = null;
             _db.LoadStoredProc("dbo.attendRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
@@ -407,12 +428,22 @@ namespace HanbizaMVC.Controllers
                     .Exec(r => monthList = r.ToList<PayList>());
 
                 // Console.WriteLine(plist[0].Yyyymm + "년 " + plist[0].Ncount + "회차");
+                if(monthList.Count == 0)
+                {
+                    Yyyymm = DateTime.Now.ToString("yyyy-MM");
+                    Ncount = "0";
+                }
+                else
+                {
+                    Yyyymm = monthList[0].Yyyymm;
+                    Ncount = monthList[0].Ncount+"";
+                }
 
-                ViewBag.선택월 = monthList[0].Yyyymm;
-                ViewBag.선택회차 = monthList[0].Ncount;
+                ViewBag.선택월 = Yyyymm;
+                ViewBag.선택회차 = Ncount;
 
                 _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .AddParam("Yyyymm", monthList[0].Yyyymm).AddParam("Ncount", monthList[0].Ncount).Exec(r => plist = r.ToList<PayList>());
+                    .AddParam("Yyyymm", Yyyymm).AddParam("Ncount", int.Parse(Ncount)).Exec(r => plist = r.ToList<PayList>());
             }
             else
             {

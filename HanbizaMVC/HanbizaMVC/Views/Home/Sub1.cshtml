@@ -111,9 +111,19 @@
 <script type="text/javascript">
     function changeMonth(sign) {
         let monthList = [];
-        @foreach (var item in Model)
+        let today = new Date()
+        let month = today.getFullYear+"-"+today.getMonth;
+        
+        @if(Model == null)
         {
-            @:monthList.push('@item.월');
+            @:monthList.push(month)
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                @:monthList.push('@item.월');
+            }
         }
         let current_num = monthList.indexOf('@ViewBag.선택월');
         //alert("현재index: " + current_num + " / 배열길이: " + monthList.length)

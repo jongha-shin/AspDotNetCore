@@ -12,7 +12,7 @@ CREATE PROCEDURE [dbo].[totalAttendence]
 	@StaffID int,
 	@lastMonth varchar(10)
 AS
-	SELECT sum([총근로]) as 총근로, sum([소정근로]) as 소정근로, sum([근태조정]) as 근태조정, sum([초과근로]) as 초과근로, sum([연장근로]) as 연장근로, sum([야간근로]) as 야간근로, sum([휴일근로]) as 휴일근로, sum([휴일연장]) as 휴일연장, sum([휴일야간]) as 휴일야간
+	SELECT ISNULL(sum([총근로]), 0) as 총근로, ISNULL(sum([소정근로]), 0) as 소정근로, ISNULL(sum([근태조정]), 0) as 근태조정, ISNULL(sum([초과근로]), 0) as 초과근로, ISNULL(sum([연장근로]), 0) as 연장근로, ISNULL(sum([야간근로]), 0) as 야간근로, ISNULL(sum([휴일근로]), 0) as 휴일근로, ISNULL(sum([휴일연장]), 0) as 휴일연장, ISNULL(sum([휴일야간]), 0) as 휴일야간
 	FROM 출퇴근기록
 	WHERE BizNum = @BizNum AND StaffID = @StaffID AND substring(convert(varchar(10),날짜,23),1,7) = @lastMonth
 

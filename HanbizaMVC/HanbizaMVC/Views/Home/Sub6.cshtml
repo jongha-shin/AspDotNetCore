@@ -14,7 +14,7 @@
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
     <ul class="nav justify-content-end mb-3" style="font-size:small">
         <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
-            <span style="margin:5px">@ViewBag.선택월 - @ViewBag.선택회차 회차</span>
+        <span style="margin:5px">@ViewBag.선택월 - @ViewBag.선택회차 회차</span>
         <a href="#" id="nextBtn" onclick="changeMonth('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
     </ul>
     <div class="table-responsive">
@@ -26,31 +26,42 @@
                     <th>금액</th>
                 </tr>
             </thead>
-            <tbody>
-                @{int a = 0; }
-                @foreach (var item in Model.plist)
-                {
-                    @if (item.Gubun.Equals("0") && item.Fsort == 0)
+            @if (Model.plist.Count == 0)
+            {
+                <tbody>
+                    <tr>
+                        <td colspan="2">데이터가 없습니다</td>
+                    </tr>
+                </tbody>
+            }
+            else
+            {
+                <tbody>
+                    @{int a = 0; }
+                    @foreach (var item in Model.plist)
                     {
-                        a++;
-                        <tr>
-                            <th>@item.Slist</th>
-                            <td align="right">@item.SSvalue 원</td>
-                        </tr>
+                        @if (item.Gubun.Equals("0") && item.Fsort == 0)
+                        {
+                            a++;
+                            <tr>
+                                <th>@item.Slist</th>
+                                <td align="right">@item.SSvalue 원</td>
+                            </tr>
+                        }
                     }
-                }
-                @if (a < ViewBag.Crows)
-                {
-                    @for (int i = a; i < ViewBag.Crows; i++)
+                    @if (a < ViewBag.Crows)
                     {
+                        @for (int i = a; i < ViewBag.Crows; i++)
+                        {
 
-                        <tr>
-                            <th>&nbsp;</th>
-                            <td>&nbsp;</td>
-                        </tr>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td>&nbsp;</td>
+                            </tr>
+                        }
                     }
-                }
-            </tbody>
+                </tbody>
+            }
         </table>
 
         @*Gubun = 1 && Fsort = 0*@
@@ -61,30 +72,41 @@
                     <th>금액</th>
                 </tr>
             </thead>
-            <tbody>
-                @{int b = 0; }
-                @foreach (var item in Model.plist)
-                {
-                    @if (item.Gubun.Equals("1") && item.Fsort == 0)
+            @if (Model.plist.Count == 0)
+            {
+                <tbody>
+                    <tr>
+                        <td colspan="2">데이터가 없습니다</td>
+                    </tr>
+                </tbody>
+            }
+            else
+            {
+                <tbody>
+                    @{int b = 0; }
+                    @foreach (var item in Model.plist)
                     {
-                        b++;
-                        <tr>
-                            <th>@item.Slist</th>
-                            <td align="right">@item.SSvalue 원</td>
-                        </tr>
+                        @if (item.Gubun.Equals("1") && item.Fsort == 0)
+                        {
+                            b++;
+                            <tr>
+                                <th>@item.Slist</th>
+                                <td align="right">@item.SSvalue 원</td>
+                            </tr>
+                        }
                     }
-                }
-                @if (b < ViewBag.Crows)
-                {
-                    @for (int i = b; i < ViewBag.Crows; i++)
+                    @if (b < ViewBag.Crows)
                     {
-                        <tr>
-                            <th>&nbsp;</th>
-                            <td>&nbsp;</td>
-                        </tr>
+                        @for (int i = b; i < ViewBag.Crows; i++)
+                        {
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td>&nbsp;</td>
+                            </tr>
+                        }
                     }
-                }
-            </tbody>
+                </tbody>
+            }
         </table>
         @*Gubun = 1 && Fsort > 0*@
         <table class="table table-bordered table-sm">
@@ -94,25 +116,36 @@
                     <th>금액</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var item in Model.plist)
-                {
-                    @if (item.Fsort > 0)
+            @if (Model.plist.Count == 0)
+            {
+                <tbody>
+                    <tr>
+                        <td colspan="2">데이터가 없습니다</td>
+                    </tr>
+                </tbody>
+            }
+            else
+            {
+                <tbody>
+                    @foreach (var item in Model.plist)
                     {
-                        <tr style="background-color:#d0eaf8; color:black">
-                            <th style="border-bottom-color:black">@item.Slist</th>
-                            <td style="border-bottom-color:black" align="right">@item.SSvalue 원</td>
-                        </tr>
+                        @if (item.Fsort > 0)
+                        {
+                            <tr style="background-color:#d0eaf8; color:black">
+                                <th style="border-bottom-color:black">@item.Slist</th>
+                                <td style="border-bottom-color:black" align="right">@item.SSvalue 원</td>
+                            </tr>
+                        }
                     }
-                }
-                <tr>
-                    <td colspan="2" align="center" style="color:#3763ab; padding:10px;">귀하의 노고에 감사드립니다.</td>
-                </tr>
-            </tbody>
+                    <tr>
+                        <td colspan="2" align="center" style="color:#3763ab; padding:10px;">귀하의 노고에 감사드립니다.</td>
+                    </tr>
+                </tbody>
+            }
         </table>
     </div>
 </div>
-    
+
 <script>
     function changeMonth(sign) {
         let monthList = [];
