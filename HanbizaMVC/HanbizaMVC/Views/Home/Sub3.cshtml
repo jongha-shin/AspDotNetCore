@@ -29,6 +29,9 @@
     label {
         font-weight: bold
     }
+    .linePerWord{
+        word-break: keep-all;
+    }
 </style>
 <div class="text-center col-12 col-md-8 offset-md-2 p-2" style="background-color:white">
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
@@ -47,13 +50,13 @@
                     <label class="col-md-2 col-form-label">구분</label>
                     <select class="form-control form-control-sm col-md-4" id="Vicname" onchange="fn_timeHide()">
                         <option value="선택" selected disabled>휴가종류를 선택하세요</option>
-                        <option value="연차">연차</option>
-                        <option value="반차">반차</option>
+                        <option value="연차휴가">연차휴가</option>
+                        <option value="반차휴가">반차휴가</option>
                         <option value="기타휴가">기타휴가</option>
                     </select>
-                    <label class="col-md-2 col-form-label" id="UseTimeLabel">시간</label>
-                    <select class="form-control form-control-sm col-md-4" id="UseTime">
-                        <option value="시간" selected disabled>시간을 선택하세요</option>
+                    <label class="col-md-2 col-form-label" id="UseTimeLabel" style="display:none">시간</label>
+                    <select class="form-control form-control-sm col-md-4" id="UseTime" style="display:none">
+                        <option value="시간" selected disabled>사용 시간을 선택하세요</option>
                         @for (int i = 1; i < 9; i++)
                         {
                         <option value="@i">@i 시간</option>
@@ -61,15 +64,15 @@
                     </select>
                 </div>
                 <div class="form-group row">
-                    <label class="col-2 col-form-label">시작</label>
-                    <input id="Snal" class="form-control form-control-sm col-10 col-md-4" autocomplete="off" />
-                    <label id="EnalLabel" class="col-2 col-form-label">종료</label>
-                    <input id="Enal" class="form-control form-control-sm col-10 col-md-4" autocomplete="off" />
+                    <label class="col-2 col-form-label">신청일</label>
+                    <input id="Snal" class="form-control form-control-sm col-10 col-md-4" autocomplete="off" placeholder="시작일을 선택하세요"/>
+                    <label id="EnalLabel" class="col-12 col-md-2 col-form-label">~</label>
+                    <input id="Enal" class="form-control form-control-sm col-10 offset-2 col-md-4 offset-md-0" autocomplete="off" placeholder="종료일을 선택하세요"/>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">사유</label>
-                    <textarea class="form-control form-control-sm col-md-10" id="VicReason" rows="5"></textarea>
+                    <textarea class="form-control form-control-sm col-md-10" id="VicReason" rows="5" placeholder="사유를 입력하세요"></textarea>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">결재단계</label>
@@ -148,10 +151,10 @@
                 <table class="table-sm table-bordered table-hover" id="vacationTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>구분</th>
-                            <th>신청시간</th>
-                            <th>결재현황</th>
-                            <th>결과</th>
+                            <th width="15%">구분</th>
+                            <th width="45%">신청시간</th>
+                            <th width="20%">결재현황</th>
+                            <th width="20%">결과</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -167,14 +170,14 @@
                             {
                         <tr>
                             <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
-                            @if (item.Vicname.Equals("반차"))
+                            @if (item.Vicname.Equals("반차휴가"))
                                     {
                             <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
 
                                     }
                                     else
                                     {
-                            <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</td>
+                            <td><span class="linePerWord">@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</span></td>
                                     }
 
                             <td> @item.DeepNum / @item.ProCDeep</td>
@@ -308,7 +311,7 @@
 
     function fn_timeHide() {
         $("#div_msg").html("");
-        if ($("#Vicname").val() == "반차") {
+        if ($("#Vicname").val() == "반차휴가") {
             $("#UseTime").attr("disabled", false);
             //$("#UseTime").css("background", "#fff");
             $("#Enal").attr("disabled", true);
@@ -351,14 +354,16 @@
 
     $(function () {
         $("#Snal").datepicker({
-            language: 'ko'
+            language: 'ko',
+            autoclose: true
         });
         $("#Enal").datepicker({
-            language: 'ko'
+            language: 'ko',
+            autoclose: true
         });
 
         $("#Vicname").change(function () {
-            if ($("#Vicname").val() == '반차') {
+            if ($("#Vicname").val() == '반차휴가') {
                 $("#ShowTime").show();
             } else {
                 $("#ShowTime").hide();
@@ -436,6 +441,11 @@
 
         });
 
+        $("#Snal").change(function () {
+            $("#Enal").val($("#Snal").val());
+        //    $("#Enal").click();
+        //    $("#Enal").focus();
+        })
     });
 
     function submitVacation() {
@@ -450,7 +460,7 @@
 
         if (UseTime == "") UseTime = 0;
         if (ProCDeep == "") ProCDeep = 0;
-        if (Vicname == "반차") Enal = Snal;
+        if (Vicname == "반차휴가") Enal = Snal;
 
         if (ProCDeep > 0) {
             // 휴가정보 등록(Vacation_List)
@@ -552,7 +562,7 @@
             $("#Snal").focus();
             return;
         }
-        if ($("#Vicname").val() != "반차") {
+        if ($("#Vicname").val() != "반차휴가") {
             if ($("#Enal").val() == "") {
                 alert("휴가기간을 선택해주세요");
                 $("#Enal").focus();
@@ -564,7 +574,7 @@
                 return;
             }
         }
-        if ($("#Vicname").val() == "반차") {
+        if ($("#Vicname").val() == "반차휴가") {
             if ($("#UseTime").val() == "시간") {
                 alert("반차 시간을 선택해주세요");
                 $("#UseTime").focus();

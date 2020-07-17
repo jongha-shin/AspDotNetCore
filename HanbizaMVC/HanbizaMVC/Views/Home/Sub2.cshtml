@@ -23,7 +23,6 @@
 
     label {
         font-weight: bold;
-        
     }
 </style>
 
@@ -53,7 +52,7 @@
                     </div>
                     <label class="col-sm-2 col-form-label">신청일</label>
                     <div class="col-sm-4">
-                        <input id="Snal" class="form-control form-control-sm" autocomplete="off" />
+                        <input id="Snal" class="form-control form-control-sm" autocomplete="off" placeholder="신청 날짜를 선택하세요"/>
                     </div>
                 </div>
                 @*<div class="form-group row">
@@ -69,15 +68,15 @@
                         <select id="Snal_h" class="form-control form-control-sm col-5" style="float:left">
                             @for (int i = 0; i < 24; i++)
                             {
-                                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                                <option value="@i.ToString("D2")">@i.ToString("D2") 시</option>
                             }
                         </select>
                         &nbsp;: &nbsp;
                         <select id="Snal_m" class="form-control form-control-sm col-5" style="float:right">
-                            <option value="00">00</option>
-                            <option value="15">15</option>
-                            <option value="30">30</option>
-                            <option value="45">45</option>
+                            <option value="00">00 분</option>
+                            <option value="15">15 분</option>
+                            <option value="30">30 분</option>
+                            <option value="45">45 분</option>
                         </select>
                     </div>
                     <label class="col-2 col-form-label">종료</label>
@@ -85,26 +84,26 @@
                         <select id="Enal_h" class="form-control form-control-sm col-5" style="float:left">
                             @for (int i = 0; i < 24; i++)
                             {
-                                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                                <option value="@i.ToString("D2")">@i.ToString("D2") 시</option>
                             }
                         </select>
                         &nbsp;: &nbsp;
                         <select id="Enal_m" class="form-control form-control-sm col-5" style="float:right">
-                            <option value="00">00</option>
-                            <option value="15">15</option>
-                            <option value="30">30</option>
-                            <option value="45">45</option>
+                            <option value="00">00 분</option>
+                            <option value="15">15 분</option>
+                            <option value="30">30 분</option>
+                            <option value="45">45 분</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group row mb-4">
                     <label class="col-sm-2 col-form-label">사유</label>
                     <div class="col-sm-10">
-                        <textarea id="Reason" class="form-control form-control-sm"></textarea>
+                        <textarea id="Reason" class="form-control form-control-sm" placeholder="사유를 입력하세요"></textarea>
                     </div>
                 </div>
                 <div class="col-4 offset-4 mb-2">
-                    <button class="btn btn-primary btn-user btn-block" onclick="checkInput()">신청하기</button>
+                    <button class="btn btn-primary btn-user btn-block" onclick="checkInput()" style="min-width:86px; display:inline-block">신청하기</button>
                 </div>
             </div>
         </div>
@@ -150,7 +149,8 @@
         //    alert("asdf");
         //});
         $("#Snal").datepicker({
-            language: 'ko'
+            language: 'ko',
+            autoclose:true
             //        $(".datepicker").datepicker({
             //            autoSize: true,
             //            yearRange: "-1:+1", // last hundred years

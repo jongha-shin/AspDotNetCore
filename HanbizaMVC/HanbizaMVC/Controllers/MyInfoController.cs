@@ -37,23 +37,27 @@ namespace HanbizaMVC.Controllers
 
             if (mySign.Count > 0)
             {
-
-                var stringify_byte = Convert.ToBase64String(mySign[0].FileBlob);
-                Console.WriteLine("tobase64 : " + stringify_byte);
-                string result = "data:image/png;base64," + stringify_byte;
-                
-                //System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
-                //System.Text.Decoder utf8Decode = encoder.GetDecoder();
-                //byte[] todecode_byte = Convert.FromBase64String(stringify_byte);
-                //Console.WriteLine("byte: " + todecode_byte);
-                //int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
-                //char[] decoded_char = new char[charCount];
-                //utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
-                //string result = new String(decoded_char);
-                //Console.WriteLine("result: " + result);
-                //ViewBag.mySign = mySign[0].FileBlob;
-                
-                ViewBag.mySign = result;
+                if(mySign[0].Regdate > Convert.ToDateTime("2020-07-15"))
+                {
+                    var stringify_byte = Convert.ToBase64String(mySign[0].FileBlob);
+                    Console.WriteLine("tobase64 : " + stringify_byte);
+                    string result = "data:image/png;base64," + stringify_byte;
+                    ViewBag.mySign = result;
+                }
+                else
+                {
+                    var stringify_byte = Convert.ToBase64String(mySign[0].FileBlob);
+                    System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
+                    System.Text.Decoder utf8Decode = encoder.GetDecoder();
+                    byte[] todecode_byte = Convert.FromBase64String(stringify_byte);
+                    Console.WriteLine("byte: " + todecode_byte);
+                    int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
+                    char[] decoded_char = new char[charCount];
+                    utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
+                    string result = new String(decoded_char);
+                    Console.WriteLine("result: " + result);
+                    ViewBag.mySign = result;
+                }
                 ViewBag.SEQID = mySign[0].SeqId;
 
                 return View();

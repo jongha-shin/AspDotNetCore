@@ -27,7 +27,7 @@
 </style>
 
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white;">
-    <p class="text-right">회계년도 기준 업데이트: @ViewBag.Regdate</p>
+    <p class="text-right">업데이트: @ViewBag.Regdate</p>
     <div style="margin-left:8%">
         <div class="card border-primary mb-3 col-4 col-sm-2">
             <div class="card-header">입사일</div>
@@ -125,7 +125,14 @@
                 <tr>
                     <td>@item.번호</td>
                     <td>@string.Format("{0:yyyy-MM-dd}", item.날짜)</td>
-                    <td>@item.반차</td>
+                    @if (item.반차 != null)
+                    {
+                        <td>@item.반차 시간</td>
+                    }
+                    else
+                    {
+                        <td>@item.반차</td>
+                    }
                 </tr>
             }
         }
