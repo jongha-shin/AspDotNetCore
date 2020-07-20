@@ -2,6 +2,102 @@
     ViewData["Title"] = "비밀번호변경";
 }
 
-<div class="text-center">
-    <h1>@ViewData["Title"]</h1>
+<div class="text-center col-12 col-sm-8 offset-sm-2 p-5 my-5 checkPWD" style="background-color:white">
+    <p>본인확인을 위해 비밀번호를 입력하세요</p>
+
+    <div class="input-group mb-3 col-md-6 offset-md-3">
+        <input type="password" id="confirmPWD" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" onkeyup="enterkey(1)">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="checkPWD()">확인</button>
+        </div>
+    </div>
+
+
 </div>
+
+<div class="text-center col-12 col-sm-8 offset-sm-2 p-5 my-5 changePWD" style="background-color:white; display:none;">
+    <p>변경할 비밀번호를 입력하세요</p>
+    <div class="input-group mb-3 col-md-6 offset-md-3">
+        <input type="password" class="form-control" id="PWD1" aria-label="Recipient's username" aria-describedby="button-addon2" onkeyup="enterkey(2)">
+    </div>
+    <p>비밀번호를 확인해주세요</p>
+    <div class="input-group mb-3 col-md-6 offset-md-3">
+        <input type="password" class="form-control" id="PWD2" aria-label="Recipient's username" aria-describedby="button-addon2" onkeyup="enterkey(2)">
+    </div>
+
+    <button class="btn btn-primary btn-user btn-block col-4 offset-4 mt-4" onclick="completePWD()">변경</button>
+</div>
+
+<script>
+    $(function () {
+
+    })
+    function checkPWD() {
+        //alert("확인");
+        let pwd = $("#confirmPWD").val();
+        $.ajax({
+            url: '/MyInfo/Sub9_1/' + pwd,
+            type: 'POST',
+            dataType: "text",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            charset: "utf-8",
+            success: function (result) {
+                if (result == "success") {
+                    $(".checkPWD").hide();
+                    $(".changePWD").show();
+                } else {
+                    alert("비밀번호를 확인하세요");
+                    $("#confirmPWD").focus();
+                }
+            },
+            error: function () {
+                alert("error")
+            }
+        })
+    }
+
+    function completePWD() {
+        let PWD1 = $("#PWD1").val().trim();
+        let PWD2 = $("#PWD2").val().trim();
+
+        if (PWD1 != PWD2) {
+            alert("비밀번호가 일치하지 않습니다");
+            $("#PWD1").focus();
+            return
+        }
+
+        $.ajax({
+            url: '/MyInfo/Sub9_2/' + PWD2,
+            type: 'POST',
+            dataType: "text",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            charset: "utf-8",
+            success: function (result) {
+                if (result == "success") {
+                    alert("비밀번호가 변경되었습니다");
+                } else {
+                    alert("비밀번호 변경 실패");
+                }
+            },
+            error: function () {
+                alert("error")
+            }
+        })
+        $(".checkPWD").show();
+        $(".changePWD").hide();
+    }
+
+    function enterkey(id) {
+        if (id == 1) {
+            if (window.event.keyCode == 13) {
+                checkPWD();
+            }
+        }
+        if (id == 2) {
+            if (window.event.keyCode == 13) {
+                completePWD();
+            }
+        }
+    }
+</script>
+

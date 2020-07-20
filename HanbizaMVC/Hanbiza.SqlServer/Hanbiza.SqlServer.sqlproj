@@ -99,6 +99,8 @@
     <Build Include="dbo\notice_getList.sql" />
     <Build Include="dbo\vacation_process_allow.sql" />
     <Build Include="dbo\vacation_process_reject.sql" />
+    <Build Include="dbo\PWD_check.sql" />
+    <Build Include="dbo\PWD_change.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Hanbiza.SqlServer.refactorlog" />

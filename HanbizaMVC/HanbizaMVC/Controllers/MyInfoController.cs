@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using StoredProcedureEFCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace HanbizaMVC.Controllers
 {
@@ -91,7 +92,45 @@ namespace HanbizaMVC.Controllers
             ViewBag.menulist = menulist;
             return View();
         }
-       
+        [Route("/MyInfo/Sub9_1/{pwd}")]
+        public string Sub9_1(string pwd)
+        {
+            string rsString = "";
+            _logger.LogInformation("sub9_1(pwd): " + pwd); // 신청x
+            List<LoginInfor> loginInfor = null;
+            _db.LoadStoredProc("dbo.PWD_check").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("checkPWD", pwd)
+                        .Exec(r => loginInfor = r.ToList<LoginInfor>());
+            
+            //Console.WriteLine("Sub9_1 rs: " + loginInfor.Count);
+
+            if (loginInfor.Count > 0)
+            {
+                rsString = "success";
+                return rsString;
+            }
+
+            rsString = "fail";
+            return rsString;
+        }
+        [Route("/MyInfo/Sub9_2/{pwd}")]
+        public string Sub9_2(string pwd)
+        {
+            string rsString = "";
+            _logger.LogInformation("sub9_2(pwd): " + pwd); // 신청x
+            int rs = _db.LoadStoredProc("dbo.PWD_change").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("changePWD", pwd.ToLower())
+                        .ExecNonQuery();
+
+            Console.WriteLine("Sub9_2 rs: " + rs);
+
+            if (rs > 0)
+            {
+                rsString = "success";
+                return rsString;
+            }
+
+            rsString = "fail";
+            return rsString;
+        }
         //[HttpPost]
         //public IActionResult LogIn(OnlyLogin model)
         //{
