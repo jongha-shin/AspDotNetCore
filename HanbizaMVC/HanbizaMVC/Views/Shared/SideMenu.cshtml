@@ -8,7 +8,7 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-    @if (ViewBag.menulist[0].근태보기.Equals("0"))
+    @if (ViewBag.menulist[0].근태보기.Equals("1"))
     {
         <li class="nav-item" id="Sub0">
             <a class="nav-link" href="/Home/Sub1">
@@ -17,7 +17,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.menulist[0].OT신청.Equals("0"))
+    @if (ViewBag.menulist[0].OT신청.Equals("1"))
     {
         <li class="nav-item">
             <a class="nav-link" href="/Home/Sub2">
@@ -26,7 +26,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.menulist[0].휴가신청.Equals("0"))
+    @if (ViewBag.menulist[0].휴가신청.Equals("1"))
     {
         <li class="nav-item">
             <a class="nav-link" href="/Home/Sub3">
@@ -35,7 +35,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.menulist[0].휴가결재.Equals("0"))
+    @if (ViewBag.menulist[0].휴가결재.Equals("1"))
     {
         <li class="nav-item">
             <a class="nav-link" href="/Home/Sub4">
@@ -44,7 +44,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.menulist[0].연차보기.Equals("0"))
+    @if (ViewBag.menulist[0].연차보기.Equals("1"))
     {
         <li class="nav-item">
             <a class="nav-link" href="/Home/Sub5">
@@ -53,7 +53,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.menulist[0].급여명세서.Equals("0"))
+    @if (ViewBag.menulist[0].급여명세서.Equals("1"))
     {
         <li class="nav-item">
             <a class="nav-link" href="/Home/Sub6">
@@ -69,7 +69,7 @@
     <div class="sidebar-heading">
         내 정보
     </div>
-    @if (ViewBag.menulist[0].확인서명.Equals("0"))
+    @if (ViewBag.menulist[0].확인서명.Equals("1"))
     {
         <li class="nav-item">
             <a class="nav-link" href="/MyInfo/Sub7">
@@ -78,7 +78,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.menulist[0].내문서.Equals("0"))
+    @if (ViewBag.menulist[0].내문서.Equals("1"))
     {
         <li class="nav-item">
             <a class="nav-link" href="/MyInfo/Sub8">
@@ -87,7 +87,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.menulist[0].비밀번호변경.Equals("0"))
+    @if (ViewBag.menulist[0].비밀번호변경.Equals("1"))
     {
         <li class="nav-item">
             <a class="nav-link" href="/MyInfo/Sub9">
@@ -96,7 +96,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.menulist[0].로그아웃.Equals("0"))
+    @if (ViewBag.menulist[0].로그아웃.Equals("1"))
     {
         <li class="nav-item">
             <a class="nav-link" href="/Account/Logout">

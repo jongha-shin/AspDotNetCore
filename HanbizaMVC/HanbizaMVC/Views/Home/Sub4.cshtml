@@ -1,5 +1,8 @@
 ﻿@{
     ViewData["Title"] = "휴가결재";
+    int a = 0;
+    int b = 0;
+    int c = 0;
 }
 @using HanbizaMVC.ViewModel
 @model List<ApproveList>
@@ -21,7 +24,7 @@
     }
 
     .nav-tabs .nav-link {
-       color: grey;
+        color: grey;
     }
 </style>
 
@@ -67,7 +70,15 @@
                                         </div>
                                     </td>
                                 </tr>
+                                a++;
                             }
+
+                        }
+                        @if (a == 0)
+                        {
+                            <tr>
+                                <td colspan="3">데이터가 없습니다</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -104,6 +115,13 @@
                                     </td>
                                 </tr>
                             }
+                            b++;
+                        }
+                        @if (b == 0)
+                        {
+                            <tr>
+                                <td colspan="3">데이터가 없습니다</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -140,7 +158,14 @@
 
                                     </td>
                                 </tr>
+                                c++;
                             }
+                        }
+                        @if (c == 0)
+                        {
+                            <tr>
+                                <td colspan="3">데이터가 없습니다</td>
+                            </tr>
                         }
                     </tbody>
                 </table>

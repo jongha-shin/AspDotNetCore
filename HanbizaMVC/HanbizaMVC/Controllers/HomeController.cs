@@ -33,7 +33,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub0()
         {
             ViewBag.LoginUser = LoginUser;
-            Console.WriteLine("sub0");
+            //Console.WriteLine("sub0");
             List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId).ToList<공지사항>();
            
             ViewBag.menulist = menulist;
@@ -71,7 +71,7 @@ namespace HanbizaMVC.Controllers
                     .Exec(r => Months = r.ToList<출퇴근기록>());
                 ViewBag.선택월 = dateMonth;
             }
-            Console.WriteLine("1 선택월: " + dateMonth);
+            //Console.WriteLine("1 선택월: " + dateMonth);
 
             // 월별근태내역 - 근무/휴가
             List<출퇴근기록집계표> CulTable = null;
