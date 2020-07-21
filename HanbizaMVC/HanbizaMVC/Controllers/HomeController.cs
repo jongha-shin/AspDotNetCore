@@ -339,8 +339,8 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub4_1/{checkedVacId}/{Gubun}")]
         public string Sub4_1(string checkedVacId, string Gubun)
         {
-            _logger.LogInformation("sub4_1(): " + checkedVacId);
             string[] arrVacId = checkedVacId.Split(",");
+            _logger.LogInformation("sub4_1(): " + checkedVacId +"/" + arrVacId.Length);
             int count = 0;
             for (int i = 0; i < arrVacId.Length; i++)
             {
@@ -394,6 +394,7 @@ namespace HanbizaMVC.Controllers
                 ViewBag.사용연차 = i.발생연차 - i.잔여일수;
                 ViewBag.잔여연차 = i.잔여일수;
                 ViewBag.Regdate = string.Format("{0:yyyy-MM-dd}", i.Regdate);
+                ViewBag.연차구분 = i.연차구분;
             }
 
             List<휴가대장> vacationList = null;

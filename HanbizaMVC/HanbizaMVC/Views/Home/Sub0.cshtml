@@ -18,7 +18,6 @@
     .card {
         min-width: 210px;
         display:inline-block;
-        cursor:pointer;
     }
     .notice {
         font-weight: bold;
@@ -27,6 +26,9 @@
         padding-top: 5px;
         background-color: #3763ab;
         border-radius: 5px;
+    }
+    .vacation:hover{
+        background-color: rgba(0, 0, 0, 0.075);
     }
 </style>
 <div class="text-center col-10 offset-1" style="vertical-align:middle">
@@ -40,13 +42,26 @@
             }
             else
             {
-                <div class="card border-primary mb-3 col-md-5 p-0 mt-3 mr-md-3 float-left" onclick="location.href='/Home/Sub4'">
-                    <div class="card-header p-2">@item.내용</div>
-                    <div class="card-body text-primary p-1 pt-2">
-                        <p class="card-title" style="font-weight:bold">@item.제목</p>
-                        <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                if (item.VacId != 0)
+                {
+                    <div class="card border-primary mb-3 col-md-5 p-0 mt-3 mr-md-3 float-left vacation" onclick="location.href='/Home/Sub4'" style="cursor:pointer;">
+                        <div class="card-header p-2">@item.내용</div>
+                        <div class="card-body text-primary p-1 pt-2">
+                            <p class="card-title" style="font-weight:bold">@item.제목</p>
+                            <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                        </div>
                     </div>
-                </div>
+                }
+                if (item.VacId == 0)
+                {
+                    <div class="card border-primary mb-3 col-md-5 p-0 mt-3 mr-md-3 float-left">
+                        <div class="card-header p-2">@item.제목</div>
+                        <div class="card-body text-primary p-1 pt-2">
+                            <p class="card-title" style="font-weight:bold">@item.내용</p>
+                            <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                        </div>
+                    </div>
+                }
             }
         }
     </div>
