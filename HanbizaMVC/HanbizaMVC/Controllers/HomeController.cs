@@ -10,7 +10,6 @@ using HanbizaMVC.ViewModel;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using System.Dynamic;
 
 namespace HanbizaMVC.Controllers
@@ -33,6 +32,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub0()
         {
             ViewBag.LoginUser = LoginUser;
+            _logger.LogInformation("sub0(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             //Console.WriteLine("sub0");
             List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId).ToList<공지사항>();
            
@@ -48,6 +48,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub1(string dateMonth)
         {
             ViewBag.menulist = menulist;
+            _logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             // 최근 근태기록 월 구하기
             List<출퇴근기록> Months = null;
             if (dateMonth == null)

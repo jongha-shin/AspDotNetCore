@@ -6,8 +6,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using StoredProcedureEFCore;
 using System.Collections.Generic;
-using System;
-using HanbizaMVC.ViewModel;
 using System.Threading.Tasks;
 using System.IO;
 
@@ -29,7 +27,7 @@ namespace HanbizaMVC.Controllers
         }
         public FileContentResult FileDownload(int id)
         {
-            //_logger.LogInformation("FileDownload() " + id);
+            _logger.LogInformation("FileDownload() :" + id);
 
             List<문서함> fileInfo = null;
             _db.LoadStoredProc("file_data").AddParam("SeqID", id).Exec(r => fileInfo = r.ToList<문서함>());
@@ -79,11 +77,11 @@ namespace HanbizaMVC.Controllers
 
         public FileContentResult SignDownload(int id)
         {
-            Console.WriteLine("sign down: seq ="+id);
+            //Console.WriteLine("sign down: seq ="+id);
             List<문서함> mySign = null;
             _db.LoadStoredProc("file_data").AddParam("SeqID", id).Exec(r => mySign = r.ToList<문서함>());
 
-            Console.WriteLine("byte[] : " + mySign[0].FileBlob.ToArray());
+            //Console.WriteLine("byte[] : " + mySign[0].FileBlob.ToArray());
            
             var fileRes = new FileContentResult(mySign[0].FileBlob.ToArray(), "application/octet-stream")
             {

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using StoredProcedureEFCore;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 
 namespace HanbizaMVC.Controllers
 {
@@ -30,7 +29,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub7()
         {
             ViewBag.menulist = menulist;
-            //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            _logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<문서함> mySign = null;
             _db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -38,25 +37,26 @@ namespace HanbizaMVC.Controllers
 
             if (mySign.Count > 0)
             {
+                // 2020년 7월 15일 부터 개인서명 저장방식 변경되어 convert
                 if(mySign[0].Regdate > Convert.ToDateTime("2020-07-15"))
                 {
                     var stringify_byte = Convert.ToBase64String(mySign[0].FileBlob);
-                    Console.WriteLine("tobase64 : " + stringify_byte);
+                    //Console.WriteLine("tobase64 : " + stringify_byte);
                     string result = "data:image/png;base64," + stringify_byte;
                     ViewBag.mySign = result;
                 }
                 else
-                {
+                {   // 기존 서명 저장방식에서 불러오기
                     var stringify_byte = Convert.ToBase64String(mySign[0].FileBlob);
                     System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
                     System.Text.Decoder utf8Decode = encoder.GetDecoder();
                     byte[] todecode_byte = Convert.FromBase64String(stringify_byte);
-                    Console.WriteLine("byte: " + todecode_byte);
+                    //Console.WriteLine("byte: " + todecode_byte);
                     int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
                     char[] decoded_char = new char[charCount];
                     utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
                     string result = new String(decoded_char);
-                    Console.WriteLine("result: " + result);
+                    //Console.WriteLine("result: " + result);
                     ViewBag.mySign = result;
                 }
                 ViewBag.SEQID = mySign[0].SeqId;
@@ -73,7 +73,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub8()
         {
             ViewBag.menulist = menulist;
-            //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            _logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<문서함> fileList = null;
             _db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -89,6 +89,7 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub9()
         {
+            _logger.LogInformation("sub9(): ");
             ViewBag.menulist = menulist;
             return View();
         }
@@ -116,11 +117,11 @@ namespace HanbizaMVC.Controllers
         public string Sub9_2(string pwd)
         {
             string rsString = "";
-            _logger.LogInformation("sub9_2(pwd): " + pwd); // 신청x
+            //_logger.LogInformation("sub9_2(pwd): " + pwd); // 신청x
             int rs = _db.LoadStoredProc("dbo.PWD_change").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("changePWD", pwd.ToLower())
                         .ExecNonQuery();
 
-            Console.WriteLine("Sub9_2 rs: " + rs);
+            //Console.WriteLine("Sub9_2 rs: " + rs);
 
             if (rs > 0)
             {

@@ -24,7 +24,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult StartLogin()
         {
             // 쿠키 체크, 정보 가져오기
-            Console.WriteLine("로그인 화면");
+            //Console.WriteLine("로그인 화면");
             if (User.Identity.IsAuthenticated)
             {
                 string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -62,7 +62,7 @@ namespace HanbizaMVC.Controllers
                 }
                 else
                 {
-                    Console.WriteLine("------auto_save------");
+                    //Console.WriteLine("------auto_save------");
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
                          new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(30) });
                 }
