@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using StoredProcedureEFCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HanbizaMVC.Controllers
 {
@@ -15,8 +16,8 @@ namespace HanbizaMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HanbizaContext _db;
-        private readonly LoginInfor LoginUser = AccountController.LoginUser;
-        private readonly List<회사별메뉴> menulist = AccountController.menulist;
+        private LoginInfor LoginUser;
+        private List<회사별메뉴> menulist;
 
         public MyInfoController(ILogger<HomeController> logger, HanbizaContext db)
         {
@@ -24,10 +25,37 @@ namespace HanbizaMVC.Controllers
             _db = db;
         }
 
+        public Boolean CheckLogin()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                LoginUser = new LoginInfor();
+                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var loginInfo = _db.LoginInfor.Where(r => r.StaffId == int.Parse(StaffID)).ToList();
+                foreach (var item in loginInfo)
+                {
+                    LoginUser.BizNum = item.BizNum;
+                    LoginUser.Dname = item.Dname;
+                    LoginUser.StaffName = item.StaffName;
+                    LoginUser.StaffId = item.StaffId;
+                }
+
+                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         // 확인서명
         [Authorize]
         public IActionResult Sub7()
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             _logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
@@ -72,6 +100,9 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub8()
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             _logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
@@ -89,6 +120,9 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub9()
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             _logger.LogInformation("sub9(): ");
             ViewBag.menulist = menulist;
             return View();

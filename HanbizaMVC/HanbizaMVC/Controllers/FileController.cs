@@ -8,6 +8,8 @@ using StoredProcedureEFCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
+using System;
+using System.Security.Claims;
 
 namespace HanbizaMVC.Controllers
 {
@@ -15,7 +17,7 @@ namespace HanbizaMVC.Controllers
     {
         private readonly ILogger<FileController> _logger;
         private readonly HanbizaContext _db;
-        private readonly LoginInfor LoginUser = AccountController.LoginUser;
+        private LoginInfor LoginUser;
         //static public string ToReadableByteArray(byte[] bytes)
         //{
         //    return string.Join(", ", bytes);
@@ -25,6 +27,31 @@ namespace HanbizaMVC.Controllers
             _logger = logger;
             _db = db;
         }
+
+        public Boolean CheckLogin()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                LoginUser = new LoginInfor();
+                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var loginInfo = _db.LoginInfor.Where(r => r.StaffId == int.Parse(StaffID)).ToList();
+                foreach (var item in loginInfo)
+                {
+                    LoginUser.BizNum = item.BizNum;
+                    LoginUser.Dname = item.Dname;
+                    LoginUser.StaffName = item.StaffName;
+                    LoginUser.StaffId = item.StaffId;
+                }
+
+                
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public FileContentResult FileDownload(int id)
         {
             _logger.LogInformation("FileDownload() :" + id);

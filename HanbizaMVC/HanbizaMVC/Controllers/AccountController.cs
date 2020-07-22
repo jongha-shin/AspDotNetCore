@@ -35,7 +35,7 @@ namespace HanbizaMVC.Controllers
                 foreach (var item in loginId)
                 {
                     ViewBag.loginID = item.LoginId;
-                }
+                } 
             }
 
             return View();
@@ -68,6 +68,7 @@ namespace HanbizaMVC.Controllers
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
                          new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(30) });
                 }
+                
             }
             else
             {

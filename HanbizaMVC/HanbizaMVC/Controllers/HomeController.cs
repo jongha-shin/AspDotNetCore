@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Dynamic;
+using System.Security.Claims;
 
 namespace HanbizaMVC.Controllers
 {
@@ -18,21 +19,48 @@ namespace HanbizaMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HanbizaContext _db;
-        private readonly LoginInfor LoginUser = AccountController.LoginUser;
-        private readonly List<회사별메뉴> menulist = AccountController.menulist;
+        private LoginInfor LoginUser;
+        private List<회사별메뉴> menulist;
 
         public HomeController(ILogger<HomeController> logger, HanbizaContext db)
         {
             _logger = logger;
             _db = db;
+
         }
 
+        public Boolean CheckLogin()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                LoginUser = new LoginInfor();
+                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var loginInfo = _db.LoginInfor.Where(r => r.StaffId == int.Parse(StaffID)).ToList();
+                foreach (var item in loginInfo)
+                {
+                    LoginUser.BizNum = item.BizNum;
+                    LoginUser.Dname = item.Dname;
+                    LoginUser.StaffName = item.StaffName;
+                    LoginUser.StaffId = item.StaffId;
+                }
+
+                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
         // 0. 로그인 후 첫 화면 
         public IActionResult Sub0()
         {
-            ViewBag.LoginUser = LoginUser;
+            Boolean checkLogin = CheckLogin();
+            if(!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
+            //ViewBag.LoginUser = LoginUser;
             _logger.LogInformation("sub0(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             //Console.WriteLine("sub0");
             List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId).ToList<공지사항>();
@@ -48,6 +76,9 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub1/{dateMonth}")]
         public IActionResult Sub1(string dateMonth)
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             _logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             // 최근 근태기록 월 구하기
@@ -137,6 +168,9 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub1_1/{dateMonth}")]
         public IActionResult Sub1_1(string dateMonth)
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             dynamic mymodel = new ExpandoObject();
             // 최근 근태기록 월 구하기
@@ -171,6 +205,9 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub2()
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             _logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
@@ -214,6 +251,9 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub3()
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             //GetLoginUser();
             _logger.LogInformation("sub3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
@@ -261,6 +301,9 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub3_2/{VacID}")]
         public IActionResult Sub3_2(string VacID)
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             // GetLoginUser();
             _logger.LogInformation("sub3_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + VacID);
@@ -323,6 +366,9 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub4()
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             //GetLoginUser();
             _logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
@@ -379,6 +425,9 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public IActionResult Sub5()
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             //GetLoginUser();
             _logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
@@ -419,6 +468,9 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub6/{Yyyymm}/{Ncount}")]
         public IActionResult Sub6(string Yyyymm, string Ncount)
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             ViewBag.menulist = menulist;
             _logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
