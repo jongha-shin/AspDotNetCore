@@ -10081,7 +10081,8 @@ a:focus {
 }
 
 .sidebar {
-  width: 7rem;
+  /*width: 7rem;*/
+  /*width: 126px;*/
   min-height: 100vh;
 }
 
@@ -10210,7 +10211,7 @@ a:focus {
   text-decoration: none;
   font-size: 1rem;
   font-weight: 800;
-  padding: 1.5rem 1rem;
+  /*padding: 1.5rem 1rem;*/
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.05rem;

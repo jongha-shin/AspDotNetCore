@@ -24,7 +24,7 @@ CREATE PROCEDURE [dbo].[approvalList]
 	@BizNum varchar(10),
 	@StaffID int
 AS
-	SELECT a.VacID, a.AResult, a.processPoint, a.RereaSon, b.StaffID, b.SNal, b.Enal, b.Vicname, b.VicReaSon, c.StaffName
+	SELECT a.VacID, a.AResult, a.processPoint, a.RereaSon, b.StaffID, b.SNal, b.Enal, b.Vicname, b.UseTime, b.VicReaSon, c.StaffName
 	FROM Vacation_Approve a
 	JOIN Vacation_List b
 		ON a.VacID = b.SEQID

@@ -49,7 +49,7 @@
                     </div>
                     <label class="col-sm-2 col-form-label">신청일</label>
                     <div class="col-sm-4">
-                        <input id="Snal" class="form-control form-control-sm" autocomplete="off" placeholder="신청 날짜를 선택하세요"/>
+                        <input id="Snal" class="form-control form-control-sm" autocomplete="off" placeholder="신청 날짜를 선택하세요" />
                     </div>
                 </div>
                 @*<div class="form-group row">
@@ -126,7 +126,18 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@string.Format("{0:yyyy-MM-dd HH:mm:ss}", item.Regdate)</td>
+                                    @if (item.Snal.DayOfWeek.ToString("d").Equals("0"))
+                                    {
+                                        <th style="color:red">@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
+                                    }
+                                    else if (item.Snal.DayOfWeek.ToString("d").Equals("6"))
+                                    {
+                                        <th style="color:blue">@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
+                                    }
+                                    else
+                                    {
+                                        <th>@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
+                                    }
                                     <td>@item.Snals ~ @item.Enals</td>
                                     <td>@item.Reason</td>
                                 </tr>
@@ -147,7 +158,7 @@
         //});
         $("#Snal").datepicker({
             language: 'ko',
-            autoclose:true
+            autoclose: true
             //        $(".datepicker").datepicker({
             //            autoSize: true,
             //            yearRange: "-1:+1", // last hundred years

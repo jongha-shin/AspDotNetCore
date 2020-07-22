@@ -21,12 +21,13 @@ namespace HanbizaMVC.Controllers
         private readonly LoginInfor LoginUser = AccountController.LoginUser;
         private readonly List<회사별메뉴> menulist = AccountController.menulist;
 
-
         public HomeController(ILogger<HomeController> logger, HanbizaContext db)
         {
             _logger = logger;
             _db = db;
         }
+
+
 
         // 0. 로그인 후 첫 화면 
         public IActionResult Sub0()

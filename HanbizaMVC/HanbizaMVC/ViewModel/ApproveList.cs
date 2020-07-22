@@ -12,6 +12,7 @@ namespace HanbizaMVC.ViewModel
         public DateTime SNal { get; set; }
         public DateTime ENal { get; set; }
         public string Vicname { get; set; }
+        public double UseTime { get; set; }
         public string Staffname { get; set; }
         public string VicReaSon { get; set; }
     }

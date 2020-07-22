@@ -44,8 +44,10 @@ namespace HanbizaMVC.Controllers
         [Route("/Account/Login/{userID}/{userPWD}/{autoSave}")]
         public string Login(string userID, string userPWD, string autoSave)
         {
+            LoginInfor _LoginUser = new LoginInfor();
             _db.LoadStoredProc("dbo.login_Process").AddParam("loginID", userID).AddParam("passW", userPWD)
-              .Exec(r => LoginUser = r.SingleOrDefault<LoginInfor>());
+              .Exec(r => _LoginUser = r.SingleOrDefault<LoginInfor>());
+            LoginUser = _LoginUser;
             string rs;
             if (LoginUser != null)
             {

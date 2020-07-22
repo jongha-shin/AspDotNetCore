@@ -4,7 +4,7 @@
 }
 @model List<Vacation_List>
 <style>
-    .table-hover > tbody > tr{
+    .table-hover > tbody > tr {
         cursor: pointer
     }
 
@@ -29,7 +29,8 @@
     label {
         font-weight: bold
     }
-    .linePerWord{
+
+    .linePerWord {
         word-break: keep-all;
     }
 </style>
@@ -59,15 +60,15 @@
                         <option value="시간" selected disabled>사용 시간을 선택하세요</option>
                         @for (int i = 1; i < 9; i++)
                         {
-                        <option value="@i">@i 시간</option>
+                            <option value="@i">@i 시간</option>
                         }
                     </select>
                 </div>
                 <div class="form-group row">
                     <label class="col-3 col-md-2 col-form-label">신청일</label>
-                    <input id="Snal" class="form-control form-control-sm col-9 col-md-4" autocomplete="off" placeholder="시작일을 선택하세요"/>
+                    <input id="Snal" class="form-control form-control-sm col-9 col-md-4" autocomplete="off" placeholder="시작일을 선택하세요" />
                     <label id="EnalLabel" class="col-12 col-md-2 col-form-label">~</label>
-                    <input id="Enal" class="form-control form-control-sm col-9 offset-3 col-md-4 offset-md-0" autocomplete="off" placeholder="종료일을 선택하세요"/>
+                    <input id="Enal" class="form-control form-control-sm col-9 offset-3 col-md-4 offset-md-0" autocomplete="off" placeholder="종료일을 선택하세요" />
                 </div>
 
                 <div class="form-group row">
@@ -80,7 +81,7 @@
                         @{ int a; }
                         @for (a = 1; a < 6; a++)
                         {
-                        <option value="@a">@a 단계</option>
+                            <option value="@a">@a 단계</option>
                         }
                     </select>
 
@@ -129,10 +130,10 @@
                     <div class="modal-body">
                         <div class="p-3 row">
                             @*<select class="form-control form-control-sm col-2" id="searchKey">
-                                <option value="부서" selected>부서</option>
-                                <option value="이름">이름</option>
-                            </select>*@
-                            <input class="form-control form-control-sm col-8 offset-1" type="text" placeholder="이름 또는 부서명을 입력하세요" id="searchWord" onkeyup="enterkey()" />
+                                    <option value="부서" selected>부서</option>
+                                    <option value="이름">이름</option>
+                                </select>*@
+                            <input class="form-control form-control-sm col-8 offset-1" type="text" placeholder="부서명 또는 이름을 입력하세요" id="searchWord" onkeyup="enterkey()" />
                             <input class="form-control form-control-sm col-2" type="submit" value="검색" id="searchBtn" />
                         </div>
                         @* ajax로 데이터 가져옴 *@
@@ -152,7 +153,7 @@
                     <thead>
                         <tr>
                             <th width="15%">구분</th>
-                            <th width="45%">신청시간</th>
+                            <th width="45%">신청기간</th>
                             <th width="20%">결재현황</th>
                             <th width="20%">결과</th>
                         </tr>
@@ -160,41 +161,47 @@
                     <tbody>
                         @if (Model.Count == 0)
                         {
-                        <tr style="cursor:default; background-color:#fff">
-                            <td colspan="4">데이터가 없습니다</td>
-                        </tr>
+                            <tr style="cursor:default; background-color:#fff">
+                                <td colspan="4">데이터가 없습니다</td>
+                            </tr>
                         }
                         else
                         {
-                        @foreach (var item in Model)
+                            @foreach (var item in Model)
                             {
-                        <tr>
-                            <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
-                            @if (item.Vicname.Equals("반차휴가"))
+                                <tr>
+                                    <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
+                                    @if (item.Vicname.Equals("반차휴가"))
                                     {
-                            <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
+                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
 
                                     }
                                     else
                                     {
-                            <td><span class="linePerWord">@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</span></td>
+                                        <td><span class="linePerWord">@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</span></td>
                                     }
 
-                            <td> @item.DeepNum / @item.ProCDeep</td>
+                                    <td>
+                                        @if (item.AllProCess.Equals("N"))
+                                        { @:0 
+                                        }
+                                        else
+                                        {@item.DeepNum}  / @item.ProCDeep
+                                    </td>
 
-                            @if (@item.AllProCess.Equals("F"))
+                                    @if (@item.AllProCess.Equals("F"))
                                     {
-                            <td style="color:red">반려</td>
+                                        <td style="color:red">반려</td>
                                     }
                                     else if (@item.AllProCess.Equals("S"))
                                     {
-                            <td style="color:blue">승인</td>
+                                        <td style="color:blue">승인</td>
                                     }
                                     else
                                     {
-                            <td style="color:grey">대기</td>
+                                        <td style="color:grey">대기</td>
                                     }
-                        </tr>
+                                </tr>
                             }
                         }
                     </tbody>
@@ -208,7 +215,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <p class="modal-title" id="exampleModalLongTitle">휴가신청 세부내역</p>
+                        <p class="modal-title" id="exampleModalLongTitle">휴가신청 세부내역 <br />신청 사유 : <span id="vicReason"></span></p>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -384,7 +391,7 @@
                     var sjson = JSON.parse(result);
                     //alert("succ");
                     var s = '<table id="VPTable" class="table-sm table-bordered col-sm-12">';
-                    s += "<thead><tr><th align='center' width='20%' >결재</th><th align='center' width='20%'>이름</th><th align='center'>부서</th><th align='center'>반려사유</th></tr></thead>"
+                    s += "<thead><tr><th align='center' width='10%' >결재</th><th align='center' width='15%'>이름</th><th align='center' width='15%'>부서</th><th align='center'>반려사유</th></tr></thead>"
                     if (sjson.length == 0) {
                         s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
                     } else {
@@ -398,7 +405,7 @@
                             }
                             if (DeepNumChk < Number(sjson[i].DeepNum)) f_color = "gray";
                             s += "<tr>";
-                            s += "<td style='color:" + f_color + "'>" + sjson[i].DeepNum + "</td>"
+                            s += "<td style='color:" + f_color + "' width=>" + sjson[i].DeepNum + "</td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].approveName + "</td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].Buseo + "</td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].RereaSon + "</td>"
@@ -407,6 +414,7 @@
                         }
                         s += "</table>"
                     }
+                    $("#vicReason").text(sjson[0].VicReaSon);
                     $("#result2").html(s);
                 },
                 error: function () {
@@ -444,8 +452,8 @@
 
         $("#Snal").change(function () {
             $("#Enal").val($("#Snal").val());
-        //    $("#Enal").click();
-        //    $("#Enal").focus();
+            //    $("#Enal").click();
+            //    $("#Enal").focus();
         })
     });
 

@@ -8,5 +8,6 @@
         public string approveName { get; set; }
         public string Buseo { get; set; }
         public string RereaSon { get; set; }
+        public string VicReaSon { get; set; }
     }
 }

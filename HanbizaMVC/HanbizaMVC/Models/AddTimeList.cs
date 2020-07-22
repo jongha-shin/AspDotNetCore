@@ -19,5 +19,6 @@ namespace HanbizaMVC.Models
 
         public string Snals { get; set; }
         public string Enals { get; set; }
+        public string 요일 { get; set; }
     }
 }

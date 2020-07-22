@@ -19,7 +19,7 @@ CREATE PROCEDURE [dbo].[OT_list]
 	@BizNum varchar(10),
 	@StaffID int
 AS
-	SELECT CONVERT(CHAR(16),Regdate,120) AS Regdate, Reason, SUBSTRING(CONVERT(CHAR(23), SNal, 121),12,5) as SNals, SUBSTRING(CONVERT(CHAR(23), ENal, 121),12,5) as ENals
+	SELECT CONVERT(CHAR(16),Regdate,120) AS Regdate, Reason, SUBSTRING(CONVERT(CHAR(23), SNal, 121),12,5) as SNals, SUBSTRING(CONVERT(CHAR(23), ENal, 121),12,5) as ENals, SNal
 	FROM AddTime_List
 	WHERE StaffID = @StaffID AND BizNum = @BizNum
 		AND DATEADD(mm, -6, GETDATE()) <= ENal
