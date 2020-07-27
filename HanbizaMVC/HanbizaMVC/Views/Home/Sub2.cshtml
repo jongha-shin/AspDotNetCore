@@ -12,6 +12,9 @@
             color: white;
         }
 
+    .table-hover > tbody > tr {
+        cursor: pointer
+    }
     .nav-tabs .nav-link.active {
         font-weight: bold;
         color: #214085
@@ -106,7 +109,7 @@
         </div>
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="table-responsive">
-                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th style="text-align:center">신청일</th>
@@ -117,7 +120,7 @@
                     <tbody>
                         @if (Model == null)
                         {
-                            <tr>
+                            <tr style="cursor:default;">
                                 <td colspan="3">데이터가 없습니다</td>
                             </tr>
                         }
@@ -139,7 +142,8 @@
                                         <th>@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
                                     }
                                     <td>@item.Snals ~ @item.Enals</td>
-                                    <td>@item.Reason</td>
+                                    <td>@item.Reason <input type="hidden" value="@item.Seqid"></td>
+                                    
                                 </tr>
                             }
                         }
@@ -210,6 +214,11 @@
             data: { "Gubun": Gubun, "Snal": Snal, "Enal": Enal, "Reason": Reason },
             success: function (result) {
                 //alert("succ")
+                if (result == "sameTime") {
+                    alert("중복된 신청이 있습니다. 시작일과 시작시간을 확인해주세요.");
+                    return;
+                }
+
                 if (result == "success") {
                     $("#Gubun").val("선택");
                     $("#Snal").val("");

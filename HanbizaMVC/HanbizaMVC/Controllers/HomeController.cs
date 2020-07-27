@@ -232,6 +232,7 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         public string Sub2_1(AddTimeList addtime)
         {
+            Boolean checkLogin = CheckLogin();
             string rsString = "";
             _logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal + " / " + addtime.Reason); // 신청x
 
@@ -240,6 +241,12 @@ namespace HanbizaMVC.Controllers
                                                  .AddParam("Gubun", addtime.Gubun).AddParam("Snal", addtime.Snal)
                                                  .AddParam("Enal", addtime.Enal).AddParam("Reason", addtime.Reason).ExecNonQuery();
             //Console.WriteLine("Sub2_1 rs: " + rs);
+
+            if(rs == -1)
+            {
+                rsString = "sameTime";
+                return rsString;
+            }
 
             if (rs > 0)
             {
@@ -452,7 +459,7 @@ namespace HanbizaMVC.Controllers
                 ViewBag.연차발생일 = string.Format("{0:yyyy-MM-dd}", i.연차발생일);
                 ViewBag.근속연수 = i.근속년수;
                 ViewBag.발생연차 = i.발생연차;
-                ViewBag.사용연차 = i.발생연차 - i.잔여일수;
+                ViewBag.사용연차 = i.발생연차 + i.이월조정추가 - i.잔여일수;
                 ViewBag.잔여연차 = i.잔여일수;
                 ViewBag.Regdate = string.Format("{0:yyyy-MM-dd}", i.Regdate);
                 ViewBag.연차구분 = i.연차구분;
