@@ -456,6 +456,7 @@ namespace HanbizaMVC.Controllers
                 ViewBag.잔여연차 = i.잔여일수;
                 ViewBag.Regdate = string.Format("{0:yyyy-MM-dd}", i.Regdate);
                 ViewBag.연차구분 = i.연차구분;
+                ViewBag.이월조정추가 = i.이월조정추가;
             }
 
             List<휴가대장> vacationList = null;
