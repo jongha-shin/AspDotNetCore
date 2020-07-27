@@ -69,6 +69,9 @@ namespace HanbizaMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveSign()
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+
             var form = await Request.ReadFormAsync(); 
             var file = form.Files.First();
             var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();

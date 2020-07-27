@@ -62,12 +62,13 @@
                                     <td>
                                         @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가"))
                                         {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span><br />
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                                         }
                                         else
                                         {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span><br />
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
                                         }
+                                        <br />
                                         <span style="color:black">사유: @item.VicReaSon</span><br />
                                         <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
                                             <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
@@ -119,12 +120,13 @@
                                     <td>
                                         @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가"))
                                         {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span><br />
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                                         }
                                         else
                                         {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span><br />
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
                                         }
+                                        <br />
                                         <span style="color:black">@item.VicReaSon</span><br />
                                     </td>
                                 </tr>
@@ -160,11 +162,11 @@
                                     <td>
                                         @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가"))
                                         {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span><br />
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                                         }
                                         else
                                         {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span><br />
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
                                         }
                                         <br />
                                         <span style="color:black">@item.VicReaSon</span><br />

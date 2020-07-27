@@ -63,8 +63,12 @@ namespace HanbizaMVC.Controllers
             //ViewBag.LoginUser = LoginUser;
             _logger.LogInformation("sub0(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             //Console.WriteLine("sub0");
-            List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId).ToList<공지사항>();
-           
+            //List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId || r.VacId == 0).ToList<공지사항>();
+            List<공지사항> noticeList = null;
+            _db.LoadStoredProc("dbo.notice_getList").AddParam("StaffId", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum)
+                .Exec(r => noticeList = r.ToList<공지사항>());
+
+
             ViewBag.menulist = menulist;
 
             return View(noticeList);
@@ -275,6 +279,8 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub3_1/{SearchWord}/{Step_num}/{StaffList}")]
         public IActionResult Sub3_1(/*string SearchKey,*/ string SearchWord, string Step_num, string StaffList)
         {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
             ViewBag.menulist = menulist;
             //GetLoginUser();
             _logger.LogInformation("sub3_1(): " /*+ SearchKey + " / "*/ + SearchWord + " / " + Step_num);
@@ -321,6 +327,7 @@ namespace HanbizaMVC.Controllers
         // 3_3 휴가 신청 ajax
         public string Sub3_3(Vacation_List VaInfo)
         {
+            Boolean checkLogin = CheckLogin();
             string rsString;
             _logger.LogInformation("sub3_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
@@ -344,6 +351,7 @@ namespace HanbizaMVC.Controllers
         // 3_4 등록된 휴가정보 결재자에게 전송
         public string Sub3_4(Approve_Params approve_Params)
         {
+            Boolean checkLogin = CheckLogin();
             _logger.LogInformation("sub3_4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + approve_Params.StaffID1);
             string rsString = "";
 
@@ -387,6 +395,7 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub4_1/{checkedVacId}/{Gubun}")]
         public string Sub4_1(string checkedVacId, string Gubun)
         {
+            Boolean checkLogin = CheckLogin();
             string[] arrVacId = checkedVacId.Split(",");
             _logger.LogInformation("sub4_1(): " + checkedVacId +"/" + arrVacId.Length);
             int count = 0;
@@ -410,6 +419,7 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub4_2/{VacID}/{RereaSon}")]
         public string Sub4_2(string VacID, string RereaSon)
         {
+            Boolean checkLogin = CheckLogin();
             string result;
             _logger.LogInformation("sub4_2(): " + VacID + " / " + RereaSon);
             var rs = _db.LoadStoredProc("vacation_process_reject").AddParam("approveID", LoginUser.StaffId).AddParam("VacID", VacID).AddParam("RereaSon", RereaSon).ExecNonQuery();

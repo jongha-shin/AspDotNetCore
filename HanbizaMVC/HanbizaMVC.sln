@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HanbizaMVC", "HanbizaMVC\HanbizaMVC.csproj", "{7A4BC5E8-C755-4A22-BAF8-403BD401BB81}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Hanbiza.SqlServer", "Hanbiza.SqlServer\Hanbiza.SqlServer.sqlproj", "{583D9215-4CCF-4451-BE2A-03B42AB63686}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +15,6 @@ Global
 		{7A4BC5E8-C755-4A22-BAF8-403BD401BB81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A4BC5E8-C755-4A22-BAF8-403BD401BB81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A4BC5E8-C755-4A22-BAF8-403BD401BB81}.Release|Any CPU.Build.0 = Release|Any CPU
-		{583D9215-4CCF-4451-BE2A-03B42AB63686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{583D9215-4CCF-4451-BE2A-03B42AB63686}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{583D9215-4CCF-4451-BE2A-03B42AB63686}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{583D9215-4CCF-4451-BE2A-03B42AB63686}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{583D9215-4CCF-4451-BE2A-03B42AB63686}.Release|Any CPU.Build.0 = Release|Any CPU
-		{583D9215-4CCF-4451-BE2A-03B42AB63686}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
