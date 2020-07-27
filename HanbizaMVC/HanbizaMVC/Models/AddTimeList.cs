@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HanbizaMVC.Models
 {
     public partial class AddTimeList
     {
+        [Key]
         public int Seqid { get; set; }
         public string Dname { get; set; }
         public string BizNum { get; set; }

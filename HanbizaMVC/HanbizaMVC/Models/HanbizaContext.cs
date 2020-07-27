@@ -30,7 +30,8 @@ namespace HanbizaMVC.Models
         {
             modelBuilder.Entity<AddTimeList>(entity =>
             {
-                entity.HasNoKey();
+                //entity.HasNoKey();
+                entity.HasKey("Seqid");
 
                 entity.ToTable("AddTime_List");
 

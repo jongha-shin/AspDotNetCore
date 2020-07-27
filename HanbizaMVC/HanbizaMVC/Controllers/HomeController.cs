@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Dynamic;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace HanbizaMVC.Controllers
 {
@@ -242,11 +244,11 @@ namespace HanbizaMVC.Controllers
                                                  .AddParam("Enal", addtime.Enal).AddParam("Reason", addtime.Reason).ExecNonQuery();
             //Console.WriteLine("Sub2_1 rs: " + rs);
 
-            if(rs == -1)
-            {
-                rsString = "sameTime";
-                return rsString;
-            }
+            //if(rs == -1)
+            //{
+            //    rsString = "sameTime";
+            //    return rsString;
+            //}
 
             if (rs > 0)
             {
@@ -257,9 +259,30 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
+        [Route("/Home/Sub2_2/{seqid}")]
+        public string Sub2_2(int seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            var OTSeq = new AddTimeList { Seqid = seqid };
+            _db.Entry(OTSeq).State = EntityState.Deleted;
+            int rs = _db.SaveChanges();
+
+            //var commandText = "DELETE FROM AddTimeList WHERE SEQID = @seqid";
+            //var seq = new SqlParameter("@seqid", seqid);
+            //int rs = _db.Database.ExecuteSqlCommand(commandText, seq);
+
+            string rsString="error";
+            if (rs > 0)
+            {
+                rsString = "success";
+                return rsString;
+            }
+
+            return rsString;
+        }
 
         // 3. 휴가신청
-        [Authorize]
+            [Authorize]
         public IActionResult Sub3()
         {
             Boolean checkLogin = CheckLogin();

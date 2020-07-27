@@ -128,7 +128,7 @@
                         {
                             @foreach (var item in Model)
                             {
-                                <tr>
+                                <tr class="OT_row">
                                     @if (item.Snal.DayOfWeek.ToString("d").Equals("0"))
                                     {
                                         <th style="color:red">@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
@@ -185,6 +185,37 @@
             //        });
         });
 
+        $(".OT_row").on("click", function () {
+            let seqid = $(this).find("input").val();
+            //alert("asdf: " + seqid);
+            if (confirm("선택한 OT신청을 취소하시겠습니까?")) {
+                //alert("취소");
+                $.ajax({
+                    url: "/Home/Sub2_2/" + seqid,
+                    type: "GET",
+                    dataType: "text",
+                    contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                    charset: "utf-8",
+                    success: function (result) {
+                        if (result == "success") {
+                            alert("OT신청이 취소되었습니다");
+                            
+                        } else {
+                            alert("취소신청이 실패하였습니다. 다시 시도해주세요.");
+                            
+                        }
+                        location.href = "/Home/Sub2";
+                        
+                    },
+                    error: function () {
+                        alert("err");
+                    }
+                });
+
+            } else {
+                //alert("OT취소의 취소");
+            }
+        })
     });
 
     function OTsubmit() {
@@ -214,10 +245,10 @@
             data: { "Gubun": Gubun, "Snal": Snal, "Enal": Enal, "Reason": Reason },
             success: function (result) {
                 //alert("succ")
-                if (result == "sameTime") {
-                    alert("중복된 신청이 있습니다. 시작일과 시작시간을 확인해주세요.");
-                    return;
-                }
+                //if (result == "sameTime") {
+                //    alert("중복된 신청이 있습니다. 시작일과 시작시간을 확인해주세요.");
+                //    return;
+                //}
 
                 if (result == "success") {
                     $("#Gubun").val("선택");
@@ -264,4 +295,5 @@
 
         OTsubmit();
     }
+
 </script>
