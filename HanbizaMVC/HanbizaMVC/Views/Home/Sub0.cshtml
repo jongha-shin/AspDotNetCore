@@ -11,14 +11,16 @@
             background-color: #3763ab;
             color: white;
         }
+
     .card-wrapper {
         text-align: center;
-       
     }
+
     .card {
         min-width: 210px;
-        display:inline-block;
+        display: inline-block;
     }
+
     .notice {
         font-weight: bold;
         color: #fff;
@@ -27,43 +29,48 @@
         background-color: #3763ab;
         border-radius: 5px;
     }
-    .vacation:hover{
+
+    .vacation:hover {
         background-color: rgba(0, 0, 0, 0.075);
     }
 </style>
 <div class="text-center col-10 offset-1" style="vertical-align:middle">
     <h6 class="notice">공지사항</h6>
     <div class="card-wrapper offset-md-1">
-        @foreach (var item in Model)
-        {
-            if (Model.Count == 0)
+        <div class="row">
+            @foreach (var item in Model)
             {
-                <span>데이터가 없습니다</span>
-            }
-            else
-            {
-                if (item.VacId > 0)
+                if (Model.Count == 0)
                 {
-                    <div class="card border-primary mb-3 col-md-5 p-0 mt-3 mr-md-3 float-left vacation" onclick="location.href='/Home/Sub4'" style="cursor:pointer;">
-                        <div class="card-header p-2">@item.내용</div>
-                        <div class="card-body text-primary p-1 pt-2">
-                            <p class="card-title" style="font-weight:bold">@item.제목</p>
-                            <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
-                        </div>
-                    </div>
+                    <span>데이터가 없습니다</span>
                 }
-                if (item.VacId == 0)
+                else
                 {
-                    <div class="card border-primary mb-3 col-md-5 p-0 mt-3 mr-md-3 float-left">
-                        <div class="card-header p-2" style="background-color:#5783c3; color:white">@item.제목</div>
-                        <div class="card-body text-primary p-1 pt-2">
-                            <p class="card-title" style="font-weight:bold">@item.내용</p>
-                            <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+
+                    @if (item.VacId > 0)
+                    {
+                        <div class="card border-primary col-md-5 p-0 m-2 float-left vacation" onclick="location.href='/Home/Sub4'" style="cursor:pointer;">
+                            <div class="card-header p-2">@item.내용</div>
+                            <div class="card-body text-primary p-1 pt-2">
+                                <p class="card-title" style="font-weight:bold">@item.제목</p>
+                                <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    @if (item.VacId == 0)
+                    { //mb-3 mt-3 mr-md-3
+                        <div class="card border-primary col-md-5 p-0 m-2 float-left">
+                            <div class="card-header p-2" style="background-color:#5783c3; color:white">@item.제목</div>
+                            <div class="card-body text-primary p-1 pt-2">
+                                <p class="card-title" style="font-weight:bold">@item.내용</p>
+                                <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                            </div>
+                        </div>
+                    }
+
                 }
             }
-        }
+        </div>
     </div>
 </div>
 <script>
