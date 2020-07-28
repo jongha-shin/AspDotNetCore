@@ -109,6 +109,7 @@
             </div>
         </div>
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <p style="text-align:right; margin:0px; font:small">* 선택하여 취소할 수 있습니다</p>
             <div class="table-responsive">
                 <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -121,31 +122,31 @@
                     <tbody>
                         @if (Model == null)
                         {
-                            <tr style="cursor:default;">
-                                <td colspan="3">데이터가 없습니다</td>
-                            </tr>
+                        <tr style="cursor:default;">
+                            <td colspan="3">데이터가 없습니다</td>
+                        </tr>
                         }
                         else
                         {
-                            @foreach (var item in Model)
+                        @foreach (var item in Model)
                             {
-                                <tr class="OT_row">
-                                    @if (item.Snal.DayOfWeek.ToString("d").Equals("0"))
+                        <tr class="OT_row">
+                            @if (item.Snal.DayOfWeek.ToString("d").Equals("0"))
                                     {
-                                        <th style="color:red">@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
+                            <th style="color:red">@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
                                     }
                                     else if (item.Snal.DayOfWeek.ToString("d").Equals("6"))
                                     {
-                                        <th style="color:blue">@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
+                            <th style="color:blue">@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
                                     }
                                     else
                                     {
-                                        <th>@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
+                            <th>@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
                                     }
-                                    <td>@item.Snals ~ @item.Enals</td>
-                                    <td>@item.Reason <input type="hidden" value="@item.Seqid"></td>
+                            <td>@item.Snals ~ @item.Enals</td>
+                            <td>@item.Reason <input type="hidden" value="@item.Seqid"></td>
 
-                                </tr>
+                        </tr>
                             }
                         }
 
