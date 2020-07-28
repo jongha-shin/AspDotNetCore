@@ -12,8 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Dynamic;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
 
 namespace HanbizaMVC.Controllers
 {
@@ -69,7 +67,6 @@ namespace HanbizaMVC.Controllers
             List<공지사항> noticeList = null;
             _db.LoadStoredProc("dbo.notice_getList").AddParam("StaffId", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum)
                 .Exec(r => noticeList = r.ToList<공지사항>());
-
 
             ViewBag.menulist = menulist;
 

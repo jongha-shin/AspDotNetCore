@@ -35,6 +35,7 @@ namespace HanbizaMVC.Controllers
                 foreach (var item in loginId)
                 {
                     ViewBag.loginID = item.LoginId;
+                    // pwd 저장시 여기서 가져와서 로그인 화면으로
                 } 
             }
 
