@@ -262,16 +262,23 @@ namespace HanbizaMVC.Controllers
         [Route("/Home/Sub2_2/{seqid}")]
         public string Sub2_2(int seqid)
         {
-            Boolean checkLogin = CheckLogin();
-            var OTSeq = new AddTimeList { Seqid = seqid };
-            _db.Entry(OTSeq).State = EntityState.Deleted;
-            int rs = _db.SaveChanges();
+            //var OTSeq = new AddTimeList { Seqid = seqid };
+            //_db.Entry(OTSeq).State = EntityState.Deleted;
+            //int rs = _db.SaveChanges();
 
             //var commandText = "DELETE FROM AddTimeList WHERE SEQID = @seqid";
             //var seq = new SqlParameter("@seqid", seqid);
             //int rs = _db.Database.ExecuteSqlCommand(commandText, seq);
 
+            Boolean checkLogin = CheckLogin();
+            var rs = _db.LoadStoredProc("dbo.OT_delete").AddParam("SEQID", seqid).ExecNonQuery();
+
             string rsString="error";
+            if( rs == -1)
+            {
+                rsString = "done";
+                return rsString;
+            }
             if (rs > 0)
             {
                 rsString = "success";

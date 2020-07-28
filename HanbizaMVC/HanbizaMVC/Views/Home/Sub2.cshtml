@@ -15,6 +15,7 @@
     .table-hover > tbody > tr {
         cursor: pointer
     }
+
     .nav-tabs .nav-link.active {
         font-weight: bold;
         color: #214085
@@ -143,7 +144,7 @@
                                     }
                                     <td>@item.Snals ~ @item.Enals</td>
                                     <td>@item.Reason <input type="hidden" value="@item.Seqid"></td>
-                                    
+
                                 </tr>
                             }
                         }
@@ -199,13 +200,18 @@
                     success: function (result) {
                         if (result == "success") {
                             alert("OT신청이 취소되었습니다");
-                            
-                        } else {
+
+                        }
+                        else if (result == "done") {
+                            alert("결재가 마감된 신청입니다. 취소할 수 없습니다");
+                            return;
+                        }
+                        else {
                             alert("취소신청이 실패하였습니다. 다시 시도해주세요.");
-                            
+
                         }
                         location.href = "/Home/Sub2";
-                        
+
                     },
                     error: function () {
                         alert("err");
