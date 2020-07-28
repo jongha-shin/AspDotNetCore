@@ -25,7 +25,7 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@string.Format("{0:yyyy-MM-dd}", item.Regdate)</td>
+                            <td>@string.Format("{0:yyyy-MM-dd HH시 mm분}", item.Regdate)</td>
                             <td>@item.FileName</td>
                             <td><a href="/File/FileDownload/@item.SeqId"><i class="fas fa-fw fa-download"></i><span>저장하기</span></a></td>
                         </tr>
