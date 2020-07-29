@@ -67,7 +67,7 @@
                         <option value="시간" selected disabled>사용 시간을 선택하세요</option>
                         @for (int i = 1; i < 9; i++)
                         {
-                        <option value="@i">@i 시간</option>
+                            <option value="@i">@i 시간</option>
                         }
                     </select>
                 </div>
@@ -88,7 +88,7 @@
                         @{ int a; }
                         @for (a = 1; a < 6; a++)
                         {
-                        <option value="@a">@a 단계</option>
+                            <option value="@a">@a 단계</option>
                         }
                     </select>
 
@@ -161,6 +161,7 @@
         @* tap2 *@
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="table-responsive">
+                <p style="text-align:right; margin:0px; font:small">* 결재단계가 진행 되기 전에 선택하여 취소할 수 있습니다</p>
                 <table class="table-sm table-bordered table-hover" id="vacationTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -173,29 +174,29 @@
                     <tbody>
                         @if (Model.Count == 0)
                         {
-                        <tr style="cursor:default; background-color:#fff">
-                            <td colspan="4">데이터가 없습니다</td>
-                        </tr>
+                            <tr style="cursor:default; background-color:#fff">
+                                <td colspan="4">데이터가 없습니다</td>
+                            </tr>
                         }
                         else
                         {
-                        @foreach (var item in Model)
+                            @foreach (var item in Model)
                             {
-                        <tr>
-                            <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
-                            @if (item.Vicname.Equals("반차휴가"))
+                                <tr>
+                                    <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
+                                    @if (item.Vicname.Equals("반차휴가"))
                                     {
-                            <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
+                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
 
                                     }
                                     else
                                     {
-                            <td><span class="linePerWord">@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</span></td>
+                                        <td><span class="linePerWord">@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</span></td>
                                     }
 
-                            <td>
-                                @if (item.AllProCess.Equals("N"))
-                                        { @:0
+                                    <td class="status">
+                                        @if (item.AllProCess.Equals("N"))
+                                        {@:0
                                         }
                                         else
                                         {@item.DeepNum}  / @item.ProCDeep
@@ -203,15 +204,15 @@
 
                                     @if (@item.AllProCess.Equals("F"))
                                     {
-                                    <td style="color:red">반려</td>
+                                        <td style="color:red">반려</td>
                                     }
                                     else if (@item.AllProCess.Equals("S"))
                                     {
-                                    <td style="color:blue">승인</td>
+                                        <td style="color:blue">승인</td>
                                     }
                                     else
                                     {
-                                    <td style="color:grey">대기</td>
+                                        <td style="color:grey">대기</td>
                                     }
                                 </tr>
                             }
@@ -236,7 +237,8 @@
                         <span id="result2"></span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger btn-sm vacation_deleteBtn" data-dismiss="modal" style="display:none">삭제</button>
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -391,6 +393,14 @@
         })
 
         $("#vacationTable tr").click(function () {
+            var status = $(this).find(".status").text().substring(0, 2).trim();
+            //alert(status);
+            if (status == '0') {
+                $(".vacation_deleteBtn").show();
+            } else {
+                $(".vacation_deleteBtn").hide();
+            }
+
             var VacID = $(this).find("input").val();
             //alert(seq)
             if (VacID == null || VacID == "") return;
@@ -418,7 +428,7 @@
                             }
                             if (DeepNumChk < Number(sjson[i].DeepNum)) f_color = "gray";
                             s += "<tr>";
-                            s += "<td style='color:" + f_color + "' width=>" + sjson[i].DeepNum + "</td>"
+                            s += "<td style='color:" + f_color + "' width=>" + sjson[i].DeepNum + "<input type='hidden' value='" + VacID +"'></td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].approveName + "</td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].Buseo + "</td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].RereaSon + "</td>"
@@ -435,6 +445,31 @@
                 }
             })
         });
+        $(".vacation_deleteBtn").on('click', function () {
+            let seqid = $(this).parent().parent().find("input").val();
+            if (confirm("선택한 휴가신청을 취소하시겠습니까?")) {
+                $.ajax({
+                    url: "/Home/Sub3_5/" + seqid,
+                    type: "GET",
+                    dataType: "text",
+                    contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                    charset: "utf-8",
+                    success: function (result) {
+                        if (result == 'success') {
+                            alert("선택한 휴가신청이 취소되었습니다.");
+                        } else {
+                            alert("휴가신청 취소가 실패하였습니다. 다시시도해주세요.");
+                        }
+                            location.href = "Sub3";
+                    },
+                    error: function () {
+                        alert("err");
+                    }
+                });
+            } else {
+                return;
+            }
+        })
 
         $("#ProCDeep").change(function () {
             var optionValue = $("#ProCDeep option:selected").val();
@@ -560,7 +595,7 @@
             success: function (result) {
                 if (result == "success") {
                     alert("신청 완료");
-                    location.href = "/Home/Sub3";
+                    location.href = "Sub3";
                 } else {
                     alert("신청 실패");
                 }

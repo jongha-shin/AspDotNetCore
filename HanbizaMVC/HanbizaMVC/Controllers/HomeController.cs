@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Dynamic;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace HanbizaMVC.Controllers
 {
@@ -403,7 +404,23 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
+        // 3-5 휴가결재 진행 전 취소, 등록된 휴가seq 삭제
+        [Route("/Home/Sub3_5/{seqid}")]
+        public string Sub3_5(string seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            _logger.LogInformation("sub3_5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + seqid);
+            string rsString = "fail";
 
+            var rs = _db.LoadStoredProc("dbo.vacation_cancel").AddParam("SEQID", seqid).ExecNonQuery();
+            
+            if (rs > 0 )
+            {
+                rsString = "success";
+                return rsString;
+            }
+            return rsString;
+        }
         // 4. 휴가결재
         [Authorize]
         public IActionResult Sub4()

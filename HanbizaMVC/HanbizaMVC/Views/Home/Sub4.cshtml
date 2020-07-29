@@ -113,7 +113,7 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            if (item.AResult.Equals("Y"))
+                            if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F") )
                             {
                                 <tr>
                                     <td>@item.Staffname</td>
@@ -155,7 +155,7 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            if (item.AResult.Equals("F"))
+                            if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
                             {
                                 <tr>
                                     <td>@item.Staffname</td>

@@ -15,5 +15,6 @@ namespace HanbizaMVC.ViewModel
         public double UseTime { get; set; }
         public string Staffname { get; set; }
         public string VicReaSon { get; set; }
+        public string AllProCess { get; set; }
     }
 }
