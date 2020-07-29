@@ -161,14 +161,14 @@
         @* tap2 *@
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="table-responsive">
-                <p style="text-align:right; margin:0px; font:small">* 결재단계가 진행 되기 전에 선택하여 취소할 수 있습니다</p>
+                <p style="text-align:right; margin:0px; font:small">* 결재단계가 진행 되기 전에 선택하여 삭제할 수 있습니다</p>
                 <table class="table-sm table-bordered table-hover" id="vacationTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th width="15%">구분</th>
+                            <th width="20%">구분</th>
                             <th width="45%">신청기간</th>
                             <th width="20%">결재현황</th>
-                            <th width="20%">결과</th>
+                            <th width="15%">결과</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -237,8 +237,8 @@
                         <span id="result2"></span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-sm vacation_deleteBtn" data-dismiss="modal" style="display:none">삭제</button>
                         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-danger btn-sm vacation_deleteBtn" data-dismiss="modal" style="display:none">삭제</button>
                     </div>
                 </div>
             </div>
@@ -414,7 +414,7 @@
                     var sjson = JSON.parse(result);
                     //alert("succ");
                     var s = '<table id="VPTable" class="table-sm table-bordered col-sm-12">';
-                    s += "<thead><tr><th align='center' width='10%' >결재</th><th align='center' width='15%'>이름</th><th align='center' width='15%'>부서</th><th align='center'>반려사유</th></tr></thead>"
+                    s += "<thead><tr><th align='center' width='15%' >결재</th><th align='center' width='15%'>이름</th><th align='center' width='20%'>부서</th><th align='center'>반려사유</th></tr></thead>"
                     if (sjson.length == 0) {
                         s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
                     } else {
