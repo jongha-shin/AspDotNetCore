@@ -118,7 +118,7 @@
         function loginProcess(userID, userPWD) {
 
             let autoSave = $("#customCheck").val();
-
+            //alert(autoSave);
             $.ajax({
                 type: 'POST',
                 url: '/Account/Login/' + userID + "/" + userPWD + "/" + autoSave,
@@ -126,7 +126,7 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (result) {
                     if (result == "success") {
-                        location.href = "/Home/Sub0";
+                        location.href = "/Home/Index";
                     } else {
                         alert("ID와 비밀번호를 확인하세요")
                         $("#userPWD").focus();

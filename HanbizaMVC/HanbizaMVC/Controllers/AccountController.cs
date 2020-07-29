@@ -21,7 +21,7 @@ namespace HanbizaMVC.Controllers
         {
             _db = db;
         }
-        public IActionResult StartLogin()
+        public IActionResult Login()
         {
             // 쿠키 체크, 정보 가져오기
             //Console.WriteLine("로그인 화면");
@@ -45,6 +45,7 @@ namespace HanbizaMVC.Controllers
         [Route("/Account/Login/{userID}/{userPWD}/{autoSave}")]
         public string Login(string userID, string userPWD, string autoSave)
         {
+            //Console.WriteLine("login() autoSave: "+ autoSave);
             LoginInfor _LoginUser = new LoginInfor();
             _db.LoadStoredProc("dbo.login_Process").AddParam("loginID", userID).AddParam("passW", userPWD)
               .Exec(r => _LoginUser = r.SingleOrDefault<LoginInfor>());
@@ -58,16 +59,18 @@ namespace HanbizaMVC.Controllers
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                if (autoSave == null || autoSave.Equals(""))
+                if (autoSave.Equals("not_save"))
                 {
+                    //Console.WriteLine("------auto_save NONONONONO------");
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
-                        new AuthenticationProperties { IsPersistent = false });
+                    new AuthenticationProperties { IsPersistent = false });
                 }
                 else
                 {
                     //Console.WriteLine("------auto_save------");
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
-                         new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(30) });
+                         new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(50) });
+                        //new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddSeconds(10) });
                 }
                 
             }
@@ -96,7 +99,7 @@ namespace HanbizaMVC.Controllers
         {
             await HttpContext.SignOutAsync("Cookies");
 
-            return RedirectToAction("StartLogIn", "Account");
+            return RedirectToAction("LogIn", "Account");
         }
 
 

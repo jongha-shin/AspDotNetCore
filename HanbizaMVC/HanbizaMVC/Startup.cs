@@ -26,7 +26,7 @@ namespace HanbizaMVC
             services.AddAuthentication("Cookies").AddCookie();  // optioin 추가가능
             services.ConfigureApplicationCookie(options =>
             {
-                options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                options.ExpireTimeSpan = TimeSpan.FromDays(1);
                 options.LoginPath = "Account/Login";
                 options.LogoutPath = "Account/Logout";
                 options.AccessDeniedPath = "Home/Index";
@@ -70,7 +70,7 @@ namespace HanbizaMVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=StartLogin}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }

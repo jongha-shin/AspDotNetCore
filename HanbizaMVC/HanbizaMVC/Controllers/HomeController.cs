@@ -55,14 +55,14 @@ namespace HanbizaMVC.Controllers
 
 
         // 0. 로그인 후 첫 화면 
-        public IActionResult Sub0()
+        public IActionResult Index()
         {
             Boolean checkLogin = CheckLogin();
             if(!checkLogin) return RedirectToAction("StartLogIn", "Account");
 
             //ViewBag.LoginUser = LoginUser;
-            _logger.LogInformation("sub0(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            //Console.WriteLine("sub0");
+            _logger.LogInformation("Index(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //Console.WriteLine("Index");
             //List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId || r.VacId == 0).ToList<공지사항>();
             List<공지사항> noticeList = null;
             _db.LoadStoredProc("dbo.notice_getList").AddParam("StaffId", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum)
@@ -80,7 +80,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub1(string dateMonth)
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("LogIn", "Account");
 
             ViewBag.menulist = menulist;
             _logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
