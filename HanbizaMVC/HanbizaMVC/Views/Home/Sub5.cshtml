@@ -1,7 +1,11 @@
 ﻿@{
     ViewData["Title"] = "연차보기";
     var flag = "";
-    if (ViewBag.연차구분.Equals("Y"))
+    if (ViewBag.연차구분 == null)
+    {
+        flag = "";
+    }
+    else if (ViewBag.연차구분 != null && ViewBag.연차구분.Equals("Y"))
     {
         flag = "회기년";
     }

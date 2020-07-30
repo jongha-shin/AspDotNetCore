@@ -57,7 +57,7 @@ namespace HanbizaMVC.Controllers
             if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
 
             ViewBag.menulist = menulist;
-            _logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<문서함> mySign = null;
             _db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -104,7 +104,7 @@ namespace HanbizaMVC.Controllers
             if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
 
             ViewBag.menulist = menulist;
-            _logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<문서함> fileList = null;
             _db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -123,7 +123,7 @@ namespace HanbizaMVC.Controllers
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
 
-            _logger.LogInformation("sub9(): ");
+            //_logger.LogInformation("sub9(): ");
             ViewBag.menulist = menulist;
             return View();
         }
@@ -132,7 +132,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             string rsString = "";
-            _logger.LogInformation("sub9_1(pwd): " + pwd); // 신청x
+            //_logger.LogInformation("sub9_1(pwd): " + pwd); // 신청x
             List<LoginInfor> loginInfor = null;
             _db.LoadStoredProc("dbo.PWD_check").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("checkPWD", pwd)
                         .Exec(r => loginInfor = r.ToList<LoginInfor>());

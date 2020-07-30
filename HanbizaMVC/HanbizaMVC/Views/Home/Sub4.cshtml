@@ -60,7 +60,7 @@
                                     <td><input type="checkbox" class="checkBox_body" value="@item.VacID" /><input type="hidden" class="submit_result" value=""></td>
                                     <td>@item.Staffname</td>
                                     <td>
-                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가"))
+                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                                         {
                                             <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                                         }
@@ -118,7 +118,7 @@
                                 <tr>
                                     <td>@item.Staffname</td>
                                     <td>
-                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가"))
+                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                                         {
                                             <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                                         }
@@ -160,7 +160,7 @@
                                 <tr>
                                     <td>@item.Staffname</td>
                                     <td>
-                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가"))
+                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                                         {
                                             <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                                         }

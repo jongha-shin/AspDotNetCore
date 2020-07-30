@@ -54,7 +54,7 @@ namespace HanbizaMVC.Controllers
 
         public FileContentResult FileDownload(int id)
         {
-            _logger.LogInformation("FileDownload() :" + id);
+            //_logger.LogInformation("FileDownload() :" + id);
 
             List<문서함> fileInfo = null;
             _db.LoadStoredProc("file_data").AddParam("SeqID", id).Exec(r => fileInfo = r.ToList<문서함>());
@@ -76,7 +76,7 @@ namespace HanbizaMVC.Controllers
             var file = form.Files.First();
             var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
 
-            _logger.LogInformation("SaveSign()1 :" + bytes);
+            //_logger.LogInformation("SaveSign()1 :" + bytes);
             var fileBytes = new byte[file.OpenReadStream().Length];
             using (var ms = new MemoryStream())
             {

@@ -59,7 +59,7 @@
                     <select class="form-control form-control-sm col-md-4" id="Vicname" onchange="fn_timeHide()">
                         <option value="선택" selected disabled>휴가종류를 선택하세요</option>
                         <option value="연차휴가">연차휴가</option>
-                        <option value="반차휴가">반차휴가</option>
+                        <option value="연차휴가(반차)">연차휴가(반차)</option>
                         <option value="기타휴가">기타휴가</option>
                     </select>
                     <label class="col-md-2 col-form-label" id="UseTimeLabel" style="display:none">시간</label>
@@ -184,7 +184,7 @@
                             {
                                 <tr>
                                     <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
-                                    @if (item.Vicname.Equals("반차휴가"))
+                                    @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                                     {
                                         <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
 
@@ -196,7 +196,9 @@
 
                                     <td class="status">
                                         @if (item.AllProCess.Equals("N"))
-                                        {@:0
+                                        {
+                                            item.DeepNum = item.DeepNum - 1;
+                                            @item.DeepNum
                                         }
                                         else
                                         {@item.DeepNum}  / @item.ProCDeep
@@ -332,7 +334,7 @@
 
     function fn_timeHide() {
         $("#div_msg").html("");
-        if ($("#Vicname").val() == "반차휴가") {
+        if ($("#Vicname").val() == "연차휴가(반차)") {
             $("#UseTime").attr("disabled", false);
             //$("#UseTime").css("background", "#fff");
             $("#Enal").attr("disabled", true);
@@ -385,7 +387,7 @@
         });
 
         $("#Vicname").change(function () {
-            if ($("#Vicname").val() == '반차휴가') {
+            if ($("#Vicname").val() == '연차휴가(반차)') {
                 $("#ShowTime").show();
             } else {
                 $("#ShowTime").hide();
@@ -517,7 +519,7 @@
 
         if (UseTime == "") UseTime = 0;
         if (ProCDeep == "") ProCDeep = 0;
-        if (Vicname == "반차휴가") Enal = Snal;
+        if (Vicname == "연차휴가(반차)") Enal = Snal;
 
         if (ProCDeep > 0) {
             // 휴가정보 등록(Vacation_List)
@@ -619,7 +621,7 @@
             $("#Snal").focus();
             return;
         }
-        if ($("#Vicname").val() != "반차휴가") {
+        if ($("#Vicname").val() != "연차휴가(반차)") {
             if ($("#Enal").val() == "") {
                 alert("휴가기간을 선택해주세요");
                 $("#Enal").focus();
@@ -631,7 +633,7 @@
                 return;
             }
         }
-        if ($("#Vicname").val() == "반차휴가") {
+        if ($("#Vicname").val() == "연차휴가(반차)") {
             if ($("#UseTime").val() == "시간") {
                 alert("반차 시간을 선택해주세요");
                 $("#UseTime").focus();

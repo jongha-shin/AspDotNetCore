@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Dynamic;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 
 namespace HanbizaMVC.Controllers
 {
@@ -62,7 +61,7 @@ namespace HanbizaMVC.Controllers
             if(!checkLogin) return RedirectToAction("StartLogIn", "Account");
 
             //ViewBag.LoginUser = LoginUser;
-            _logger.LogInformation("Index(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("Index(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             //Console.WriteLine("Index");
             //List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId || r.VacId == 0).ToList<공지사항>();
             List<공지사항> noticeList = null;
@@ -84,7 +83,7 @@ namespace HanbizaMVC.Controllers
             if (!checkLogin) return RedirectToAction("LogIn", "Account");
 
             ViewBag.menulist = menulist;
-            _logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             // 최근 근태기록 월 구하기
             List<출퇴근기록> Months = null;
             if (dateMonth == null)
@@ -213,7 +212,7 @@ namespace HanbizaMVC.Controllers
             if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
 
             ViewBag.menulist = menulist;
-            _logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             // OT 신청내역
             List<AddTimeList> OTlist = null;
@@ -234,7 +233,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             string rsString = "";
-            _logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal + " / " + addtime.Reason); // 신청x
+            //_logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal + " / " + addtime.Reason); // 신청x
 
             var rs = _db.LoadStoredProc("dbo.OT_insert").AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
                                                  .AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
@@ -295,7 +294,7 @@ namespace HanbizaMVC.Controllers
 
             ViewBag.menulist = menulist;
             //GetLoginUser();
-            _logger.LogInformation("sub3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<Vacation_List> Vlist = null;
             _db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -318,8 +317,8 @@ namespace HanbizaMVC.Controllers
             if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
             ViewBag.menulist = menulist;
             //GetLoginUser();
-            _logger.LogInformation("sub3_1(): " /*+ SearchKey + " / "*/ + SearchWord + " / " + Step_num);
-            Console.WriteLine("list: " + StaffList);
+            //_logger.LogInformation("sub3_1(): " /*+ SearchKey + " / "*/ + SearchWord + " / " + Step_num);
+            //Console.WriteLine("list: " + StaffList);
             var jsonString = "";
 
             if (/*SearchKey != null &&*/ SearchWord != null)
@@ -347,7 +346,7 @@ namespace HanbizaMVC.Controllers
 
             ViewBag.menulist = menulist;
             // GetLoginUser();
-            _logger.LogInformation("sub3_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + VacID);
+            //_logger.LogInformation("sub3_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + VacID);
             var jsonString = "";
 
             List<Vacation_ProcessDetail> VPList = null; ;
@@ -364,7 +363,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             string rsString;
-            _logger.LogInformation("sub3_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub3_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             var rs = _db.LoadStoredProc("dbo.vacation_insert")
                         .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
@@ -372,7 +371,7 @@ namespace HanbizaMVC.Controllers
                         .AddParam("Snal", VaInfo.Snal).AddParam("Enal", VaInfo.Enal).AddParam("ProCDeep", VaInfo.ProCDeep)
                         .AddParam("VicReaSon", VaInfo.VicReason)
                         .ExecNonQuery();
-            Console.WriteLine("Sub2_1 rs: " + rs);
+            //Console.WriteLine("Sub2_1 rs: " + rs);
 
             if (rs > 0)
             {
@@ -387,7 +386,7 @@ namespace HanbizaMVC.Controllers
         public string Sub3_4(Approve_Params approve_Params)
         {
             Boolean checkLogin = CheckLogin();
-            _logger.LogInformation("sub3_4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + approve_Params.StaffID1);
+            //_logger.LogInformation("sub3_4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + approve_Params.StaffID1);
             string rsString = "";
 
             var rs = _db.LoadStoredProc("vacation_insertEachApprover")
@@ -409,7 +408,7 @@ namespace HanbizaMVC.Controllers
         public string Sub3_5(string seqid)
         {
             Boolean checkLogin = CheckLogin();
-            _logger.LogInformation("sub3_5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + seqid);
+            //_logger.LogInformation("sub3_5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + seqid);
             string rsString = "fail";
 
             var rs = _db.LoadStoredProc("dbo.vacation_cancel").AddParam("SEQID", seqid).ExecNonQuery();
@@ -430,7 +429,7 @@ namespace HanbizaMVC.Controllers
 
             ViewBag.menulist = menulist;
             //GetLoginUser();
-            _logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<ApproveList> Alist = null; ;
             _db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -448,7 +447,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             string[] arrVacId = checkedVacId.Split(",");
-            _logger.LogInformation("sub4_1(): " + checkedVacId +"/" + arrVacId.Length);
+            //_logger.LogInformation("sub4_1(): " + checkedVacId +"/" + arrVacId.Length);
             int count = 0;
             for (int i = 0; i < arrVacId.Length; i++)
             {
@@ -472,7 +471,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             string result;
-            _logger.LogInformation("sub4_2(): " + VacID + " / " + RereaSon);
+            //_logger.LogInformation("sub4_2(): " + VacID + " / " + RereaSon);
             var rs = _db.LoadStoredProc("vacation_process_reject").AddParam("approveID", LoginUser.StaffId).AddParam("VacID", VacID).AddParam("RereaSon", RereaSon).ExecNonQuery();
             if (rs > 0)
             {
@@ -491,7 +490,7 @@ namespace HanbizaMVC.Controllers
 
             ViewBag.menulist = menulist;
             //GetLoginUser();
-            _logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<연차대장> vacationRecord = null;
             _db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -534,7 +533,7 @@ namespace HanbizaMVC.Controllers
             if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
 
             ViewBag.menulist = menulist;
-            _logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             dynamic mymodel = new ExpandoObject();
             List<PayList> plist = null;
