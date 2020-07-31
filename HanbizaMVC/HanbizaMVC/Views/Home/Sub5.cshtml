@@ -74,49 +74,35 @@
             <div class="card-header">사용연차</div>
             <div class="card-body text-primary">
                 @*<h5 class="card-title">@ViewBag.입사일</h5>*@
-                <p class="card-text">@ViewBag.사용연차</p>
+                <p class="card-text">
+                    @if (ViewBag.사용연차 != null)
+                    {
+                        @Math.Round(ViewBag.사용연차, 3)
+                    }
+                    else
+                    {
+                        @ViewBag.사용연차
+                    }
+                </p>
             </div>
         </div>
         <div class="card border-primary mb-5 col-4 col-sm-2">
             <div class="card-header" @*style="background-color:#d0eaf8; color:black"*@>잔여연차</div>
             <div class="card-body text-primary">
                 @*<h5 class="card-title">@ViewBag.입사일</h5>*@
-                <p class="card-text">@ViewBag.잔여연차</p>
+                <p class="card-text">
+                    @if (ViewBag.잔여연차 != null)
+                    {
+                        @Math.Round(ViewBag.잔여연차, 3)
+                    }
+                    else
+                    {
+                        @ViewBag.잔여연차
+                    }
+                </p>
             </div>
         </div>
     </div>
-
-    @*<table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th width="33%">입사일</th>
-                    <th width="34%">연차발생일</th>
-                    <th width="33%">근속연수</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@ViewBag.입사일</td>
-                    <td>@ViewBag.연차발생일</td>
-                    <td>@ViewBag.근속연수</td>
-                </tr>
-            </tbody>
-            <thead>
-                <tr>
-                    <th>발생연차</th>
-                    <th>사용연차</th>
-                    <th>잔여연차</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@ViewBag.발생연차</td>
-                    <td>@ViewBag.사용연차</td>
-                    <td>@ViewBag.잔여연차</td>
-                </tr>
-            </tbody>
-        </table>*@
-
     <table class="table table-bordered table-sm">
         <thead>
             <tr>
@@ -138,13 +124,13 @@
                 <tr>
                     <td>@item.번호</td>
                     <td>@string.Format("{0:yyyy-MM-dd}", item.날짜)</td>
-                    @if (item.반차 != null)
+                    @if (item.반차 != null && item.반차!= 0)
                     {
                         <td>@item.반차 시간</td>
                     }
                     else
                     {
-                        <td>@item.반차</td>
+                        <td></td>
                     }
                 </tr>
             }

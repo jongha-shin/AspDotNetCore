@@ -15,6 +15,7 @@ namespace HanbizaMVC.Models
         public double? 발생연차 { get; set; }
         public double? 잔여일수 { get; set; }
         public double? 이월조정추가 { get; set; }
+        public double? 조정추가 { get; set; }
         public string 사용기간 { get; set; }
         public string 연차구분 { get; set; }
         public string 등록인 { get; set; }
