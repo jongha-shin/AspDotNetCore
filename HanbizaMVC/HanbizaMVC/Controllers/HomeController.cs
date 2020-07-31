@@ -228,7 +228,7 @@ namespace HanbizaMVC.Controllers
         public string Sub2_1(AddTimeList addtime)
         {
             Boolean checkLogin = CheckLogin();
-            string rsString = "";
+            string rsString;
             //_logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal + " / " + addtime.Reason); // 신청x
 
             var rs = _db.LoadStoredProc("dbo.OT_insert").AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
@@ -377,7 +377,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             //_logger.LogInformation("sub3_4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + approve_Params.StaffID1);
-            string rsString = "";
+            string rsString;
 
             var rs = _db.LoadStoredProc("vacation_insertEachApprover")
                      .AddParam("ProCDeep", approve_Params.ProCDeep).AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname).AddParam("StaffName", LoginUser.StaffName)

@@ -153,7 +153,7 @@ namespace HanbizaMVC.Controllers
         public string Sub9_2(string pwd)
         {
             Boolean checkLogin = CheckLogin();
-            string rsString = "";
+            string rsString;
             //_logger.LogInformation("sub9_2(pwd): " + pwd); // 신청x
             int rs = _db.LoadStoredProc("dbo.PWD_change").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("changePWD", pwd.ToLower())
                         .ExecNonQuery();
