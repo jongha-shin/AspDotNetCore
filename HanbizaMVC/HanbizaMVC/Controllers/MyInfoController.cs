@@ -49,7 +49,7 @@ namespace HanbizaMVC.Controllers
             }
         }
 
-        // 확인서명
+        // 7 확인서명
         [Authorize]
         public IActionResult Sub7()
         {
@@ -96,7 +96,7 @@ namespace HanbizaMVC.Controllers
         }
 
 
-        // 내 문서
+        // 8 내 문서
         [Authorize]
         public IActionResult Sub8()
         {
@@ -127,6 +127,7 @@ namespace HanbizaMVC.Controllers
             ViewBag.menulist = menulist;
             return View();
         }
+        // 9 비밀번호 변경
         [Route("/MyInfo/Sub9_1/{pwd}")]
         public string Sub9_1(string pwd)
         {

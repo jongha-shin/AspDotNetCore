@@ -26,7 +26,6 @@ namespace HanbizaMVC.Controllers
         {
             _logger = logger;
             _db = db;
-
         }
 
         public Boolean CheckLogin()
@@ -52,7 +51,6 @@ namespace HanbizaMVC.Controllers
                 return false;
             }
         }
-
 
         // 0. 로그인 후 첫 화면 
         public IActionResult Index()
@@ -144,8 +142,6 @@ namespace HanbizaMVC.Controllers
                 }
             }
 
-            
-
             // 월별근태내역 - 근무외시수
             List<TotalAttendence> totalTable = null;
             _db.LoadStoredProc("dbo.totalAttendence").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
@@ -166,6 +162,7 @@ namespace HanbizaMVC.Controllers
 
             return View(Months);
         }
+
         [Authorize]
         [Route("/Home/Sub1_1")]
         [Route("/Home/Sub1_1/{dateMonth}")]
@@ -226,8 +223,7 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
-
-        //2-1 OT 신청 클릭
+        // 2-1 OT 신청 클릭
         [Authorize]
         public string Sub2_1(AddTimeList addtime)
         {
@@ -239,14 +235,7 @@ namespace HanbizaMVC.Controllers
                                                  .AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
                                                  .AddParam("Gubun", addtime.Gubun).AddParam("Snal", addtime.Snal)
                                                  .AddParam("Enal", addtime.Enal).AddParam("Reason", addtime.Reason).ExecNonQuery();
-            //Console.WriteLine("Sub2_1 rs: " + rs);
-
-            //if(rs == -1)
-            //{
-            //    rsString = "sameTime";
-            //    return rsString;
-            //}
-
+            
             if (rs > 0)
             {
                 rsString = "success";
@@ -256,6 +245,7 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
+        // 2-2 OT 결재 전 삭제
         [Route("/Home/Sub2_2/{seqid}")]
         public string Sub2_2(int seqid)
         {
@@ -307,7 +297,7 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
-        // 3_1. ajax 메소드
+        // 3_1. 휴가 결재자 찾기
         [Authorize]
         //[Route("/Home/Sub3_1/{SearchKey}/{SearchWord}/{Step_num}/{StaffList}")]
         [Route("/Home/Sub3_1/{SearchWord}/{Step_num}/{StaffList}")]
@@ -336,7 +326,7 @@ namespace HanbizaMVC.Controllers
             }
             return new JsonResult(jsonString);
         }
-        // 3_2. ajax 메소드
+        // 3_2. 휴가결재 과정 상세 보기
         [Authorize]
         [Route("/Home/Sub3_2/{VacID}")]
         public IActionResult Sub3_2(string VacID)
@@ -358,7 +348,7 @@ namespace HanbizaMVC.Controllers
 
             return new JsonResult(jsonString);
         }
-        // 3_3 휴가 신청 ajax
+        // 3_3 휴가신청
         public string Sub3_3(Vacation_List VaInfo)
         {
             Boolean checkLogin = CheckLogin();
@@ -382,7 +372,7 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
-        // 3_4 등록된 휴가정보 결재자에게 전송
+        // 3_4 등록된 휴가정보 각 결재자에게 전송
         public string Sub3_4(Approve_Params approve_Params)
         {
             Boolean checkLogin = CheckLogin();
@@ -420,7 +410,7 @@ namespace HanbizaMVC.Controllers
             }
             return rsString;
         }
-        // 4. 휴가결재
+        // 4. 휴가결재 보기
         [Authorize]
         public IActionResult Sub4()
         {
@@ -442,6 +432,7 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
+        // 4-1 휴가 승인 프로세스
         [Route("/Home/Sub4_1/{checkedVacId}/{Gubun}")]
         public string Sub4_1(string checkedVacId, string Gubun)
         {
@@ -466,6 +457,7 @@ namespace HanbizaMVC.Controllers
                 return result;
             }
         }
+        // 4-1 휴가 반려 프로세스
         [Route("/Home/Sub4_2/{VacID}/{RereaSon}")]
         public string Sub4_2(string VacID, string RereaSon)
         {
@@ -481,6 +473,7 @@ namespace HanbizaMVC.Controllers
             result = "fail";
             return result;
         }
+
         // 5. 연차보기
         [Authorize]
         public IActionResult Sub5()
