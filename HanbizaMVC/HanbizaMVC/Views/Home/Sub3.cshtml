@@ -501,7 +501,9 @@
         });
 
         $("#Snal").change(function () {
-            $("#Enal").val($("#Snal").val());
+            if ($("#Enal").val() == null || $("#Enal").val() == "") {
+                $("#Enal").val($("#Snal").val());
+            }
             //    $("#Enal").click();
             //    $("#Enal").focus();
         })
