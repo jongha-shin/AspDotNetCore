@@ -85,7 +85,7 @@ namespace HanbizaMVC.Controllers
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, $"{account.StaffId}"),
+                new Claim(ClaimTypes.NameIdentifier, $"{account.LoginId}"),
                 //new Claim("StaffName", account.StaffName),
                 //new Claim("Dname", account.Dname),
                 //new Claim("BizNum", account.BizNum),

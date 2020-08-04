@@ -33,8 +33,8 @@ namespace HanbizaMVC.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 LoginUser = new LoginInfor();
-                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var loginInfo = _db.LoginInfor.Where(r => r.StaffId == int.Parse(StaffID)).ToList();
+                string LoginId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var loginInfo = _db.LoginInfor.Where(r => r.LoginId == LoginId).ToList();
                 foreach (var item in loginInfo)
                 {
                     LoginUser.BizNum = item.BizNum;
@@ -483,7 +483,7 @@ namespace HanbizaMVC.Controllers
 
             ViewBag.menulist = menulist;
             //GetLoginUser();
-            //_logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            _logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<연차대장> vacationRecord = null;
             _db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
