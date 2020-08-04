@@ -27,9 +27,9 @@ namespace HanbizaMVC.Controllers
             //Console.WriteLine("로그인 화면");
             if (User.Identity.IsAuthenticated)
             {
-                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                string LoginId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var loginId = from info in _db.LoginInfor
-                              where info.StaffId == int.Parse(StaffID)
+                              where info.LoginId == LoginId
                               select info;
 
                 foreach (var item in loginId)

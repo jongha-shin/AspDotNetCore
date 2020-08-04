@@ -53,10 +53,11 @@ namespace HanbizaMVC.Controllers
         }
 
         // 0. 로그인 후 첫 화면 
+        [Authorize]
         public IActionResult Index()
         {
             Boolean checkLogin = CheckLogin();
-            if(!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if(!checkLogin) return RedirectToAction("Login", "Account");
 
             //ViewBag.LoginUser = LoginUser;
             //_logger.LogInformation("Index(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
@@ -169,7 +170,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub1_1(string dateMonth)
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
             dynamic mymodel = new ExpandoObject();
@@ -206,7 +207,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub2()
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
             //_logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
@@ -280,7 +281,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub3()
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
             //GetLoginUser();
@@ -291,8 +292,10 @@ namespace HanbizaMVC.Controllers
             List<Approver> Alist = null;
             _db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                 .Exec(r => Vlist = r.ToList<Vacation_List>());
+            
+            // 히스토리 조회 후 결재자 세팅
             _db.LoadStoredProc("dbo.vacation_getPreApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => Alist = r.ToList<Approver>());
+                .Exec(r => Alist = r.ToList<Approver>());   
             
             if(Alist == null)
             {
@@ -301,13 +304,14 @@ namespace HanbizaMVC.Controllers
                     new Approver { StaffID = 999999, StaffName = "" }
                 };
             }
-            
-            //Console.WriteLine("asdfasdfasdf: "+ preAppID[0]);
-           
 
-            if (Vlist != null)
+            //Console.WriteLine("asdfasdfasdf: "+ preAppID[0]);
+            mymodel.VacationList = Vlist;
+            mymodel.ApproverList = Alist;
+
+            if (Vlist != null && Alist != null)
             {
-                return View(Vlist);
+                return View(mymodel);
             }
 
             return View();
@@ -319,7 +323,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub3_1(/*string SearchKey,*/ string SearchWord, string Step_num, string StaffList)
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
             ViewBag.menulist = menulist;
             //GetLoginUser();
             //_logger.LogInformation("sub3_1(): " /*+ SearchKey + " / "*/ + SearchWord + " / " + Step_num);
@@ -347,7 +351,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub3_2(string VacID)
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
             // GetLoginUser();
@@ -430,7 +434,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub4()
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
             //GetLoginUser();
@@ -494,7 +498,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub5()
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
             //GetLoginUser();
@@ -552,7 +556,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub6(string Yyyymm, string Ncount)
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
             //_logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);

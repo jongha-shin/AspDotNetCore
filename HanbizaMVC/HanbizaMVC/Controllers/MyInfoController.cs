@@ -54,7 +54,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub7()
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
             //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
@@ -101,7 +101,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub8()
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
             //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
@@ -121,7 +121,7 @@ namespace HanbizaMVC.Controllers
         public IActionResult Sub9()
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             //_logger.LogInformation("sub9(): ");
             ViewBag.menulist = menulist;

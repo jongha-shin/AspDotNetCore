@@ -70,7 +70,7 @@ namespace HanbizaMVC.Controllers
         public async Task<IActionResult> SaveSign()
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("StartLogIn", "Account");
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
             var form = await Request.ReadFormAsync(); 
             var file = form.Files.First();
