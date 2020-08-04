@@ -72,7 +72,6 @@ namespace HanbizaMVC.Controllers
                          new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(50) });
                         //new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddSeconds(10) });
                 }
-                
             }
             else
             {
