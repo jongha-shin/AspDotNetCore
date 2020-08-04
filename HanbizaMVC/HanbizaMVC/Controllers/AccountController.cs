@@ -28,11 +28,11 @@ namespace HanbizaMVC.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 string LoginId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var loginId = from info in _db.LoginInfor
+                var loginInfo = from info in _db.LoginInfor
                               where info.LoginId == LoginId
                               select info;
 
-                foreach (var item in loginId)
+                foreach (var item in loginInfo)
                 {
                     ViewBag.loginID = item.LoginId;
                     // pwd 저장시 여기서 가져와서 로그인 화면으로
