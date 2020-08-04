@@ -33,8 +33,8 @@ namespace HanbizaMVC.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 LoginUser = new LoginInfor();
-                string StaffID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var loginInfo = _db.LoginInfor.Where(r => r.StaffId == int.Parse(StaffID)).ToList();
+                string LoginId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var loginInfo = _db.LoginInfor.Where(r => r.LoginId == LoginId).ToList();
                 foreach (var item in loginInfo)
                 {
                     LoginUser.BizNum = item.BizNum;
@@ -42,8 +42,6 @@ namespace HanbizaMVC.Controllers
                     LoginUser.StaffName = item.StaffName;
                     LoginUser.StaffId = item.StaffId;
                 }
-
-                
                 return true;
             }
             else

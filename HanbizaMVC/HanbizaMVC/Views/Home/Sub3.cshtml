@@ -95,7 +95,7 @@
                     <label class="col-md-2 col-form-label">결재자</label>
                     <div id="" class="inputCls1 col-md-4 p-0 pt-2 pb-md-2" style="text-align:left">
                         <input type="hidden" id="StaffID1">
-                        <input class="approval_input" type="text" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');">
+                        <input class="approval_input" type="text" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');" value="">
                     </div>
 
                     <div id="" class="inputCls2 col-md-4 offset-md-8 mt-2 mt-md-0 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
@@ -172,7 +172,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.VacationList.Count == 0)
+                        @if (Model.Count == 0)
                         {
                             <tr style="cursor:default; background-color:#fff">
                                 <td colspan="4">데이터가 없습니다</td>
@@ -180,7 +180,7 @@
                         }
                         else
                         {
-                            @foreach (var item in Model.VacationList)
+                            @foreach (var item in Model)
                             {
                                 <tr>
                                     <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
@@ -511,8 +511,62 @@
             //    $("#Enal").focus();
         })
     });
-    function set_preApprover() {
-     
+
+   function set_preApprover() {
+       @*let StaffID_List = [];
+        let StaffName_List = [];
+        let listSize = @Model.ApproverList.Count;
+
+        @foreach (var item in Model.ApproverList)
+        {
+            @:StaffID_List.push("@item.approveID");
+            @:StaffName_List.push("@item.approveName");
+        }
+        alert(StaffName_List[0]);
+        $("#ProCDeep").val(listSize);
+        for (var i = 1; i <= 5; i++) {
+            if (i <= listSize) {
+                $("#StaffID" + i).val(StaffID_List[i-1]);
+                $("#sign" + i).val(StaffName_List[i-1]);
+                $(".inputCls" + i).show();
+            } else {
+                $("#StaffID" + i).val("");
+                $("#sign" + i).val("");
+                $(".inputCls" + i).hide();
+            }
+        }*@
+       $.ajax({
+           url: "/Home/Sub3_6",
+           type: "GET",
+           contentType: "application/x-www-form-urlencoded; charset=utf-8",
+           dataType: "json",
+           success: function (result) {
+               var preApprover = JSON.parse(result);
+               //alert("success: " + preApprover.length + " /" + preApprover[0].StaffName);
+               $("#ProCDeep").val(preApprover.length);
+
+               if (preApprover.length == 0) { $("#ProCDeep").val(1); return };
+
+               for (var i = 1; i <= 5; i++) {
+                   if (i <= preApprover.length) {
+                       $("#StaffID" + i).val(preApprover[i - 1].StaffID);
+                       $("#sign" + i).val(preApprover[i - 1].StaffName);
+                       $(".inputCls" + i).show();
+                   } else {
+                       $("#StaffID" + i).val("");
+                       $("#sign" + i).val("");
+                       $(".inputCls" + i).hide();
+                   }
+               }
+
+           },
+           error: function () {
+               alert("err");
+           }
+       })
+
+
+
     }
 
     function submitVacation() {

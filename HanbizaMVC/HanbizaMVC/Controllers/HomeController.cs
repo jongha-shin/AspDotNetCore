@@ -287,31 +287,32 @@ namespace HanbizaMVC.Controllers
             //GetLoginUser();
             //_logger.LogInformation("sub3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             
-            dynamic mymodel = new ExpandoObject();
             List<Vacation_List> Vlist = null;
-            List<Approver> Alist = null;
             _db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                 .Exec(r => Vlist = r.ToList<Vacation_List>());
             
             // 히스토리 조회 후 결재자 세팅
-            _db.LoadStoredProc("dbo.vacation_getPreApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => Alist = r.ToList<Approver>());   
-            
-            if(Alist == null)
+            //List<Vacation_Approve> Alist = null;
+            //_db.LoadStoredProc("dbo.vacation_getPreApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+            //    .Exec(r => Alist = r.ToList<Vacation_Approve>());
+            //foreach (var item in Alist)
+            //{
+            //    Alist = new List<Vacation_Approve> {
+            //    new Vacation_Approve { approveID = item.approveID, approveName = item.approveName }
+            //    };
+            //    Console.WriteLine(item.approveID +"/"+ item.approveName);
+            //}
+            //if(Alist == null)
+            //{
+            //    Alist = new List<Vacation_Approve>
+            //    {
+            //        new Vacation_Approve { approveID = 999999, approveName = ""}
+            //    };
+            //}
+            //mymodel.ApproverList = Alist;
+            if (Vlist != null)
             {
-                Alist = new List<Approver>
-                {
-                    new Approver { StaffID = 999999, StaffName = "" }
-                };
-            }
-
-            //Console.WriteLine("asdfasdfasdf: "+ preAppID[0]);
-            mymodel.VacationList = Vlist;
-            mymodel.ApproverList = Alist;
-
-            if (Vlist != null && Alist != null)
-            {
-                return View(mymodel);
+                return View(Vlist);
             }
 
             return View();
@@ -429,6 +430,21 @@ namespace HanbizaMVC.Controllers
             }
             return rsString;
         }
+        // 3-6 휴가 히스토리에서 결재자 정보 가져오기
+        public IActionResult Sub3_6()
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+            ViewBag.menulist = menulist;
+            
+            var jsonString = "";
+            List<Approver> Alist = null;
+            _db.LoadStoredProc("dbo.vacation_getPreApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                .Exec(r => Alist = r.ToList<Approver>());
+            jsonString = JsonConvert.SerializeObject(Alist);
+            return new JsonResult(jsonString);
+        }
+
         // 4. 휴가결재 보기
         [Authorize]
         public IActionResult Sub4()
