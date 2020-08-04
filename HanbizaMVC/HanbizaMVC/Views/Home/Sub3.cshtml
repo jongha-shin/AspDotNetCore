@@ -91,7 +91,7 @@
                             <option value="@a">@a 단계</option>
                         }
                     </select>
-
+                    
                     <label class="col-md-2 col-form-label">결재자</label>
                     <div id="" class="inputCls1 col-md-4 p-0 pt-2 pb-md-2" style="text-align:left">
                         <input type="hidden" id="StaffID1">
@@ -377,6 +377,9 @@
     });
 
     $(function () {
+
+        set_preApprover();
+
         $("#Snal").datepicker({
             language: 'ko',
             autoclose: true
@@ -508,6 +511,9 @@
             //    $("#Enal").focus();
         })
     });
+    function set_preApprover() {
+     
+    }
 
     function submitVacation() {
         //alert("휴가 신청")

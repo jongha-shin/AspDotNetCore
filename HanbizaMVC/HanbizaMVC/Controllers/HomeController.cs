@@ -285,10 +285,25 @@ namespace HanbizaMVC.Controllers
             ViewBag.menulist = menulist;
             //GetLoginUser();
             //_logger.LogInformation("sub3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-
+            
+            dynamic mymodel = new ExpandoObject();
             List<Vacation_List> Vlist = null;
+            List<Approver> Alist = null;
             _db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                 .Exec(r => Vlist = r.ToList<Vacation_List>());
+            _db.LoadStoredProc("dbo.vacation_getPreApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                .Exec(r => Alist = r.ToList<Approver>());
+            
+            if(Alist == null)
+            {
+                Alist = new List<Approver>
+                {
+                    new Approver { StaffID = 999999, StaffName = "" }
+                };
+            }
+            
+            //Console.WriteLine("asdfasdfasdf: "+ preAppID[0]);
+           
 
             if (Vlist != null)
             {
