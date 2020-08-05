@@ -1,0 +1,384 @@
+﻿@{
+    ViewData["Title"] = "각종 신청";
+}
+<style>
+    .table-hover > tbody > tr {
+        cursor: pointer
+    }
+
+    table > thead > tr > th {
+        background-color: #3763ab;
+        color: white;
+    }
+
+    .approval_input {
+        text-align: center;
+        cursor: pointer;
+        width: inherit;
+        padding: 0px
+    }
+
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+        color: #214085
+    }
+
+    .nav-tabs .nav-link {
+        color: grey;
+    }
+
+    label {
+        font-weight: bold
+    }
+</style>
+<div class="text-center col-12 col-md-8 offset-md-2 p-2" style="background-color:white">
+    <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">신청</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">각종신청내역</a>
+        </li>
+    </ul>
+    @* tap1 *@
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="table-responsive col-12">
+                <div class="form-group row mb-3 mt-3">
+                    <label class="col-md-2 col-form-label">구분</label>
+                    <select class="form-control form-control-sm col-md-4" id="Vicname">
+                        <option value="선택" selected disabled>신청 종류를 선택하세요</option>
+                        <option value="사직">사직</option>
+                        <option value="휴직">휴직</option>
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">신청일</label>
+                    <input id="Snal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="신청일을 선택하세요" />
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">사유</label>
+                    <textarea class="form-control form-control-sm col-md-10" id="VicReason" rows="5" placeholder="사유를 입력하세요(최대 500글자)" maxlength="500"></textarea>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">결재단계</label>
+                    <select class="form-control form-control-sm col-md-4" id="ProCDeep">
+                        @{ int a; }
+                        @for (a = 1; a < 6; a++)
+                        {
+                            <option value="@a">@a 단계</option>
+                        }
+                    </select>
+
+                    <label class="col-md-2 col-form-label">결재자</label>
+                    <div id="" class="inputCls1 col-md-4 p-0 pt-2 pb-md-2" style="text-align:left">
+                        <input type="hidden" id="StaffID1">
+                        <input class="approval_input" type="text" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');" value="">
+                    </div>
+
+                    <div id="" class="inputCls2 col-md-4 offset-md-8 mt-2 mt-md-0 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID2">
+                        <input class="approval_input" type="text" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
+                    </div>
+
+                    <div id="" class="inputCls3 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID3">
+                        <input class="approval_input" type="text" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
+                    </div>
+
+                    <div id="" class="inputCls4 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID4">
+                        <input class="approval_input" type="text" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
+                    </div>
+
+                    <div id="" class="inputCls5 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID5">
+                        <input class="approval_input" type="text" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
+                    </div>
+                </div>
+
+                <div class="form-group row col-4 offset-4">
+                    <button class="btn btn-sm btn-primary btn-user btn-block" onclick="checkInput()">신청하기</button>
+                </div>
+            </div>
+        </div>
+
+        @* tap2 *@
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="table-responsive">
+                <p style="text-align:right; margin:0px; font:small">* 결재단계가 진행 되기 전에 선택하여 삭제할 수 있습니다</p>
+                <table class="table-sm table-bordered table-hover" id="vacationTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="20%">구분</th>
+                            <th width="45%">신청기간</th>
+                            <th width="20%">결재현황</th>
+                            <th width="15%">결과</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || Model.Count == 0)
+                        {
+                            <tr style="cursor:default; background-color:#fff">
+                                <td colspan="4">데이터가 없습니다</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
+                                    @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
+                                    {
+                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
+
+                                    }
+                                    else
+                                    {
+                                        <td><span class="linePerWord">@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</span></td>
+                                    }
+
+                                    <td class="status">
+                                        @if (item.AllProCess.Equals("N"))
+                                        {
+                                            item.DeepNum = item.DeepNum - 1;
+                                            @item.DeepNum
+                                        }
+                                        else
+                                        {@item.DeepNum}  / @item.ProCDeep
+                                    </td>
+
+                                    @if (@item.AllProCess.Equals("F"))
+                                    {
+                                        <td style="color:red">반려</td>
+                                    }
+                                    else if (@item.AllProCess.Equals("S"))
+                                    {
+                                        <td style="color:blue">승인</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color:grey">대기</td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @* layer2 *@
+    <!-- ApproveDetail modal block -->
+    <div id="ApproveDetail" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="exampleModalLongTitle">각종신청 세부내역 @*<br />신청 사유 : <span id="vicReason"></span>*@</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span id="result2"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-danger btn-sm vacation_deleteBtn" data-dismiss="modal" style="display:none">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /ApproveDetail modal block -->
+</div>
+<!-- findApproverModal modal block -->
+<div id="findApproverModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-primary modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="modal-title"><span id="stepModal"></span>단계 결재자 찾기</p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="p-3 row input-group">
+                    @*<select class="form-control form-control-sm col-2" id="searchKey">
+                            <option value="부서" selected>부서</option>
+                            <option value="이름">이름</option>
+                        </select>*@
+                    <input class="form-control col-8 offset-2" type="text" placeholder="부서명 또는 이름을 입력하세요" id="searchWord" onkeyup="enterkey()" />
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" id="searchBtn">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                    </div>
+                    @*<input class="form-control form-control-sm col-2" type="submit" value="검색" id="searchBtn" />*@
+                </div>
+                @* ajax로 데이터 가져옴 *@
+                <spand id="result"></spand>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 동적 테이블(결재자 찾기) 생성 후 (row)클릭 이벤트
+    $(document).on("click", "#approverTable tr", function () {
+        //alert("");
+        let step_num = $("#stepModal").text();
+        let name = $(this).find("td").eq(1).text();
+        let staffID = $(this).find("input").val();
+        //alert(name + "/" + staffID + "/" + step_num);
+
+        $("#StaffID" + step_num).val(staffID);
+        $("#sign" + step_num).val(name);
+        $("#findApproverModal").modal('toggle');
+        $("#result").html("");
+
+    });
+    $(function () {
+        $("#Snal").datepicker({
+            language: 'ko',
+            autoclose: true
+        });
+        $("#ProCDeep").change(function () {
+            let optionValue = $("#ProCDeep option:selected").val();
+            //	   alert(optionValue);
+            for (let i = 1; i <= 5; i++) {
+                if (i <= optionValue) {
+                    $(".inputCls" + i).show();
+                } else {
+                    $("#StaffID" + i).val("");
+                    $("#sign" + i).val("");
+                    $(".inputCls" + i).hide();
+                }
+            }
+        });
+
+        $("#searchBtn").click(function () {
+            //var searchKey = $("#searchKey").val();
+            let searchWord = $("#searchWord").val().trim();
+            //alert(searchKey + "/" + searchWord);
+            if (searchWord == null || searchWord == "") {
+                alert("검색어를 입력해 주세요");
+                this.focus();
+            } else {
+                getApproverTable(/*searchKey,*/ searchWord);
+            }
+
+        });
+    });
+
+    function checkInput() {
+        alert($("#Vicname").val());
+        if ($("#Vicname").val() == null) {
+            alert("신청 구분을 선택해주세요");
+            $("#Vicname").focus();
+            return;
+        }
+        if ($("#Snal").val() == "") {
+            alert("신청일을 선택해주세요");
+            $("#Snal").focus();
+            return;
+        }
+        
+        if ($("#VicReason").val() == "") {
+            alert("사유를 입력해 주세요");
+            $("#UseTime").focus();
+            return;
+        }
+
+        var optionValue = $("#ProCDeep option:selected").val();
+        for (var i = 1; i <= 5; i++) {
+            if (i <= optionValue) {
+                if ($("#sign" + i).val() == "") {
+                    alert(i + "단계 결재자를 입력해 주세요")
+                    $("#sign" + i).focus();
+                    return;
+                }
+            } else {
+                $(".inputCls" + i).hide();
+            }
+        }
+
+        submitVacation();
+    }
+
+    function enterkey() {
+        let searchWord = $("#searchWord").val().trim();
+        if (window.event.keyCode == 13) {
+            getApproverTable(searchWord);
+        }
+    }
+
+    function getApproverTable(searchWord) {
+        let Sstep_num = $("#stepModal").text();
+        let step_num = parseInt(Sstep_num);
+
+        let sf1 = $("#StaffID1").val();
+        let sf2 = $("#StaffID2").val();
+        let sf3 = $("#StaffID3").val();
+        let sf4 = $("#StaffID4").val();
+        let sf5 = $("#StaffID5").val();
+
+        if (sf1 == "") { sf1 = "9999999" };
+        if (sf2 == "") { sf2 = "9999999" };
+        if (sf3 == "") { sf3 = "9999999" };
+        if (sf4 == "") { sf4 = "9999999" };
+        if (sf5 == "") { sf5 = "9999999" };
+
+        let keyArr = [sf1, sf2, sf3, sf4, sf5]
+
+        let staffList = [];
+
+        for (let i = 0; i < step_num; i++) {
+            if (i == step_num - 1) {
+                staffList += keyArr[i];
+            } else {
+                staffList += keyArr[i] + ",";
+            }
+        }
+
+        $.ajax({
+            url: '/Home/Sub10_1/' + searchWord + "/" + step_num + "/" + staffList,
+            type: 'GET',
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            charset: "utf-8",
+            success: function (result) {
+                let sjson = JSON.parse(result);
+                let s = '<table id="approverTable" class="table-sm table-bordered table-hover col-sm-12">';
+                s += "<thead><tr><th align='center' width='50%'>부서명</th><th align='center' width='50%'>이름</th></tr></thead>"
+                if (sjson.length == 0) {
+                    s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
+                } else {
+                    for (let i = 0; i < sjson.length; i++) {
+                        s += "<tr>";
+                        s += "<td>" + sjson[i].Buseo + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
+                        s += "<td>" + sjson[i].StaffName + "</td>"
+                        s += "</tr>"
+                    }
+                    s += "</table>"
+                }
+                $("#result").html(s);
+            },
+            error: function () {
+                alert("err");
+            }
+        })
+    }
+
+    function layer_open(id) {
+        //alert(id);
+        $("#searchWord").val("");
+        $("#stepModal").html(id);
+        $("#findApproverModal").modal('show'); // 입력 및 수정 폼 모달 창 열기
+    }
+
+</script>

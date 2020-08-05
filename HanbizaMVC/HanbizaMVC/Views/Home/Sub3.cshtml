@@ -513,28 +513,6 @@
     });
 
    function set_preApprover() {
-       @*let StaffID_List = [];
-        let StaffName_List = [];
-        let listSize = @Model.ApproverList.Count;
-
-        @foreach (var item in Model.ApproverList)
-        {
-            @:StaffID_List.push("@item.approveID");
-            @:StaffName_List.push("@item.approveName");
-        }
-        alert(StaffName_List[0]);
-        $("#ProCDeep").val(listSize);
-        for (var i = 1; i <= 5; i++) {
-            if (i <= listSize) {
-                $("#StaffID" + i).val(StaffID_List[i-1]);
-                $("#sign" + i).val(StaffName_List[i-1]);
-                $(".inputCls" + i).show();
-            } else {
-                $("#StaffID" + i).val("");
-                $("#sign" + i).val("");
-                $(".inputCls" + i).hide();
-            }
-        }*@
        $.ajax({
            url: "/Home/Sub3_6",
            type: "GET",
@@ -673,7 +651,7 @@
     }
     function checkInput() {
         //let ProCDeep = $("#ProCDeep ").val();
-        if ($("#Vicname").val() == "선택") {
+        if ($("#Vicname").val() == null) {
             alert("휴가구분을 선택해주세요");
             $("#Vicname").focus();
             return;

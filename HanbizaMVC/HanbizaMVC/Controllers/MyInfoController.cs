@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using StoredProcedureEFCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using HanbizaMVC.ViewModel;
+using Newtonsoft.Json;
 
 namespace HanbizaMVC.Controllers
 {
@@ -169,6 +171,43 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
+
+        [Authorize]
+        public IActionResult Sub10()
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+
+            ViewBag.menulist = menulist;
+            return View();
+        }
+        [Authorize]
+        [Route("/Home/Sub10_1/{SearchWord}/{Step_num}/{StaffList}")]
+        public IActionResult Sub10_1(string SearchWord, string Step_num, string StaffList)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+            ViewBag.menulist = menulist;
+            
+            var jsonString = "";
+
+            if (SearchWord != null)
+            {
+                if (!SearchWord.Equals(""))
+                {
+                    List<Approver> Datatable = null;
+                    _db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
+                      .AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
+                      .Exec(r => Datatable = r.ToList<Approver>());
+
+                    jsonString = JsonConvert.SerializeObject(Datatable);
+                }
+            }
+            return new JsonResult(jsonString);
+        }
+
+
+
         //[HttpPost]
         //public IActionResult LogIn(OnlyLogin model)
         //{

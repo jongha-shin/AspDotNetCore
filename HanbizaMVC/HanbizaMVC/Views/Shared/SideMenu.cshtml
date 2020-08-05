@@ -110,6 +110,9 @@
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
-
+    @if (ViewBag.menulist[0].신청.Equals("1"))
+    {
+        <a class="text-center" style="" href="/MyInfo/Sub10">신청</a>
+    }
 </ul>
 <!-- End of Sidebar -->

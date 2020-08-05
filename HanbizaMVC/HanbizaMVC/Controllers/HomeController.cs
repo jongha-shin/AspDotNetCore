@@ -492,7 +492,7 @@ namespace HanbizaMVC.Controllers
                 return result;
             }
         }
-        // 4-1 휴가 반려 프로세스
+        // 4-2 휴가 반려 프로세스
         [Route("/Home/Sub4_2/{VacID}/{RereaSon}")]
         public string Sub4_2(string VacID, string RereaSon)
         {
