@@ -6,6 +6,16 @@
 
     .collapse-inner {
     }
+
+    li{
+        text-align:center;
+    }
+    a{
+        display:inline-block !important;
+    }
+    bg-white > a {
+        float:none;
+    }
 </style>
 
 <!-- Sidebar -->
@@ -63,19 +73,19 @@
                 {
                 <a class="collapse-item text-left" href="/Home/Sub2">
                     <i class="fas fa-fw fa-plus"></i>&nbsp;
-                    <span>OT신청</span>
+                    <span> OT신청 </span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].휴가신청.Equals("1"))
                 {
                 <a class="collapse-item text-left" href="/Home/Sub3">
                     <i class="fas fa-fw fa-plane-departure"></i>&nbsp;
-                    <span>휴가신청</span>
+                    <span> &nbsp;휴가신청&nbsp;</span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].신청.Equals("1"))
                 {
-                <a class="collapse-item text-left" style="" href="/MyInfo/Sub10">각종 신청</a>
+            <a class="collapse-item text-left" style="" href="/MyInfo/Sub10">&nbsp;기타 신청&nbsp;</a>
                 }
             </div>
         </div>
@@ -118,48 +128,37 @@
             </div>
         </div>
     </li>
-    <div></div>
-    <!-- Sidebar Toggler (Sidebar) -->
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
+    <div class="align-bottom" style="position:absolute; bottom:0px; min-width:8rem;">
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
 
-    @if (ViewBag.menulist[0].비밀번호변경.Equals("1"))
-    {
-    <li class="nav-item">
-        <a class="nav-link" href="/MyInfo/Sub9">
-            <i class="fas fa-fw fa-key"></i>&nbsp;
-            <span>비밀번호변경</span>
-        </a>
-    </li>
-    }
-    @if (ViewBag.menulist[0].로그아웃.Equals("1"))
-    {
-    <li class="nav-item">
-        <a class="nav-link" href="/Account/Logout">
-            <i class="fas fa-fw fa-sign-out-alt"></i>&nbsp;
-            <span>로그아웃</span>
-        </a>
-    </li>
-    }
+        @if (ViewBag.menulist[0].비밀번호변경.Equals("1"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="/MyInfo/Sub9">
+                    <i class="fas fa-fw fa-key"></i>&nbsp;
+                    <span>비밀번호변경</span>
+                </a>
+            </li>
+        }
+        @if (ViewBag.menulist[0].로그아웃.Equals("1"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="/Account/Logout">
+                    <i class="fas fa-fw fa-sign-out-alt"></i>&nbsp;
+                    <span>로그아웃</span>
+                </a>
+            </li>
+        }
+    </div>
 </ul>
 <!-- End of Sidebar -->
 
 
 <script>
-    $(function () {
-        $(".nav-link").on("click", function () {
-            if ($(this).hasClass("collapsed")) {
-                $(this).removeClass("collapsed");
-                $(this).attr("aria-expanded", true);
-                $(this).parent().find("div").addClass("show");
-            } else {
-                $(".nav-link").addClass("collapsed");
-                $(".nav-link").attr("aria-expanded", false);
-                $(".nav-link").parent().find("div").removeClass("show");
-            }
-        });
-    });
+   
 
 </script>
 
