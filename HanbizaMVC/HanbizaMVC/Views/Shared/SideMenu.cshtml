@@ -78,7 +78,7 @@
                     <span> &nbsp;휴가신청&nbsp;</span>
                 </a>
                 }
-                @if (ViewBag.menulist[0].기타신청.Equals("1"))
+                @if (ViewBag.menulist[0].신청.Equals("1")) @*@if (ViewBag.menulist[0].기타신청.Equals("1"))*@
                 {
                 <a class="collapse-item text-left" style="" href="/MyInfo/Sub10">
                     <i class="fas fa-fw fa-plus"></i>&nbsp;
@@ -103,6 +103,13 @@
                 <a class="collapse-item text-left" href="/Home/Sub4">
                     <i class="fas fa-fw fa-pen"></i>&nbsp;
                     <span> &nbsp;휴가결재&nbsp;</span>
+                </a>
+                }
+                @if (ViewBag.menulist[0].기타결재.Equals("1"))
+                {
+                <a class="collapse-item text-left" href="/Home/Sub4">
+                    <i class="fas fa-fw fa-pen-fancy"></i>&nbsp;
+                    <span> &nbsp;기타결재&nbsp;</span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].인사평가.Equals("1"))
