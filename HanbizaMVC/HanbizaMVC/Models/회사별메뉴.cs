@@ -17,6 +17,7 @@ namespace HanbizaMVC.Models
         public string 내문서 { get; set; }
         public string 비밀번호변경 { get; set; }
         public string 로그아웃 { get; set; }
-        public string 신청 { get; set; }
+        public string 기타신청 { get; set; }
+        public string 인사평가 { get; set; }
     }
 }
