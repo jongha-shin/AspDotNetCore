@@ -4,22 +4,17 @@
         font-size: 0.8rem !important;
     }
 
-    .collapse-inner {
+    li {
+        text-align: center;
     }
 
-    li{
-        text-align:center;
-    }
-    a{
-        display:inline-block !important;
-    }
-    bg-white > a {
-        float:none;
+    li > a {
+        display: inline-block !important;
     }
 </style>
 
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled text-center" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled text-center" id="accordionSidebar" style="position:relative">
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/Home/Index">
         <h5 class="m-0" style="font-weight:bold;">HANBIZA</h5>
@@ -72,7 +67,7 @@
                 @if (ViewBag.menulist[0].OT신청.Equals("1"))
                 {
                 <a class="collapse-item text-left" href="/Home/Sub2">
-                    <i class="fas fa-fw fa-plus"></i>&nbsp;
+                    <i class="fas fa-fw fa-clock"></i>&nbsp;
                     <span> OT신청 </span>
                 </a>
                 }
@@ -85,7 +80,10 @@
                 }
                 @if (ViewBag.menulist[0].신청.Equals("1"))
                 {
-            <a class="collapse-item text-left" style="" href="/MyInfo/Sub10">&nbsp;기타 신청&nbsp;</a>
+                <a class="collapse-item text-left" style="" href="/MyInfo/Sub10">
+                    <i class="fas fa-fw fa-plus"></i>&nbsp;
+                    <span>&nbsp;기타 신청&nbsp;</span>
+                </a>
                 }
             </div>
         </div>
@@ -136,21 +134,21 @@
 
         @if (ViewBag.menulist[0].비밀번호변경.Equals("1"))
         {
-            <li class="nav-item">
-                <a class="nav-link" href="/MyInfo/Sub9">
-                    <i class="fas fa-fw fa-key"></i>&nbsp;
-                    <span>비밀번호변경</span>
-                </a>
-            </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/MyInfo/Sub9">
+                <i class="fas fa-fw fa-key"></i>&nbsp;
+                <span>비밀번호변경</span>
+            </a>
+        </li>
         }
         @if (ViewBag.menulist[0].로그아웃.Equals("1"))
         {
-            <li class="nav-item">
-                <a class="nav-link" href="/Account/Logout">
-                    <i class="fas fa-fw fa-sign-out-alt"></i>&nbsp;
-                    <span>로그아웃</span>
-                </a>
-            </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/Account/Logout">
+                <i class="fas fa-fw fa-sign-out-alt"></i>&nbsp;
+                <span>로그아웃</span>
+            </a>
+        </li>
         }
     </div>
 </ul>
@@ -158,7 +156,7 @@
 
 
 <script>
-   
+
 
 </script>
 
