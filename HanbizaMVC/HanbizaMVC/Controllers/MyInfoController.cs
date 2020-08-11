@@ -63,7 +63,7 @@ namespace HanbizaMVC.Controllers
 
             List<문서함> mySign = null;
             _db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => mySign = r.ToList<문서함>());
+                .AddParam("Dname", LoginUser.StaffId).Exec(r => mySign = r.ToList<문서함>());
 
             if (mySign.Count > 0)
             {
@@ -110,7 +110,7 @@ namespace HanbizaMVC.Controllers
 
             List<문서함> fileList = null;
             _db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => fileList = r.ToList<문서함>());
+                .AddParam("Dname", LoginUser.Dname).Exec(r => fileList = r.ToList<문서함>());
 
             if (fileList.Count > 0)
             {
@@ -137,8 +137,8 @@ namespace HanbizaMVC.Controllers
             string rsString = "";
             //_logger.LogInformation("sub9_1(pwd): " + pwd); // 신청x
             List<LoginInfor> loginInfor = null;
-            _db.LoadStoredProc("dbo.PWD_check").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("checkPWD", pwd)
-                        .Exec(r => loginInfor = r.ToList<LoginInfor>());
+            _db.LoadStoredProc("dbo.PWD_check").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname)
+                .AddParam("checkPWD", pwd).Exec(r => loginInfor = r.ToList<LoginInfor>());
             
             //Console.WriteLine("Sub9_1 rs: " + loginInfor.Count);
 
@@ -157,7 +157,8 @@ namespace HanbizaMVC.Controllers
             Boolean checkLogin = CheckLogin();
             string rsString;
             //_logger.LogInformation("sub9_2(pwd): " + pwd); // 신청x
-            int rs = _db.LoadStoredProc("dbo.PWD_change").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("changePWD", pwd.ToLower())
+            int rs = _db.LoadStoredProc("dbo.PWD_change").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum)
+                        .AddParam("Dname", LoginUser.Dname).AddParam("changePWD", pwd.ToLower())
                         .ExecNonQuery();
 
             //Console.WriteLine("Sub9_2 rs: " + rs);
@@ -197,7 +198,7 @@ namespace HanbizaMVC.Controllers
                 {
                     List<Approver> Datatable = null;
                     _db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
-                      .AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
+                      .AddParam("Dname", LoginUser.Dname).AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
                       .Exec(r => Datatable = r.ToList<Approver>());
 
                     jsonString = JsonConvert.SerializeObject(Datatable);
