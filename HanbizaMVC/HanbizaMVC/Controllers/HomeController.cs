@@ -454,10 +454,10 @@ namespace HanbizaMVC.Controllers
 
             ViewBag.menulist = menulist;
             //GetLoginUser();
-            //_logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
 
             List<ApproveList> Alist = null; ;
-            _db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+            _db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                 .Exec(r => Alist = r.ToList<ApproveList>());
             //Console.WriteLine("sub4 list count: " + Alist.Count());
             if (Alist != null)
