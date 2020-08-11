@@ -213,7 +213,24 @@ namespace HanbizaMVC.Controllers
             Console.WriteLine("");
             return View();
         }
+        public IActionResult Sub11()
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
+            ViewBag.menulist = menulist;
+            //_logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+
+            List<ApproveList> Alist = null; ;
+            _db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                .Exec(r => Alist = r.ToList<ApproveList>());
+            //Console.WriteLine("sub4 list count: " + Alist.Count());
+            if (Alist != null)
+            {
+                return View(Alist);
+            }
+            return View();
+        }
         //[HttpPost]
         //public IActionResult LogIn(OnlyLogin model)
         //{
