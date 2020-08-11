@@ -171,7 +171,7 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
-
+        // Sub10 기타신청
         [Authorize]
         public IActionResult Sub10()
         {
@@ -181,6 +181,7 @@ namespace HanbizaMVC.Controllers
             ViewBag.menulist = menulist;
             return View();
         }
+        // 10-1 기타신청 결재자 찾기
         [Authorize]
         [Route("/Home/Sub10_1/{SearchWord}/{Step_num}/{StaffList}")]
         public IActionResult Sub10_1(string SearchWord, string Step_num, string StaffList)
@@ -206,7 +207,12 @@ namespace HanbizaMVC.Controllers
             return new JsonResult(jsonString);
         }
 
-
+        // 10-2 기타 신청 하기
+        public IActionResult Sub10_2()
+        {
+            Console.WriteLine("");
+            return View();
+        }
 
         //[HttpPost]
         //public IActionResult LogIn(OnlyLogin model)
