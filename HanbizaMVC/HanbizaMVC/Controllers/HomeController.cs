@@ -216,7 +216,7 @@ namespace HanbizaMVC.Controllers
 
             List<연차대장> vacationRecord = null;
             _db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => vacationRecord = r.ToList<연차대장>());
+               .AddParam("Dname", LoginUser.Dname).Exec(r => vacationRecord = r.ToList<연차대장>());
 
             foreach (var i in vacationRecord)
             {
@@ -246,7 +246,7 @@ namespace HanbizaMVC.Controllers
 
             List<휴가대장> vacationList = null;
             _db.LoadStoredProc("dbo.usingVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => vacationList = r.ToList<휴가대장>());
+                .AddParam("Dname", LoginUser.Dname).Exec(r => vacationList = r.ToList<휴가대장>());
 
             ViewBag.vacationList = vacationList;
 
@@ -276,7 +276,7 @@ namespace HanbizaMVC.Controllers
             if (Yyyymm == null || Ncount == null)
             {
                 _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .Exec(r => monthList = r.ToList<PayList>());
+                   .AddParam("Dname", LoginUser.Dname).Exec(r => monthList = r.ToList<PayList>());
 
                 // Console.WriteLine(plist[0].Yyyymm + "년 " + plist[0].Ncount + "회차");
                 if (monthList.Count == 0)
@@ -294,7 +294,8 @@ namespace HanbizaMVC.Controllers
                 ViewBag.선택회차 = Ncount;
 
                 _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .AddParam("Yyyymm", Yyyymm).AddParam("Ncount", int.Parse(Ncount)).Exec(r => plist = r.ToList<PayList>());
+                   .AddParam("Dname", LoginUser.Dname).AddParam("Yyyymm", Yyyymm).AddParam("Ncount", int.Parse(Ncount))
+                   .Exec(r => plist = r.ToList<PayList>());
             }
             else
             {
@@ -302,15 +303,15 @@ namespace HanbizaMVC.Controllers
                 ViewBag.선택회차 = Ncount;
 
                 _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .Exec(r => monthList = r.ToList<PayList>());
+                   .AddParam("Dname", LoginUser.Dname).Exec(r => monthList = r.ToList<PayList>());
                 _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .AddParam("Yyyymm", Yyyymm).AddParam("Ncount", Ncount).Exec(r => plist = r.ToList<PayList>());
+                   .AddParam("Dname", LoginUser.Dname).AddParam("Yyyymm", Yyyymm).AddParam("Ncount", Ncount)
+                   .Exec(r => plist = r.ToList<PayList>());
             }
 
             mymodel.plist = plist;
             mymodel.monthList = monthList;
 
-            // 테이블 길이 맞추기 위한 변수 설정
             int a = 0;
             int b = 0;
             int i = 0;
@@ -623,141 +624,6 @@ namespace HanbizaMVC.Controllers
             }
             result = "fail";
             return result;
-        }
-
-        
-        // 5. 연차보기
-        [Authorize]
-        public IActionResult Sub5()
-        {
-            Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
-
-            ViewBag.menulist = menulist;
-            //GetLoginUser();
-            _logger.LogInformation("sub5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-
-            List<연차대장> vacationRecord = null;
-            _db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-               .AddParam("Dname", LoginUser.Dname).Exec(r => vacationRecord = r.ToList<연차대장>());
-
-            foreach (var i in vacationRecord)
-            {
-                ViewBag.입사일 = string.Format("{0:yyyy-MM-dd}", i.입사일);
-                ViewBag.연차발생일 = string.Format("{0:yyyy-MM-dd}", i.연차발생일);
-                ViewBag.근속연수 = i.근속년수;
-                ViewBag.이월조정추가 = i.이월조정추가;
-
-                if (i.연차구분.Equals("N")) 
-                {
-                    // 입사일 기준
-                    if (i.잔여일수 > 0) ViewBag.사용연차 = i.발생연차 + i.이월조정추가 - i.잔여일수; 
-                    else ViewBag.사용연차 = i.발생연차 + i.이월조정추가 + i.잔여일수;
-                }
-                else
-                {
-                    // 회기년 기준
-                    ViewBag.사용연차 = i.발생연차 - i.잔여일수;
-                    //ViewBag.발생연차 = i.발생연차 + i.조정추가;
-                }
-                ViewBag.발생연차 = i.발생연차;
-                if (i.조정추가 == null) i.조정추가 = 0;
-                ViewBag.조정추가 = i.조정추가;
-                ViewBag.Regdate = string.Format("{0:yyyy-MM-dd}", i.Regdate);
-                ViewBag.잔여연차 = i.잔여일수;
-                ViewBag.연차구분 = i.연차구분;
-            }
-
-            List<휴가대장> vacationList = null;
-            _db.LoadStoredProc("dbo.usingVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .AddParam("Dname", LoginUser.Dname).Exec(r => vacationList = r.ToList<휴가대장>());
-
-            ViewBag.vacationList = vacationList;
-
-            if (vacationRecord != null && vacationList != null)
-            {
-                return View(vacationList);
-            }
-
-            return View();
-        }
-
-        // 6. 급여명세서
-        [Authorize]
-        [Route("/Home/Sub6")]
-        [Route("/Home/Sub6/{Yyyymm}/{Ncount}")]
-        public IActionResult Sub6(string Yyyymm, string Ncount)
-        {
-            Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
-
-            ViewBag.menulist = menulist;
-            //_logger.LogInformation("sub6(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-
-            dynamic mymodel = new ExpandoObject();
-            List<PayList> plist = null;
-            List<PayList> monthList = null;
-            if (Yyyymm == null || Ncount == null)
-            {
-                _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                   .AddParam("Dname", LoginUser.Dname).Exec(r => monthList = r.ToList<PayList>());
-
-                // Console.WriteLine(plist[0].Yyyymm + "년 " + plist[0].Ncount + "회차");
-                if(monthList.Count == 0)
-                {
-                    Yyyymm = DateTime.Now.ToString("yyyy-MM");
-                    Ncount = "0";
-                }
-                else
-                {
-                    Yyyymm = monthList[0].Yyyymm;
-                    Ncount = monthList[0].Ncount+"";
-                }
-
-                ViewBag.선택월 = Yyyymm;
-                ViewBag.선택회차 = Ncount;
-
-                _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                   .AddParam("Dname", LoginUser.Dname).AddParam("Yyyymm", Yyyymm).AddParam("Ncount", int.Parse(Ncount))
-                   .Exec(r => plist = r.ToList<PayList>());
-            }
-            else
-            {
-                ViewBag.선택월 = Yyyymm;
-                ViewBag.선택회차 = Ncount;
-
-                _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                   .AddParam("Dname", LoginUser.Dname).Exec(r => monthList = r.ToList<PayList>());
-                _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                   .AddParam("Dname", LoginUser.Dname).AddParam("Yyyymm", Yyyymm).AddParam("Ncount", Ncount)
-                   .Exec(r => plist = r.ToList<PayList>());
-            }
-
-            mymodel.plist = plist;
-            mymodel.monthList = monthList;
-
-            int a = 0;
-            int b = 0;
-            int i = 0;
-            foreach (var item in plist)
-            {
-                item.SSvalue = string.Format("{0:n0}", item.Svalue);
-                //Console.WriteLine(item.Slist + "/" + item.SSvalue + "/" + item.Gubun + "/" + item.Fsort + "/  " + i);
-                i++;
-                if (item.Gubun.Equals("0") && item.Fsort == 0) { a++; }
-                if (item.Gubun.Equals("1") && item.Fsort == 0) { b++; }
-            }
-            //Console.WriteLine(a + " / " + b);
-            if (a >= b)
-            {
-                ViewBag.Crows = a;
-            }
-            else if (b > a)
-            {
-                ViewBag.Crows = b;
-            }
-            
-            return View(mymodel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

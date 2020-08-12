@@ -224,7 +224,7 @@ namespace HanbizaMVC.Controllers
 
             List<ApproveList> Alist = null; ;
             _db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => Alist = r.ToList<ApproveList>());
+                .AddParam("Dname", LoginUser.StaffId).Exec(r => Alist = r.ToList<ApproveList>());
             //Console.WriteLine("sub4 list count: " + Alist.Count());
             if (Alist != null)
             {
