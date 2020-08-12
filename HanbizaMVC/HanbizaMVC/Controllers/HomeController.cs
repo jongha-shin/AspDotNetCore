@@ -65,7 +65,7 @@ namespace HanbizaMVC.Controllers
             //List<공지사항> noticeList = _db.공지사항.Where(r => r.LoginId == LoginUser.StaffId || r.VacId == 0).ToList<공지사항>();
             List<공지사항> noticeList = null;
             _db.LoadStoredProc("dbo.notice_getList").AddParam("StaffId", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum)
-                .Exec(r => noticeList = r.ToList<공지사항>());
+                .AddParam("Dname", LoginUser.Dname).Exec(r => noticeList = r.ToList<공지사항>());
 
             ViewBag.menulist = menulist;
 
@@ -89,7 +89,7 @@ namespace HanbizaMVC.Controllers
             {
                 dateMonth = "";
                 _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .Exec(r => Months = r.ToList<출퇴근기록>());
+                    .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
                 if (Months.Count() == 0)
                 {
                     dateMonth = DateTime.Now.ToString("yyyy-MM");
@@ -103,7 +103,7 @@ namespace HanbizaMVC.Controllers
             else
             {
                 _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .Exec(r => Months = r.ToList<출퇴근기록>());
+                    .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
                 ViewBag.선택월 = dateMonth;
             }
             //Console.WriteLine("1 선택월: " + dateMonth);
@@ -111,8 +111,8 @@ namespace HanbizaMVC.Controllers
             // 월별근태내역 - 근무/휴가
             List<출퇴근기록집계표> CulTable = null;
             //Console.WriteLine(dateMonth);
-            _db.LoadStoredProc("attend_MonthlyRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
-                .Exec(r => CulTable = r.ToList<출퇴근기록집계표>());
+            _db.LoadStoredProc("attend_MonthlyRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                .AddParam("Dname", LoginUser.Dname).AddParam("lastMonth", dateMonth).Exec(r => CulTable = r.ToList<출퇴근기록집계표>());
 
             //var CulTable = from data in _db.출퇴근기록집계표
             //               where data.StaffId == LoginUser.StaffId 
@@ -146,7 +146,7 @@ namespace HanbizaMVC.Controllers
             // 월별근태내역 - 근무외시수
             List<TotalAttendence> totalTable = null;
             _db.LoadStoredProc("dbo.totalAttendence").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
-              .Exec(r => totalTable = r.ToList<TotalAttendence>());
+               .AddParam("Dname", LoginUser.Dname).Exec(r => totalTable = r.ToList<TotalAttendence>());
 
             foreach (var i in totalTable)
             {
@@ -180,7 +180,7 @@ namespace HanbizaMVC.Controllers
             {
                 dateMonth = "";
                 _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .Exec(r => Months = r.ToList<출퇴근기록>());
+                    .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
 
                 dateMonth = Months[0].월;
                 ViewBag.선택월 = dateMonth;
@@ -188,14 +188,14 @@ namespace HanbizaMVC.Controllers
             else
             {
                 _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                   .Exec(r => Months = r.ToList<출퇴근기록>());
+                   .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
                 ViewBag.선택월 = dateMonth;
             }
             //Console.WriteLine("1_1 선택월: " + dateMonth);
             // 출퇴근기록
             List<출퇴근기록> recordTable = null;
             _db.LoadStoredProc("dbo.attendRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
-                .Exec(r => recordTable = r.ToList<출퇴근기록>());
+                .AddParam("Dname", LoginUser.Dname).Exec(r => recordTable = r.ToList<출퇴근기록>());
 
             mymodel.monthList = Months;
             mymodel.recordTable = recordTable;
@@ -215,7 +215,7 @@ namespace HanbizaMVC.Controllers
             // OT 신청내역
             List<AddTimeList> OTlist = null;
             _db.LoadStoredProc("dbo.OT_list").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => OTlist = r.ToList<AddTimeList>());
+                .AddParam("Dname", LoginUser.Dname).Exec(r => OTlist = r.ToList<AddTimeList>());
 
             if (OTlist.Count > 0)
             {
@@ -289,27 +289,8 @@ namespace HanbizaMVC.Controllers
             
             List<Vacation_List> Vlist = null;
             _db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => Vlist = r.ToList<Vacation_List>());
-            
-            // 히스토리 조회 후 결재자 세팅
-            //List<Vacation_Approve> Alist = null;
-            //_db.LoadStoredProc("dbo.vacation_getPreApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-            //    .Exec(r => Alist = r.ToList<Vacation_Approve>());
-            //foreach (var item in Alist)
-            //{
-            //    Alist = new List<Vacation_Approve> {
-            //    new Vacation_Approve { approveID = item.approveID, approveName = item.approveName }
-            //    };
-            //    Console.WriteLine(item.approveID +"/"+ item.approveName);
-            //}
-            //if(Alist == null)
-            //{
-            //    Alist = new List<Vacation_Approve>
-            //    {
-            //        new Vacation_Approve { approveID = 999999, approveName = ""}
-            //    };
-            //}
-            //mymodel.ApproverList = Alist;
+                .AddParam("Dname", LoginUser.Dname).Exec(r => Vlist = r.ToList<Vacation_List>());
+
             if (Vlist != null)
             {
                 return View(Vlist);
@@ -319,26 +300,24 @@ namespace HanbizaMVC.Controllers
         }
         // 3_1. 휴가 결재자 찾기
         [Authorize]
-        //[Route("/Home/Sub3_1/{SearchKey}/{SearchWord}/{Step_num}/{StaffList}")]
         [Route("/Home/Sub3_1/{SearchWord}/{Step_num}/{StaffList}")]
-        public IActionResult Sub3_1(/*string SearchKey,*/ string SearchWord, string Step_num, string StaffList)
+        public IActionResult Sub3_1(string SearchWord, string Step_num, string StaffList)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
             ViewBag.menulist = menulist;
-            //GetLoginUser();
             //_logger.LogInformation("sub3_1(): " /*+ SearchKey + " / "*/ + SearchWord + " / " + Step_num);
             //Console.WriteLine("list: " + StaffList);
             var jsonString = "";
 
-            if (/*SearchKey != null &&*/ SearchWord != null)
+            if (SearchWord != null)
             {
-                if (/*!SearchKey.Equals("") &&*/ !SearchWord.Equals(""))
+                if (!SearchWord.Equals(""))
                 {
                     List<Approver> Datatable = null;
                     _db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
-                        /*.AddParam("SearchKey", SearchKey)*/.AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
-                      .Exec(r => Datatable = r.ToList<Approver>());
+                       .AddParam("Dname", LoginUser.Dname).AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
+                       .Exec(r => Datatable = r.ToList<Approver>());
 
                     jsonString = JsonConvert.SerializeObject(Datatable);
                     //_logger.LogInformation("json1: " + jsonString);
@@ -440,7 +419,7 @@ namespace HanbizaMVC.Controllers
             var jsonString = "";
             List<Approver> Alist = null;
             _db.LoadStoredProc("dbo.vacation_getPreApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => Alist = r.ToList<Approver>());
+                .AddParam("Dname", LoginUser.Dname).Exec(r => Alist = r.ToList<Approver>());
             jsonString = JsonConvert.SerializeObject(Alist);
             return new JsonResult(jsonString);
         }
@@ -457,8 +436,8 @@ namespace HanbizaMVC.Controllers
             //_logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
 
             List<ApproveList> Alist = null; ;
-            _db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
-                .Exec(r => Alist = r.ToList<ApproveList>());
+            _db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+               .AddParam("Dname", LoginUser.Dname).Exec(r => Alist = r.ToList<ApproveList>());
             //Console.WriteLine("sub4 list count: " + Alist.Count());
             if (Alist != null)
             {
@@ -522,7 +501,7 @@ namespace HanbizaMVC.Controllers
 
             List<연차대장> vacationRecord = null;
             _db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => vacationRecord = r.ToList<연차대장>());
+               .AddParam("Dname", LoginUser.Dname).Exec(r => vacationRecord = r.ToList<연차대장>());
 
             foreach (var i in vacationRecord)
             {
@@ -553,7 +532,7 @@ namespace HanbizaMVC.Controllers
 
             List<휴가대장> vacationList = null;
             _db.LoadStoredProc("dbo.usingVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .Exec(r => vacationList = r.ToList<휴가대장>());
+                .AddParam("Dname", LoginUser.Dname).Exec(r => vacationList = r.ToList<휴가대장>());
 
             ViewBag.vacationList = vacationList;
 
@@ -583,7 +562,7 @@ namespace HanbizaMVC.Controllers
             if (Yyyymm == null || Ncount == null)
             {
                 _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .Exec(r => monthList = r.ToList<PayList>());
+                   .AddParam("Dname", LoginUser.Dname).Exec(r => monthList = r.ToList<PayList>());
 
                 // Console.WriteLine(plist[0].Yyyymm + "년 " + plist[0].Ncount + "회차");
                 if(monthList.Count == 0)
@@ -601,7 +580,8 @@ namespace HanbizaMVC.Controllers
                 ViewBag.선택회차 = Ncount;
 
                 _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .AddParam("Yyyymm", Yyyymm).AddParam("Ncount", int.Parse(Ncount)).Exec(r => plist = r.ToList<PayList>());
+                   .AddParam("Dname", LoginUser.Dname).AddParam("Yyyymm", Yyyymm).AddParam("Ncount", int.Parse(Ncount))
+                   .Exec(r => plist = r.ToList<PayList>());
             }
             else
             {
@@ -609,9 +589,10 @@ namespace HanbizaMVC.Controllers
                 ViewBag.선택회차 = Ncount;
 
                 _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .Exec(r => monthList = r.ToList<PayList>());
+                   .AddParam("Dname", LoginUser.Dname).Exec(r => monthList = r.ToList<PayList>());
                 _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .AddParam("Yyyymm", Yyyymm).AddParam("Ncount", Ncount).Exec(r => plist = r.ToList<PayList>());
+                   .AddParam("Dname", LoginUser.Dname).AddParam("Yyyymm", Yyyymm).AddParam("Ncount", Ncount)
+                   .Exec(r => plist = r.ToList<PayList>());
             }
 
             mymodel.plist = plist;
