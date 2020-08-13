@@ -259,7 +259,7 @@ namespace HanbizaMVC.Models
             modelBuilder.Entity<문서함>(entity =>
             {
                 entity.HasNoKey();
-
+                
                 entity.Property(e => e.BizNum)
                     .IsRequired()
                     .HasMaxLength(10)

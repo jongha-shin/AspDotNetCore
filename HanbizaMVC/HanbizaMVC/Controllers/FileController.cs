@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace HanbizaMVC.Controllers
 {
@@ -72,7 +73,7 @@ namespace HanbizaMVC.Controllers
 
             var form = await Request.ReadFormAsync(); 
             var file = form.Files.First();
-            var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
+            //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
 
             //_logger.LogInformation("SaveSign()1 :" + bytes);
             var fileBytes = new byte[file.OpenReadStream().Length];
@@ -103,6 +104,38 @@ namespace HanbizaMVC.Controllers
             
         }
 
+        [HttpPost]
+        [Route("/File/SavePdfWithSign/{Seqid}")]
+        public async Task<IActionResult> SavePdfWithSign(int Seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+
+            var form = await Request.ReadFormAsync();
+            var file = form.Files.First();
+            //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
+
+            _logger.LogInformation("SaveSign()1 :" + Seqid);
+            var fileBytes = new byte[file.OpenReadStream().Length];
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+
+                // act on the Base64 data
+            }
+            int SeqID = Seqid;
+            var updatefile = new 문서함 {SeqId = Seqid, FileBlob = fileBytes };
+           
+            var rs = _db.LoadStoredProc("file_SavePdfWithSign").AddParam("Base64string", fileBytes).AddParam("SEQID", SeqID)
+                        .ExecNonQuery();
+            string reponse = "fail";
+            if (rs > 0) reponse = "success";
+            return Json(reponse);
+
+        }
+
+      
         public FileContentResult SignDownload(int id)
         {
             //Console.WriteLine("sign down: seq ="+id);

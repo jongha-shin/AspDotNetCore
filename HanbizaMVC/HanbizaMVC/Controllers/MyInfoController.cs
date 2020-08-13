@@ -119,6 +119,7 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
+        [Authorize]
         [Route("/MyInfo/Sub8_1/{Seqid}")]
         public IActionResult Sub8_1(int Seqid)
         {
@@ -131,6 +132,7 @@ namespace HanbizaMVC.Controllers
          
             return View();
         }
+        [Authorize]
         [Route("/MyInfo/Sub8_2/{Seqid}")]
         public byte[] Sub8_2(int Seqid)
         {
@@ -143,6 +145,13 @@ namespace HanbizaMVC.Controllers
             pdf_file = fileInfo[0].FileBlob;
 
             return pdf_file;
+        }
+        [Authorize]
+        public string Sub8_3(SignFile signFile)
+        {
+            Boolean checkLogin = CheckLogin();
+            _logger.LogInformation("sub8_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + signFile);
+            return "";
         }
 
         [Authorize]
