@@ -119,6 +119,32 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
+        [Route("/MyInfo/Sub8_1/{Seqid}")]
+        public IActionResult Sub8_1(int Seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+            _logger.LogInformation("sub8_1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+
+            ViewBag.menulist = menulist;
+            ViewBag.Seqid = Seqid;
+         
+            return View();
+        }
+        [Route("/MyInfo/Sub8_2/{Seqid}")]
+        public byte[] Sub8_2(int Seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            _logger.LogInformation("sub8_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId +" / "+ Seqid);
+            List<문서함> fileInfo = null;
+            _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
+
+            byte[] pdf_file = null;
+            pdf_file = fileInfo[0].FileBlob;
+
+            return pdf_file;
+        }
+
         [Authorize]
         public IActionResult Sub9()
         {
