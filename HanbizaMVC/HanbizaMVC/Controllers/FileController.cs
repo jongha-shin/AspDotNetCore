@@ -64,14 +64,14 @@ namespace HanbizaMVC.Controllers
                 FileDownloadName = fileInfo[0].FileName
             };
             return fileRes;
-       }
+        }
         [HttpPost]
         public async Task<IActionResult> SaveSign()
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
 
-            var form = await Request.ReadFormAsync(); 
+            var form = await Request.ReadFormAsync();
             var file = form.Files.First();
             //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
 
@@ -81,7 +81,7 @@ namespace HanbizaMVC.Controllers
             {
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
-                
+
                 // act on the Base64 data
             }
             int SeqID = 0;
@@ -101,7 +101,7 @@ namespace HanbizaMVC.Controllers
             string reponse = "fail";
             if (rs > 0) reponse = "success";
             return Json(reponse);
-            
+
         }
 
         [HttpPost]
@@ -125,8 +125,8 @@ namespace HanbizaMVC.Controllers
                 // act on the Base64 data
             }
             int SeqID = Seqid;
-            var updatefile = new 문서함 {SeqId = Seqid, FileBlob = fileBytes };
-           
+            var updatefile = new 문서함 { SeqId = Seqid, FileBlob = fileBytes };
+
             var rs = _db.LoadStoredProc("file_SavePdfWithSign").AddParam("Base64string", fileBytes).AddParam("SEQID", SeqID)
                         .ExecNonQuery();
             string reponse = "fail";
@@ -134,8 +134,38 @@ namespace HanbizaMVC.Controllers
             return Json(reponse);
 
         }
+        [HttpPost]
+        [Route("/File/SavePdfWithSignBase64/{Seqid}/{base64pdf}")]
+        public async Task<IActionResult> SavePdfWithSignBase64(int Seqid, string base64pdf)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+            string dbstring = "data:application/pdf;base64," + base64pdf;
 
-      
+
+            var form = await Request.ReadFormAsync();
+            var file = form.Files.First();
+            //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
+
+            _logger.LogInformation("SaveSign()1 :" + Seqid);
+            var fileBytes = new byte[file.OpenReadStream().Length];
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+
+                // act on the Base64 data
+            }
+            int SeqID = Seqid;
+            var updatefile = new 문서함 { SeqId = Seqid, FileBlob = fileBytes };
+
+            var rs = _db.LoadStoredProc("file_SavePdfWithSign").AddParam("Base64string", fileBytes).AddParam("SEQID", SeqID)
+                        .ExecNonQuery();
+            string reponse = "fail";
+            if (rs > 0) reponse = "success";
+            return Json(reponse);
+        }
+
         public FileContentResult SignDownload(int id)
         {
             //Console.WriteLine("sign down: seq ="+id);
@@ -143,7 +173,7 @@ namespace HanbizaMVC.Controllers
             _db.LoadStoredProc("file_data").AddParam("SeqID", id).Exec(r => mySign = r.ToList<문서함>());
 
             //Console.WriteLine("byte[] : " + mySign[0].FileBlob.ToArray());
-           
+
             var fileRes = new FileContentResult(mySign[0].FileBlob.ToArray(), "application/octet-stream")
             {
                 FileDownloadName = mySign[0].FileName
