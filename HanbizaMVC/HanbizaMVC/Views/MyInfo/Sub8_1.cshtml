@@ -12,7 +12,7 @@
 
 <div>
     <div id="boxes">
-        <canvas id="the-canvas" width="2482" height="3508" style="width: 210mm; height:290mm"></canvas>
+        <canvas id="the-canvas" @*style="width: 210mm; height:290mm"*@></canvas>
     </div>
     <button id="prev">Previous</button>
     <button id="next">Next</button>
@@ -51,7 +51,7 @@
         pageNum = 1,
         pageRendering = false,
         pageNumPending = null,
-        scale = 1.35,
+        scale = 2,
         canvas = document.getElementById('the-canvas'),
         ctx = canvas.getContext('2d');
 
