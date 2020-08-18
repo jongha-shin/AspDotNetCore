@@ -656,6 +656,13 @@
             $("#Vicname").focus();
             return;
         }
+        if ($("#Vicname").val() == "연차휴가(반차)") {
+            if ($("#UseTime").val() == "시간" || $("#UseTime").val() == null) {
+                alert("반차 시간을 선택해주세요");
+                $("#UseTime").focus();
+                return;
+            }
+        }
         if ($("#Snal").val() == "") {
             alert("휴가기간을 선택해주세요");
             $("#Snal").focus();
@@ -673,13 +680,7 @@
                 return;
             }
         }
-        if ($("#Vicname").val() == "연차휴가(반차)") {
-            if ($("#UseTime").val() == "시간") {
-                alert("반차 시간을 선택해주세요");
-                $("#UseTime").focus();
-                return;
-            }
-        }
+        
         if ($("#VicReason").val() == "") {
             alert("사유를 입력해 주세요");
             $("#UseTime").focus();
