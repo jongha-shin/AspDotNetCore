@@ -52,12 +52,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @*@foreach (var item in Model)
                         {
                             if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
-                            {
+                            {*@
                                 <tr>
-                                    <td>@item.Staffname</td>
+                                    <td>강사원</td>
                                     <td>사직</td>
                                     <td>
                                         신청일 : 2020-08-31 <br />
@@ -88,7 +88,7 @@
                                         사유 : 사유 첫줄. 클릭하여 확인
                                     </td>
                                 </tr>
-                                a++;
+                                @*a++;
                             }
 
                         }
@@ -97,7 +97,7 @@
                             <tr>
                                 <td colspan="3">데이터가 없습니다</td>
                             </tr>
-                        }
+                        }*@
                     </tbody>
                 </table>
             </div>
