@@ -3,17 +3,15 @@
 }
 <style>
     #the-canvas {
-      
     }
 </style>
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 @*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
-
 <div>
-    <div id="boxes">
-        <canvas id="the-canvas" @*style="width: 210mm; height:290mm"*@></canvas>
-    </div>
+
+    <canvas id="the-canvas" @*style="width: 210mm; height:290mm"*@ width="1000" height="1000"></canvas>
+
     <button id="prev">Previous</button>
     <button id="next">Next</button>
     &nbsp; &nbsp;
@@ -24,17 +22,38 @@
 @*<button id="btnClear">지우기</button>*@
 <button id="saveBtn" onclick="UploadPic()">db서명저장png</button>
 <script>
-    var Seqid = "@ViewBag.Seqid";
-    ViewPDF(Seqid);
+    // pdf 변수
+    var pdfDoc = null,
+        pageNum = 1,
+        pageRendering = false,
+        pageNumPending = null,
+        scale = 1.5,
+        canvas = document.getElementById('the-canvas'),
+        ctx = canvas.getContext('2d');
+
+    // 싸인 변수
+    var isDraw = false;
+    var width = "2";
+    var color = "#000";
+    var pDraw = $('#the-canvas').offset();
+    var currP = null;
+    var drawBackup = new Array();
+
+    $(function () {
+        var Seqid = "@ViewBag.Seqid";
+        ViewPDF(Seqid);
+
+    });
+
     function ViewPDF(Seqid) {
         $.ajax({
             url: "/MyInfo/Sub8_2/" + Seqid,
             type: "GET",
             data: Text,
             success: function (rs) {
-                //console.log("1 succ : " + rs);
+                console.log("1 succ : " + rs.length);
                 var data = atob(rs);
-                //console.log("2 data : " + data);
+                console.log("2 data : " + data.length);
                 showPDF(data);
             },
             error: function () {
@@ -43,25 +62,7 @@
         })
     }
 
-    // Loaded via <script> tag, create shortcut to access PDF.js exports.
-    var pdfjsLib = window['pdfjs-dist/build/pdf'];
-    // The workerSrc property shall be specified.
-    pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
-    var pdfDoc = null,
-        pageNum = 1,
-        pageRendering = false,
-        pageNumPending = null,
-        scale = 2,
-        canvas = document.getElementById('the-canvas'),
-        ctx = canvas.getContext('2d');
-
-    var isDraw = false;
-    var width = "2";
-    var color = "#000";
-    var pDraw = $('#the-canvas').offset();
-    var currP = null;
-    var drawBackup = new Array();
-
+    
     // Event (마우스)
     $('#the-canvas').on('mousedown', function (e) {
         if (e.button === 0) {
@@ -127,6 +128,56 @@
     });
 
     /**
+     * If another page rendering in progress, waits until the rendering is
+     * finised. Otherwise, executes rendering immediately.
+     */
+    function queueRenderPage(num) {
+        if (pageRendering) {
+            pageNumPending = num;
+        } else {
+            renderPage(num);
+        }
+    }
+    /**
+     * Displays previous page.
+     */
+    function onPrevPage() {
+        if (pageNum <= 1) {
+            return;
+        }
+        pageNum--;
+        queueRenderPage(pageNum);
+    }
+    document.getElementById('prev').addEventListener('click', onPrevPage);
+    /**
+     * Displays next page.
+     */
+    function onNextPage() {
+        if (pageNum >= pdfDoc.numPages) {
+            return;
+        }
+        pageNum++;
+        queueRenderPage(pageNum);
+    }
+    document.getElementById('next').addEventListener('click', onNextPage);
+    /**
+     * Asynchronously downloads PDF.
+     */
+    function showPDF(data) {
+        // Loaded via <script> tag, create shortcut to access PDF.js exports.
+        var pdfjsLib = window['pdfjs-dist/build/pdf'];
+        // The workerSrc property shall be specified.
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+        pdfjsLib.getDocument({ data: data }).promise.then(function (pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+            // Initial/first page rendering
+            renderPage(pageNum);
+        });
+    }
+    /**
      * Get page info from document, resize canvas accordingly, and render page.
      * param num Page number.
      */
@@ -137,6 +188,8 @@
             var viewport = page.getViewport({ scale: scale });
             canvas.height = viewport.height;
             canvas.width = viewport.width;
+
+            console.log("canvas.height: " + canvas.height + " / canvas.width: " + canvas.width);
 
             // Render PDF page into canvas context
             var renderContext = {
@@ -160,86 +213,50 @@
         document.getElementById('page_num').textContent = num;
     }
 
-    /**
-     * If another page rendering in progress, waits until the rendering is
-     * finised. Otherwise, executes rendering immediately.
-     */
-    function queueRenderPage(num) {
-        if (pageRendering) {
-            pageNumPending = num;
-        } else {
-            renderPage(num);
-        }
-    }
-
-    /**
-     * Displays previous page.
-     */
-    function onPrevPage() {
-        if (pageNum <= 1) {
-            return;
-        }
-        pageNum--;
-        queueRenderPage(pageNum);
-    }
-    document.getElementById('prev').addEventListener('click', onPrevPage);
-
-    /**
-     * Displays next page.
-     */
-    function onNextPage() {
-        if (pageNum >= pdfDoc.numPages) {
-            return;
-        }
-        pageNum++;
-        queueRenderPage(pageNum);
-    }
-    document.getElementById('next').addEventListener('click', onNextPage);
-
-    /**
-     * Asynchronously downloads PDF.
-     */
-    function showPDF(data) {
-        pdfjsLib.getDocument({ data: data }).promise.then(function (pdfDoc_) {
-            pdfDoc = pdfDoc_;
-            document.getElementById('page_count').textContent = pdfDoc.numPages;
-
-            // Initial/first page rendering
-            renderPage(pageNum);
-        });
-    }
 
     function UploadPdf() {
         // 캔버스를 이미지로 변환
+
         var imgData = document.getElementById('the-canvas').toDataURL('image/png');
+        console.log("3. pdf변환중 imgData: " + imgData.length)
         var imgWidth = 210; // 이미지 가로 길이(mm) / A4 기준 210mm
-        var pageHeight = 297;  // 출력 페이지 세로 길이 계산 A4 기준
-        var imgHeight = canvas.height * imgWidth / canvas.width;
+        var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+        var imgHeight = document.getElementById('the-canvas').height * imgWidth / document.getElementById('the-canvas').width;
         var heightLeft = imgHeight;
-        var margin = 0; // 출력 페이지 여백설정
-        var position = 0;
-        var pdf = new jsPDF('p', 'mm','a4');
-        pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-        //pdf.addImage(imgData, 'PNG', -30, -60);
+        //var margin = 0; // 출력 페이지 여백설정
+        //var position = 0;
+        var pdf = new jsPDF({
+            'orientation': 'p',
+            'unit': 'mm',
+            'format': 'a4',
+            'compress': true
+        });
+        //pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+        console.log("imgWidth: " + imgWidth + "/ imgHeight: " + imgHeight);
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
         // 첫 페이지 출력
         heightLeft -= pageHeight;
-
+        var a = 1;
         //한 페이지 이상일 경우 루프 돌면서 출력
         while (heightLeft >= 20) {
             position = heightLeft - imgHeight;
             pdf.addPage();
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
+            a++;
         }
+        console.log("페이지 몇번돌아? " + a);
         var Seqid = "@ViewBag.Seqid";
         var blobBin = pdf.output(); // base64로 인코드
-
+        console.log("blobBin 길이: " + blobBin.length);
+        console.log("blobBin: " + blobBin);
         var array = [];
         for (var i = 0; i < blobBin.length; i++) {
             array.push(blobBin.charCodeAt(i));
         }
         var file = new Blob([new Uint8Array(array)], { type: 'application/pdf' });
+
         var formData = new FormData();	// formData 생성
         formData.append("file", file);	// file data 추가
 
@@ -247,20 +264,20 @@
         //console.log("==base64pdf :"+base64pdf);
         //alert("asdfasdfadf");
 
-        //$.ajax({
-        //    url: "/File/SavePdfWithSign/" + Seqid,
-        //    type: "POST",
-        //    processData: false,	// data 파라미터 강제 string 변환 방지!!
-        //    contentType: false,	// application/x-www-form-urlencoded; 방지!!
-        //    data: formData,
-        //    success: function (rs) {
-        //        alert("서명이 등록되었습니다!");
-        //        location.reload(true);
-        //    },
-        //    error: function (rs) {
-        //        alert("요청 실패");
-        //    }
-        //});
+        $.ajax({
+            url: "/File/SavePdfWithSign/" + Seqid,
+            type: "POST",
+            processData: false,	// data 파라미터 강제 string 변환 방지!!
+            contentType: false,	// application/x-www-form-urlencoded; 방지!!
+            data: formData,
+            success: function (rs) {
+                alert("서명이 등록되었습니다!");
+                location.reload(true);
+            },
+            error: function (rs) {
+                alert("요청 실패");
+            }
+        });
 
         //pdf.save('screenshot.pdf');
     }
@@ -271,7 +288,7 @@
         //console.log("3 imgDataUrl: "+imgDataUrl);
         var blobBin = atob(imgDataUrl.split(',')[1]);     // base64 header 와 body 분리, base64를 디코딩하여 이진데이터로 전환
         //console.log("4 blobBin: " + blobBin);
-        
+
         var array = [];
         for (var i = 0; i < blobBin.length; i++) {
             array.push(blobBin.charCodeAt(i));
@@ -301,5 +318,5 @@
         });
 
     }
- 
+
 </script>
