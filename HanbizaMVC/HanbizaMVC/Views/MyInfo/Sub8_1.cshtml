@@ -8,9 +8,9 @@
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 @*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
-<div>
+<div style="white-space:nowrap; overflow:auto;">
 
-    <canvas id="the-canvas" @*style="width: 210mm; height:290mm"*@ width="1000" height="1000"></canvas>
+    <canvas id="the-canvas" width="1000" height="1000"></canvas>
 
     <button id="prev">Previous</button>
     <button id="next">Next</button>
@@ -23,13 +23,15 @@
 <button id="saveBtn" onclick="UploadPic()">db서명저장png</button>
 <script>
     // pdf 변수
+    var img1 = null, img2 = null, img3 = null, img4 = null, img5 = null, img6 = null, img7 = null, img8 = null, img9 = null, img10 = null
     var pdfDoc = null,
         pageNum = 1,
         pageRendering = false,
         pageNumPending = null,
-        scale = 1.5,
+        scale = 1.3,
         canvas = document.getElementById('the-canvas'),
         ctx = canvas.getContext('2d');
+
 
     // 싸인 변수
     var isDraw = false;
@@ -42,6 +44,7 @@
     $(function () {
         var Seqid = "@ViewBag.Seqid";
         ViewPDF(Seqid);
+
 
     });
 
@@ -62,7 +65,7 @@
         })
     }
 
-    
+
     // Event (마우스)
     $('#the-canvas').on('mousedown', function (e) {
         if (e.button === 0) {
@@ -104,6 +107,7 @@
     $('#the-canvas').on('touchend', function (e) {
         e.preventDefault();
     });
+
 
     // 선 그리기
     function draw_line(p) {
@@ -156,8 +160,21 @@
         if (pageNum >= pdfDoc.numPages) {
             return;
         }
-        pageNum++;
-        queueRenderPage(pageNum);
+
+        if (confirm("서명정보를 저장하시겠습니까?")) {
+            if (pageNum == 1) img1 = document.getElementById('the-canvas').toDataURL('image/png');
+            if (pageNum == 2) img2 = document.getElementById('the-canvas').toDataURL('image/png');
+            if (pageNum == 3) img3 = document.getElementById('the-canvas').toDataURL('image/png');
+            if (pageNum == 4) img4 = document.getElementById('the-canvas').toDataURL('image/png');
+            if (pageNum == 5) img5 = document.getElementById('the-canvas').toDataURL('image/png');
+            if (pageNum == 6) img6 = document.getElementById('the-canvas').toDataURL('image/png');
+            if (pageNum == 7) img7 = document.getElementById('the-canvas').toDataURL('image/png');
+            if (pageNum == 8) img8 = document.getElementById('the-canvas').toDataURL('image/png');
+            if (pageNum == 9) img9 = document.getElementById('the-canvas').toDataURL('image/png');
+            if (pageNum == 10) img10 = document.getElementById('the-canvas').toDataURL('image/png');
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
     }
     document.getElementById('next').addEventListener('click', onNextPage);
     /**
@@ -172,6 +189,7 @@
         pdfjsLib.getDocument({ data: data }).promise.then(function (pdfDoc_) {
             pdfDoc = pdfDoc_;
             document.getElementById('page_count').textContent = pdfDoc.numPages;
+            //console.log("page: " + pdfDoc.numPages);
 
             // Initial/first page rendering
             renderPage(pageNum);
@@ -215,42 +233,43 @@
 
 
     function UploadPdf() {
-        // 캔버스를 이미지로 변환
 
-        var imgData = document.getElementById('the-canvas').toDataURL('image/png');
-        console.log("3. pdf변환중 imgData: " + imgData.length)
         var imgWidth = 210; // 이미지 가로 길이(mm) / A4 기준 210mm
-        var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
-        var imgHeight = document.getElementById('the-canvas').height * imgWidth / document.getElementById('the-canvas').width;
-        var heightLeft = imgHeight;
-        //var margin = 0; // 출력 페이지 여백설정
-        //var position = 0;
+        var imgHeight = 297; //document.getElementById('the-canvas').height * imgWidth / document.getElementById('the-canvas').width;
         var pdf = new jsPDF({
             'orientation': 'p',
             'unit': 'mm',
             'format': 'a4',
             'compress': true
         });
-        //pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-        console.log("imgWidth: " + imgWidth + "/ imgHeight: " + imgHeight);
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
-        // 첫 페이지 출력
-        heightLeft -= pageHeight;
-        var a = 1;
-        //한 페이지 이상일 경우 루프 돌면서 출력
-        while (heightLeft >= 20) {
-            position = heightLeft - imgHeight;
+        if (pdfDoc.numPages == 1) {
+            //alert("1 page pdf");
+            var imgData = document.getElementById('the-canvas').toDataURL('image/png');
+            //console.log("3. pdf변환중 imgData: " + imgData.length)
+            //console.log("imgWidth: " + imgWidth + "/ imgHeight: " + imgHeight);
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+        } else {
+            //alert(pdfDoc.numPages + "page pdf");
+            pdf.addImage(img1, 'PNG', 0, 0, imgWidth, imgHeight);
+            console.log("img1: " + img1.length);
+            // img2 부터 최대 페이지까지 반복
+            for (var i = 2; i < pdfDoc.numPages; i++) {
+                pdf.addPage();
+                pdf.addImage(eval('img' + i), 'PNG', 0, 0, imgWidth, imgHeight);
+                //console.log("img"+i+": "+eval('img' + i).length);
+            }
+            eval('img' + pdfDoc.numPages + "=\"" + document.getElementById('the-canvas').toDataURL('image/png') +"\";");
             pdf.addPage();
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-            a++;
+            pdf.addImage(eval('img' + pdfDoc.numPages), 'PNG', 0, 0, imgWidth, imgHeight);
+            //console.log("img" + pdfDoc.numPages + ": " + eval('img' + pdfDoc.numPages).length);
+
         }
-        console.log("페이지 몇번돌아? " + a);
         var Seqid = "@ViewBag.Seqid";
         var blobBin = pdf.output(); // base64로 인코드
-        console.log("blobBin 길이: " + blobBin.length);
-        console.log("blobBin: " + blobBin);
+        //console.log("blobBin 길이: " + blobBin.length);
+        //console.log("blobBin: " + blobBin);
         var array = [];
         for (var i = 0; i < blobBin.length; i++) {
             array.push(blobBin.charCodeAt(i));
@@ -261,9 +280,6 @@
         formData.append("file", file);	// file data 추가
 
         console.log("==****pdf.output() :" + pdf.output().length);
-        //console.log("==base64pdf :"+base64pdf);
-        //alert("asdfasdfadf");
-
         $.ajax({
             url: "/File/SavePdfWithSign/" + Seqid,
             type: "POST",
@@ -282,7 +298,7 @@
         //pdf.save('screenshot.pdf');
     }
 
-    function UploadPic() {
+    @*function UploadPic() {
         var Seqid = "@ViewBag.Seqid";
         var imgDataUrl = document.getElementById("the-canvas").toDataURL("image/png"); // 캔버스 이미지 정보를 base64 문자열로 변환 png
         //console.log("3 imgDataUrl: "+imgDataUrl);
@@ -317,6 +333,6 @@
             }
         });
 
-    }
+    }*@
 
 </script>
