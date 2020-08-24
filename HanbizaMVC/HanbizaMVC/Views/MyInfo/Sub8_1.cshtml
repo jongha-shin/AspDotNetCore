@@ -29,14 +29,14 @@
 
         input[type=checkbox] + label {
             position: fixed;
-            left: 11rem;
+            left: 10rem;
             top: 4.5rem;
             width: 4rem;
-            height: 2rem;
+            height: 2.5rem;
             cursor: pointer;
             font-size: 13px;
             /*text-align: center;*/
-            line-height: 32px;
+            line-height: 40px;
             background-color: rgba(33, 64, 133, 0.1);
             border-radius: 0.35rem;
             border: solid 1px rgba(33, 64, 133, 0.7);
@@ -48,7 +48,7 @@
                 width: 20px;
                 height: 20px;
                 margin-right: 10px;
-                margin-top: 5px;
+                margin-top: 10px;
                 position: absolute;
                 left: 2rem;
                 /*bottom: 10px;*/
@@ -68,6 +68,18 @@
             line-height: 18px;
         }
 
+    #saveBtn {
+        position: fixed;
+        left: 15rem;
+        top: 7rem;
+        background-color: rgba(55, 99, 171,0.5);
+    }
+    #resetBtn {
+        position: fixed;
+        left: 15rem;
+        top: 4.5rem;
+        background-color: rgba(202, 102, 90,0.5);
+    }
     /* page-loading */
     #page-loading {
         width: 100%;
@@ -87,27 +99,44 @@
             display: table-cell;
             font-size: 60px;
         }
+
+    #pageController {
+        text-align: center;
+        cursor: pointer;
+        position: fixed;
+        left: 11rem;
+        bottom: 4.5rem;
+        background-color: rgba(33, 64, 133, 0.1);
+        border-radius: 0.35rem;
+        border: solid 1px rgba(33, 64, 133, 0.7);
+    }
 </style>
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 @*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
 <div id="signPage" style="white-space:nowrap; overflow:auto;">
-
+    <button class="btn btn-danger" id="resetBtn" onclick="location.reload()">다시하기</button>
     <input id="signCheck" type="checkbox" />
     <label for="signCheck">
         <i class="fas fa-pen-fancy ml-2"></i>
     </label>
+    <button class="btn btn-primary" id="saveBtn" type="button" onclick="pageLoading()">확인</button>
 
 
     <canvas id="the-canvas" width="1000" height="1000"></canvas>
 
-    <button id="prev">Previous</button>
-    <button id="next">Next</button>
-    &nbsp; &nbsp;
-    <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+    <div id="pageController">
+        <div>
+            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-secondary" id="prev" type="button" style="background-color: rgba(133, 135, 150,0.5); color:#fff">이전페이지</button>
+            <button class="btn btn-primary" id="next" type="button" style="background-color: rgba(55, 99, 171,0.5);">다음페이지</button>
+        </div>
+    </div>
+
 </div>
-<button id="saveBtn" onclick="pageLoading()">db서명저장pdf</button>
-@*<button id="tempSave" onclick="saveCanvas()">임시저장</button>*@
+
 @*<button id="btnClear">지우기</button>*@
 @*<button id="saveBtn" onclick="UploadPic()">db서명저장png</button>*@
 
@@ -278,20 +307,11 @@
                 return;
             }
 
-            if (confirm("서명정보를 저장하시겠습니까?")) {
-                if (pageNum == 1) img1 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 2) img2 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 3) img3 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 4) img4 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 5) img5 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 6) img6 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 7) img7 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 8) img8 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 9) img9 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 10) img10 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+            //if (confirm("서명정보를 저장하시겠습니까?")) {
+            
                 pageNum++;
                 queueRenderPage(pageNum);
-            }
+            //}
         }
         document.getElementById('next').addEventListener('click', onNextPage);
         /**
@@ -317,6 +337,11 @@
          * param num Page number.
          */
         function renderPage(num) {
+            if (num != pdfDoc.numPages) {
+                $("#saveBtn").html("확인");
+            } else {
+                $("#saveBtn").html("서명저장");
+            }
             pageRendering = true;
             // Using promise to fetch the page
             pdfDoc.getPage(num).then(function (page) {
@@ -324,7 +349,7 @@
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
 
-                console.log("canvas.height: " + canvas.height + " / canvas.width: " + canvas.width);
+                //console.log("canvas.height: " + canvas.height + " / canvas.width: " + canvas.width);
 
                 // Render PDF page into canvas context
                 var renderContext = {
@@ -348,9 +373,25 @@
             document.getElementById('page_num').textContent = num;
         }
 
-        function pageLoading(){
-            $("#page-loading").show();
-            UploadPdf();
+        function pageLoading() {
+            if (pageNum == pdfDoc.numPages) {
+                
+                $("#page-loading").show();
+                UploadPdf();
+            } else {
+                if (pageNum == 1) img1 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 2) img2 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 3) img3 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 4) img4 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 5) img5 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 6) img6 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 7) img7 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 8) img8 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 9) img9 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 10) img10 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                pageNum++;
+                queueRenderPage(pageNum);
+            }
         }
         function UploadPdf() {
             
@@ -380,11 +421,11 @@
                     pdf.addImage(eval('img' + i), 'PNG', 0, 0, imgWidth, imgHeight);
                     //console.log("img"+i+": "+eval('img' + i).length);
                 }
+                //
                 eval('img' + pdfDoc.numPages + "=\"" + document.getElementById('the-canvas').toDataURL('image/png', 1.0) +"\";");
                 pdf.addPage();
                 pdf.addImage(eval('img' + pdfDoc.numPages), 'PNG', 0, 0, imgWidth, imgHeight);
                 //console.log("img" + pdfDoc.numPages + ": " + eval('img' + pdfDoc.numPages).length);
-
             }
             var Seqid = "@ViewBag.Seqid";
             var blobBin = pdf.output(); // base64로 인코드
