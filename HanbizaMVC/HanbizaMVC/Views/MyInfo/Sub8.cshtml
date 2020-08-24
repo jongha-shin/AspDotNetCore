@@ -28,7 +28,15 @@
                             <td>@string.Format("{0:yyyy-MM-dd HH시 mm분}", item.Regdate)</td>
                             <td>@item.FileName</td>
                             <td><a href="/File/FileDownload/@item.SeqId"><i class="fas fa-fw fa-download"></i><span>저장하기</span></a></td>
-                            <td><a href="/MyInfo/Sub8_1/@item.SeqId"><i class="fas fa-fw fa-signature"></i><span>서명하기</span></a></td>
+                            <td>
+                                <a href="/MyInfo/Sub8_1/@item.SeqId">
+                                    @if(item.IsSignature.Equals("N")){
+                                        <i class="fas fa-fw fa-signature"></i><span>서명하기</span>
+                                    }else{
+                                        <i class="fas fa-fw fa-envelope-open"></i><span>문서보기</span>
+                                    }
+                                </a>
+                            </td>
                         </tr>
                     }
                 }

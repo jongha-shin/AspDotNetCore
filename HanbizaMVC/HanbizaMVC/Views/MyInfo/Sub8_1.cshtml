@@ -29,14 +29,14 @@
 
         input[type=checkbox] + label {
             position: fixed;
-            left: 10rem;
+            left: 8.5rem;
             top: 4.5rem;
             width: 4rem;
-            height: 2.5rem;
+            height: 2rem;
             cursor: pointer;
             font-size: 13px;
             /*text-align: center;*/
-            line-height: 40px;
+            line-height: 32px;
             background-color: rgba(33, 64, 133, 0.1);
             border-radius: 0.35rem;
             border: solid 1px rgba(33, 64, 133, 0.7);
@@ -48,7 +48,7 @@
                 width: 20px;
                 height: 20px;
                 margin-right: 10px;
-                margin-top: 10px;
+                margin-top: 5px;
                 position: absolute;
                 left: 2rem;
                 /*bottom: 10px;*/
@@ -70,13 +70,13 @@
 
     #saveBtn {
         position: fixed;
-        left: 15rem;
-        top: 7rem;
+        left: 18rem;
+        top: 4.5rem;
         background-color: rgba(55, 99, 171,0.5);
     }
     #resetBtn {
         position: fixed;
-        left: 15rem;
+        left: 13rem;
         top: 4.5rem;
         background-color: rgba(202, 102, 90,0.5);
     }
@@ -115,13 +115,14 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 @*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
 <div id="signPage" style="white-space:nowrap; overflow:auto;">
-    <button class="btn btn-danger" id="resetBtn" onclick="location.reload()">다시하기</button>
-    <input id="signCheck" type="checkbox" />
-    <label for="signCheck">
-        <i class="fas fa-pen-fancy ml-2"></i>
-    </label>
-    <button class="btn btn-primary" id="saveBtn" type="button" onclick="pageLoading()">확인</button>
-
+    @if (ViewBag.IsSignature == "N") {
+        <button class="btn btn-sm btn-danger" id="resetBtn" onclick="location.reload()">다시하기</button>
+        <input id="signCheck" type="checkbox" />
+        <label for="signCheck">
+            <i class="fas fa-pen-fancy ml-2"></i>
+        </label>
+        <button class="btn btn-sm btn-primary" id="saveBtn" type="button" onclick="pageLoading()">확인</button>
+    }
 
     <canvas id="the-canvas" width="1000" height="1000"></canvas>
 
@@ -195,6 +196,7 @@
                     alert("err");
                 }
             })
+            
         }
 
 

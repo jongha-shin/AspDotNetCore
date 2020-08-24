@@ -126,7 +126,10 @@ namespace HanbizaMVC.Controllers
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
             _logger.LogInformation("sub8_1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+            List<문서함> fileInfo = null;
+            _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
 
+            ViewBag.IsSignature = fileInfo[0].IsSignature;
             ViewBag.menulist = menulist;
             ViewBag.Seqid = Seqid;
          
@@ -143,17 +146,10 @@ namespace HanbizaMVC.Controllers
 
             byte[] pdf_file = null;
             pdf_file = fileInfo[0].FileBlob;
-
+            
             return pdf_file;
         }
-        [Authorize]
-        public string Sub8_3(SignFile signFile)
-        {
-            Boolean checkLogin = CheckLogin();
-            _logger.LogInformation("sub8_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + signFile);
-            return "";
-        }
-
+       
         [Authorize]
         public IActionResult Sub9()
         {
