@@ -32,21 +32,21 @@
             <div class="bg-white collapse-inner rounded">
                 @if (ViewBag.menulist[0].근태보기.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Home/Sub1">
+                <a class="collapse-item text-left" href="/Record/Sub10">
                     <i class="fas fa-fw fa-user-check"></i>&nbsp;
                     <span>근태보기</span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].연차보기.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Home/Sub5">
+                <a class="collapse-item text-left" href="/Record/Sub11">
                     <i class="fas fa-fw fa-calendar-alt"></i>&nbsp;
                     <span>연차보기</span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].급여명세서.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Home/Sub6">
+                <a class="collapse-item text-left" href="/Record/Sub12">
                     <i class="fas fa-fw fa-coins"></i>&nbsp;
                     <span>급여명세서</span>
                 </a>
@@ -66,21 +66,21 @@
             <div class="bg-white collapse-inner rounded">
                 @if (ViewBag.menulist[0].OT신청.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Home/Sub2">
+                <a class="collapse-item text-left" href="/Apply/Sub20">
                     <i class="fas fa-fw fa-clock"></i>&nbsp;
                     <span> OT신청 </span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].휴가신청.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Home/Sub3">
+                <a class="collapse-item text-left" href="/Apply/Sub21">
                     <i class="fas fa-fw fa-plane-departure"></i>&nbsp;
                     <span> &nbsp;휴가신청&nbsp;</span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].신청.Equals("1")) @*@if (ViewBag.menulist[0].기타신청.Equals("1"))*@
                 {
-                <a class="collapse-item text-left" style="" href="/MyInfo/Sub10">
+                <a class="collapse-item text-left" style="" href="/Apply/Sub22">
                     <i class="fas fa-fw fa-plus"></i>&nbsp;
                     <span>&nbsp;기타신청&nbsp;</span>
                 </a>
@@ -100,21 +100,21 @@
             <div class="bg-white collapse-inner rounded">
                 @if (ViewBag.menulist[0].휴가결재.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Home/Sub4">
+                <a class="collapse-item text-left" href="/Approve/Sub30">
                     <i class="fas fa-fw fa-pen"></i>&nbsp;
                     <span> &nbsp;휴가결재&nbsp;</span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].기타결재.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/MyInfo/Sub11">
+                <a class="collapse-item text-left" href="/Approve/Sub30">
                     <i class="fas fa-fw fa-pen-fancy"></i>&nbsp;
                     <span> &nbsp;기타결재&nbsp;</span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].인사평가.Equals("1"))
                 {
-                <a class="collapse-item text-left" style="" href="/Home/Sub4">
+                <a class="collapse-item text-left" style="" href="/Approve/Sub30">
                     <i class="fas fa-fw fa-user-edit"></i>&nbsp;
                     <span>&nbsp;인사평가&nbsp;</span>
                 </a>
@@ -134,14 +134,14 @@
             <div class="bg-white collapse-inner rounded">
                 @if (ViewBag.menulist[0].확인서명.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/MyInfo/Sub7">
+                <a class="collapse-item text-left" href="/Document/Sub40">
                     <i class="fas fa-fw fa-signature"></i>&nbsp;
                     <span>확인서명</span>
                 </a>
                 }
                 @if (ViewBag.menulist[0].내문서.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/MyInfo/Sub8">
+                <a class="collapse-item text-left" href="/Document/Sub41">
                     <i class="fas fa-fw fa-file-alt"></i>&nbsp;
                     <span>내문서</span>
                 </a>
@@ -160,7 +160,7 @@
         @if (ViewBag.menulist[0].비밀번호변경.Equals("1"))
         {
         <li class="nav-item">
-            <a class="nav-link" href="/MyInfo/Sub9">
+            <a class="nav-link" href="/Home/Sub00">
                 <i class="fas fa-fw fa-key"></i>&nbsp;
                 <span>비밀번호변경</span>
             </a>

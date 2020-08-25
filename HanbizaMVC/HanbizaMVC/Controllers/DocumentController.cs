@@ -9,19 +9,17 @@ using System.Collections.Generic;
 using StoredProcedureEFCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using HanbizaMVC.ViewModel;
-using Newtonsoft.Json;
 
 namespace HanbizaMVC.Controllers
 {
-    public class MyInfoController : Controller
+    public class DocumentController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HanbizaContext _db;
         private LoginInfor LoginUser;
         private List<회사별메뉴> menulist;
 
-        public MyInfoController(ILogger<HomeController> logger, HanbizaContext db)
+        public DocumentController(ILogger<HomeController> logger, HanbizaContext db)
         {
             _logger = logger;
             _db = db;
@@ -51,15 +49,15 @@ namespace HanbizaMVC.Controllers
             }
         }
 
-        // 7 확인서명
+        // 40 확인서명
         [Authorize]
-        public IActionResult Sub7()
+        public IActionResult Sub40()
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
-            //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub40(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<문서함> mySign = null;
             _db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -98,15 +96,15 @@ namespace HanbizaMVC.Controllers
         }
 
 
-        // 8 내 문서
+        // 41 내 문서
         [Authorize]
-        public IActionResult Sub8()
+        public IActionResult Sub41()
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
-            //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub41(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<문서함> fileList = null;
             _db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -119,6 +117,7 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
+        // 9 비밀번호변경
         [Authorize]
         public IActionResult Sub9()
         {
@@ -173,39 +172,7 @@ namespace HanbizaMVC.Controllers
             return rsString;
         }
 
-        [Authorize]
-        public IActionResult Sub10()
-        {
-            Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
-
-            ViewBag.menulist = menulist;
-            return View();
-        }
-        [Authorize]
-        [Route("/Home/Sub10_1/{SearchWord}/{Step_num}/{StaffList}")]
-        public IActionResult Sub10_1(string SearchWord, string Step_num, string StaffList)
-        {
-            Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
-            ViewBag.menulist = menulist;
-            
-            var jsonString = "";
-
-            if (SearchWord != null)
-            {
-                if (!SearchWord.Equals(""))
-                {
-                    List<Approver> Datatable = null;
-                    _db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
-                      .AddParam("Dname", LoginUser.Dname).AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
-                      .Exec(r => Datatable = r.ToList<Approver>());
-
-                    jsonString = JsonConvert.SerializeObject(Datatable);
-                }
-            }
-            return new JsonResult(jsonString);
-        }
+        
 
 
 

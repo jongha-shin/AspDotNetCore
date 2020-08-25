@@ -193,7 +193,7 @@
             if (confirm("선택한 OT신청을 취소하시겠습니까?")) {
                 //alert("취소");
                 $.ajax({
-                    url: "/Home/Sub2_2/" + seqid,
+                    url: "/Apply/Sub20_2/" + seqid,
                     type: "GET",
                     dataType: "text",
                     contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -211,7 +211,7 @@
                             alert("취소신청이 실패하였습니다. 다시 시도해주세요.");
 
                         }
-                        location.href = "/Home/Sub2";
+                        location.href = "/Apply/Sub20";
 
                     },
                     error: function () {
@@ -244,7 +244,7 @@
         //alert(Gubun + "/" + Snal + "/" + Enal + "/" + Reason);
 
         $.ajax({
-            url: "/Home/Sub2_1/",
+            url: "/Apply/Sub20_1/",
             type: "GET",
             dataType: "text",
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -267,7 +267,7 @@
                     $("#Reason").val("");
 
                     alert("신청 완료");
-                    location.href = "Sub2";
+                    location.href = "Sub20";
                 } else {
                     alert("신청 실패")
                 }

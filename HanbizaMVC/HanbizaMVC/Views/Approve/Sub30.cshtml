@@ -39,10 +39,14 @@
         <li class="nav-item">
             <a class="nav-link" id="pills-profile2-tab" data-toggle="pill" href="#pills-profile2" role="tab" aria-controls="pills-profile2" aria-selected="false">반려</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-profile3-tab" data-toggle="pill" href="#pills-profile3" role="tab" aria-controls="pills-profile3" aria-selected="false">결재결과</a>
+        </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive">
+                <p style="text-align:right; margin:0px; font:small">* 신청자의 휴가 잔여일수가 없으면 <span style="color:red;">빨간</span>글씨로 표시됩니다</p>
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -58,7 +62,17 @@
                             {
                                 <tr>
                                     <td><input type="checkbox" class="checkBox_body" value="@item.VacID" /><input type="hidden" class="submit_result" value=""></td>
-                                    <td>@item.Staffname</td>
+
+                                    @if (item.잔여일수 > 0)
+                                    {
+                                        <td>@item.Staffname</td>
+
+                                    }
+                                    else
+                                    {
+                                        <td style="color:red;">@item.Staffname</td>
+
+                                    }
                                     <td>
                                         @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                                         {
@@ -113,7 +127,7 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F") )
+                            if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F"))
                             {
                                 <tr>
                                     <td>@item.Staffname</td>
@@ -183,6 +197,27 @@
                                 <td colspan="3">데이터가 없습니다</td>
                             </tr>
                         }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="table-responsive">
+                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>신청자</th>
+                            <th>신청휴가</th>
+                            <th>결재자</th>
+                            <th>결과</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td colspan="4">데이터가 없습니다</td>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>

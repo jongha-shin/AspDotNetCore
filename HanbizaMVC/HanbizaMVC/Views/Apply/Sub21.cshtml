@@ -288,7 +288,7 @@
 
         //alert(searchKey + "/" + searchWord + "/" + step_num + "/" + staffList)
         $.ajax({
-            url: '/Home/Sub3_1/'/* + searchKey + "/"*/ + searchWord + "/" + step_num + "/" + staffList,
+            url: '/Apply/Sub21_1/'/* + searchKey + "/"*/ + searchWord + "/" + step_num + "/" + staffList,
             type: 'GET',
             dataType: "json",
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -412,7 +412,7 @@
             $("#ApproveDetail").modal('show');
             $.ajax({
                 type: 'GET',
-                url: '/Home/Sub3_2/' + VacID,
+                url: '/Apply/Sub21_2/' + VacID,
                 dataType: "JSON",
                 contentType: 'application/json; charset=utf-8',
                 success: function (result) {
@@ -454,7 +454,7 @@
             let seqid = $(this).parent().parent().find("input").val();
             if (confirm("선택한 휴가신청을 취소하시겠습니까?")) {
                 $.ajax({
-                    url: "/Home/Sub3_5/" + seqid,
+                    url: "/Apply/Sub21_5/" + seqid,
                     type: "GET",
                     dataType: "text",
                     contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -465,7 +465,7 @@
                         } else {
                             alert("휴가신청 취소가 실패하였습니다. 다시시도해주세요.");
                         }
-                            location.href = "Sub3";
+                            location.href = "Sub21";
                     },
                     error: function () {
                         alert("err");
@@ -514,7 +514,7 @@
 
    function set_preApprover() {
        $.ajax({
-           url: "/Home/Sub3_6",
+           url: "/Apply/Sub21_6",
            type: "GET",
            contentType: "application/x-www-form-urlencoded; charset=utf-8",
            dataType: "json",
@@ -564,7 +564,7 @@
         if (ProCDeep > 0) {
             // 휴가정보 등록(Vacation_List)
             $.ajax({
-                url: "/Home/Sub3_3",
+                url: "/Apply/Sub21_3",
                 type: "GET",
                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 dataType: "text",
@@ -617,7 +617,7 @@
         let sign5 = $("#sign5").val();
 
         $.ajax({
-            url: "/Home/Sub3_4",
+            url: "/Apply/Sub21_4",
             type: "GET",
             contentType: "application/x-www-form-urlencoded; charset=utf-8",
             dataType: "text",
@@ -637,7 +637,7 @@
             success: function (result) {
                 if (result == "success") {
                     alert("신청 완료");
-                    location.href = "Sub3";
+                    location.href = "Sub21";
                 } else {
                     alert("신청 실패");
                 }

@@ -16,5 +16,6 @@ namespace HanbizaMVC.ViewModel
         public string Staffname { get; set; }
         public string VicReaSon { get; set; }
         public string AllProCess { get; set; }
+        public double 잔여일수 { get; set; }
     }
 }
