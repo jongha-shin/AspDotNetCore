@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using HanbizaMVC.ViewModel;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace HanbizaMVC.Controllers
 {
@@ -129,8 +130,9 @@ namespace HanbizaMVC.Controllers
             List<문서함> fileInfo = null;
             _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
 
-            ViewBag.IsSignature = fileInfo[0].IsSignature;
             ViewBag.menulist = menulist;
+            ViewBag.IsSignature = fileInfo[0].IsSignature;
+            ViewBag.FileType = Path.GetExtension(fileInfo[0].FileName);
             ViewBag.Seqid = Seqid;
          
             return View();
@@ -149,7 +151,22 @@ namespace HanbizaMVC.Controllers
             
             return pdf_file;
         }
-       
+
+        [Authorize]
+        [Route("/MyInfo/Sub8_3/{Seqid}")]
+        public string Sub8_3(int Seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            _logger.LogInformation("sub8_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+            List<문서함> fileInfo = null;
+            _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
+            
+            var stringify_byte = Convert.ToBase64String(fileInfo[0].FileBlob);
+            
+            string result = "data:image/png;base64," + stringify_byte;
+            
+            return result;
+        }
         [Authorize]
         public IActionResult Sub9()
         {
