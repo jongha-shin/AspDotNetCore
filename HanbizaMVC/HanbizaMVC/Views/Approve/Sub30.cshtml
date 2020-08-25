@@ -257,13 +257,13 @@
                 //alert(VacID + "/" + RereaSon);
 
                 $.ajax({
-                    url: "/Home/Sub4_2/" + VacID + "/" + RereaSon,
+                    url: "/Approve/Sub30_2/" + VacID + "/" + RereaSon,
                     type: "GET",
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
                     dataType: "text",
                     success: function () {
                         alert("선택한 휴가 정보가 반려되었습니다.");
-                        location.href = "/Home/Sub4";
+                        location.href = "/Approve/Sub30";
                     },
                     error: function () {
                         alert("err");
@@ -288,13 +288,13 @@
                 return;
             }
             $.ajax({
-                url: "/Home/Sub4_1/" + checkedVacId + "/" + Gubun,
+                url: "/Approve/Sub30_1/" + checkedVacId + "/" + Gubun,
                 type: "GET",
                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 dataType: "text",
                 success: function () {
                     alert("선택한 휴가 정보가 승인되었습니다.");
-                    location.href = "/Home/Sub4";
+                    location.href = "/Approve/Sub30";
                 },
                 error: function () {
                     alert("err");

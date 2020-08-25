@@ -3,6 +3,10 @@
 }
 @model List<AddTimeList>
 <style>
+    .table-hover > tbody > tr {
+        cursor: pointer
+    }
+
     table {
         font-size: small;
     }
@@ -11,10 +15,6 @@
             background-color: #3763ab;
             color: white;
         }
-
-    .table-hover > tbody > tr {
-        cursor: pointer
-    }
 
     .nav-tabs .nav-link.active {
         font-weight: bold;
@@ -26,7 +26,18 @@
     }
 
     label {
-        font-weight: bold;
+        font-weight: bold
+    }
+
+    .linePerWord {
+        word-break: keep-all;
+    }
+
+    .approval_input {
+        text-align: center;
+        cursor: pointer;
+        width: inherit;
+        padding: 0px
     }
 </style>
 
@@ -57,11 +68,11 @@
                     </div>
                 </div>
                 @*<div class="form-group row">
-                        <label class="col-sm-3 col-form-label">신청일</label>
-                        <div class="col-sm-3">
-                            <input id="Snal" class="form-control form-control-sm" />
-                        </div>
-                    </div>*@
+            <label class="col-sm-3 col-form-label">신청일</label>
+            <div class="col-sm-3">
+                <input id="Snal" class="form-control form-control-sm" />
+            </div>
+        </div>*@
 
                 <div class="form-group row mb-4">
                     <label class="col-2 col-form-label">시작</label>
@@ -101,6 +112,42 @@
                     <label class="col-sm-2 col-form-label">사유</label>
                     <div class="col-sm-10">
                         <textarea id="Reason" class="form-control form-control-sm" placeholder="사유를 입력하세요(최대 50글자)" maxlength="50"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">결재단계</label>
+                    <select class="form-control form-control-sm col-md-4" id="ProCDeep">
+                        @{ int a; }
+                        @for (a = 1; a < 6; a++)
+                        {
+                            <option value="@a">@a 단계</option>
+                        }
+                    </select>
+
+                    <label class="col-md-2 col-form-label">결재자</label>
+                    <div id="" class="inputCls1 col-md-4 p-0 pt-2 pb-md-2" style="text-align:left">
+                        <input type="hidden" id="StaffID1">
+                        <input class="approval_input" type="text" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');" value="">
+                    </div>
+
+                    <div id="" class="inputCls2 col-md-4 offset-md-8 mt-2 mt-md-0 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID2">
+                        <input class="approval_input" type="text" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
+                    </div>
+
+                    <div id="" class="inputCls3 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID3">
+                        <input class="approval_input" type="text" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
+                    </div>
+
+                    <div id="" class="inputCls4 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID4">
+                        <input class="approval_input" type="text" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
+                    </div>
+
+                    <div id="" class="inputCls5 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID5">
+                        <input class="approval_input" type="text" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
                     </div>
                 </div>
                 <div class="col-4 offset-4 mb-2">
@@ -222,7 +269,21 @@
             } else {
                 //alert("OT취소의 취소");
             }
-        })
+        });
+
+        $("#ProCDeep").change(function () {
+            var optionValue = $("#ProCDeep option:selected").val();
+            //	   alert(optionValue);
+            for (var i = 1; i <= 5; i++) {
+                if (i <= optionValue) {
+                    $(".inputCls" + i).show();
+                } else {
+                    $("#StaffID" + i).val("");
+                    $("#sign" + i).val("");
+                    $(".inputCls" + i).hide();
+                }
+            }
+        });
     });
 
     function OTsubmit() {

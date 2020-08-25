@@ -62,8 +62,9 @@ namespace HanbizaMVC.Controllers
 
             // OT 신청내역
             List<AddTimeList> OTlist = null;
-            _db.LoadStoredProc("dbo.OT_list").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .AddParam("Dname", LoginUser.Dname).Exec(r => OTlist = r.ToList<AddTimeList>());
+            _db.LoadStoredProc("dbo.apply_getApplication").AddParam("Type", "OT")
+                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                .Exec(r => OTlist = r.ToList<AddTimeList>());
 
             if (OTlist.Count > 0)
             {
@@ -80,10 +81,10 @@ namespace HanbizaMVC.Controllers
             string rsString;
             //_logger.LogInformation("sub2(addtime): " + addtime.Gubun + " / " + addtime.Snal + " / " + addtime.Enal + " / " + addtime.Reason); // 신청x
 
-            var rs = _db.LoadStoredProc("dbo.OT_insert").AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
-                                                 .AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
-                                                 .AddParam("Gubun", addtime.Gubun).AddParam("Snal", addtime.Snal)
-                                                 .AddParam("Enal", addtime.Enal).AddParam("Reason", addtime.Reason).ExecNonQuery();
+            var rs = _db.LoadStoredProc("dbo.apply_insert_OT")
+                        .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
+                        .AddParam("Gubun", addtime.Gubun).AddParam("Snal", addtime.Snal)
+                        .AddParam("Enal", addtime.Enal).AddParam("Reason", addtime.Reason).ExecNonQuery();
             if (rs > 0)
             {
                 rsString = "success";
@@ -105,7 +106,8 @@ namespace HanbizaMVC.Controllers
             //int rs = _db.Database.ExecuteSqlCommand(commandText, seq);
 
             Boolean checkLogin = CheckLogin();
-            var rs = _db.LoadStoredProc("dbo.OT_delete").AddParam("SEQID", seqid).ExecNonQuery();
+            var rs = _db.LoadStoredProc("dbo.apply_cancel").AddParam("SEQID", seqid).AddParam("Type", "OT")
+                        .ExecNonQuery();
 
             string rsString="error";
             if( rs == -1)
@@ -133,8 +135,9 @@ namespace HanbizaMVC.Controllers
             //_logger.LogInformation("sub21(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
             
             List<Vacation_List> Vlist = null;
-            _db.LoadStoredProc("dbo.vacation_getVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .AddParam("Dname", LoginUser.Dname).Exec(r => Vlist = r.ToList<Vacation_List>());
+            _db.LoadStoredProc("dbo.apply_getApplication").AddParam("Type", "vacation")
+                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                .Exec(r => Vlist = r.ToList<Vacation_List>());
 
             if (Vlist != null)
             {
@@ -160,8 +163,9 @@ namespace HanbizaMVC.Controllers
                 if (!SearchWord.Equals(""))
                 {
                     List<Approver> Datatable = null;
-                    _db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
-                       .AddParam("Dname", LoginUser.Dname).AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
+                    _db.LoadStoredProc("dbo.apply_getApprover").AddParam("Type","vacation")
+                       .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                       .AddParam("SearchWord", SearchWord)/*.AddParam("Step_num", Step_num)*/.AddParam("StaffList", StaffList)
                        .Exec(r => Datatable = r.ToList<Approver>());
 
                     jsonString = JsonConvert.SerializeObject(Datatable);
@@ -184,7 +188,7 @@ namespace HanbizaMVC.Controllers
             var jsonString = "";
 
             List<Vacation_ProcessDetail> VPList = null; ;
-            _db.LoadStoredProc("dbo.vacation_getDetail").AddParam("VacID", VacID)
+            _db.LoadStoredProc("dbo.apply_getDetail").AddParam("Type", "vacation").AddParam("VacID", VacID)
                 .Exec(r => VPList = r.ToList<Vacation_ProcessDetail>());
 
             jsonString = JsonConvert.SerializeObject(VPList);
@@ -199,7 +203,7 @@ namespace HanbizaMVC.Controllers
             string rsString;
             //_logger.LogInformation("sub21_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
-            var rs = _db.LoadStoredProc("dbo.vacation_insert")
+            var rs = _db.LoadStoredProc("dbo.apply_insert_Vacation")
                         .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
                         .AddParam("StaffId", LoginUser.StaffId).AddParam("Vicname", VaInfo.Vicname).AddParam("UseTime", VaInfo.UseTime)
                         .AddParam("Snal", VaInfo.Snal).AddParam("Enal", VaInfo.Enal).AddParam("ProCDeep", VaInfo.ProCDeep)
@@ -223,7 +227,7 @@ namespace HanbizaMVC.Controllers
             //_logger.LogInformation("sub21_4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + approve_Params.StaffID1);
             string rsString;
 
-            var rs = _db.LoadStoredProc("vacation_insertEachApprover")
+            var rs = _db.LoadStoredProc("dbo.apply_insertEachApprover").AddParam("Type", "vacation")
                      .AddParam("ProCDeep", approve_Params.ProCDeep).AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname).AddParam("StaffName", LoginUser.StaffName)
                      .AddParam("StaffID1", approve_Params.StaffID1).AddParam("StaffID2", approve_Params.StaffID2).AddParam("StaffID3", approve_Params.StaffID3).AddParam("StaffID4", approve_Params.StaffID4).AddParam("StaffID5", approve_Params.StaffID5)
                      .AddParam("Sign1", approve_Params.Sign1).AddParam("Sign2", approve_Params.Sign2).AddParam("Sign3", approve_Params.Sign3).AddParam("Sign4", approve_Params.Sign4).AddParam("Sign5", approve_Params.Sign5)
@@ -245,7 +249,7 @@ namespace HanbizaMVC.Controllers
             //_logger.LogInformation("sub21_5(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + seqid);
             string rsString = "fail";
 
-            var rs = _db.LoadStoredProc("dbo.vacation_cancel").AddParam("SEQID", seqid).ExecNonQuery();
+            var rs = _db.LoadStoredProc("dbo.apply_cancel").AddParam("SEQID", seqid).AddParam("Type","vacation").ExecNonQuery();
             
             if (rs > 0 )
             {
@@ -263,12 +267,13 @@ namespace HanbizaMVC.Controllers
             
             var jsonString = "";
             List<Approver> Alist = null;
-            _db.LoadStoredProc("dbo.vacation_getPreApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .AddParam("Dname", LoginUser.Dname).Exec(r => Alist = r.ToList<Approver>());
+            _db.LoadStoredProc("dbo.apply_getPreApprover").AddParam("Type", "vacation")
+                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                .Exec(r => Alist = r.ToList<Approver>());
             jsonString = JsonConvert.SerializeObject(Alist);
             return new JsonResult(jsonString);
         }
-
+        // 기타결재
         [Authorize]
         public IActionResult Sub22()
         {
@@ -293,9 +298,10 @@ namespace HanbizaMVC.Controllers
                 if (!SearchWord.Equals(""))
                 {
                     List<Approver> Datatable = null;
-                    _db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
-                      .AddParam("Dname", LoginUser.Dname).AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
-                      .Exec(r => Datatable = r.ToList<Approver>());
+                    _db.LoadStoredProc("vacation_getApprover").AddParam("Type", "vacation")
+                       .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                       .AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
+                       .Exec(r => Datatable = r.ToList<Approver>());
 
                     jsonString = JsonConvert.SerializeObject(Datatable);
                 }

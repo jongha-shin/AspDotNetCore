@@ -83,7 +83,6 @@ namespace HanbizaMVC.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
-
             modelBuilder.Entity<LoginInfor>(entity =>
             {
                 entity.HasNoKey();
@@ -140,7 +139,6 @@ namespace HanbizaMVC.Models
                     .IsUnicode(false)
                     .IsFixedLength();
             });
-
             modelBuilder.Entity<PayList>(entity =>
             {
                 entity.HasNoKey();
@@ -225,7 +223,6 @@ namespace HanbizaMVC.Models
                 entity.Property(e => e.Regdate).HasColumnType("datetime");
                 
             });
-
             modelBuilder.Entity<공지사항>(entity =>
             {
                 entity.HasNoKey();
@@ -255,7 +252,6 @@ namespace HanbizaMVC.Models
 
                 entity.Property(e => e.제목).HasMaxLength(50);
             });
-
             modelBuilder.Entity<문서함>(entity =>
             {
                 entity.HasNoKey();
@@ -319,7 +315,6 @@ namespace HanbizaMVC.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
-
             modelBuilder.Entity<연차대장>(entity =>
             {
                 entity.HasNoKey();
@@ -358,7 +353,6 @@ namespace HanbizaMVC.Models
 
                 entity.Property(e => e.입사일).HasColumnType("date");
             });
-
             modelBuilder.Entity<출퇴근기록>(entity =>
             {
                 entity.HasNoKey();
@@ -402,7 +396,6 @@ namespace HanbizaMVC.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
-
             modelBuilder.Entity<출퇴근기록집계표>(entity =>
             {
                 entity.HasNoKey();
@@ -440,7 +433,6 @@ namespace HanbizaMVC.Models
 
                 entity.Property(e => e.종료일).HasColumnType("date");
             });
-
             modelBuilder.Entity<휴가대장>(entity =>
             {
                 entity.HasNoKey();
