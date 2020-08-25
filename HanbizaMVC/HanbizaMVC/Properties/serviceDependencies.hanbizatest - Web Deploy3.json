@@ -1,16 +1,16 @@
 {
   "dependencies": {
-    "mssql1": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroup')]/providers/Microsoft.Sql/servers/hanbizamvcdbserver/databases/hanbizatest_db",
-      "type": "mssql.azure",
-      "connectionId": "DefaultConnection",
-      "secretStore": "AzureAppSettings"
-    },
     "mssql2": {
       "resourceId": null,
       "type": "mssql.onprem",
       "connectionId": "HanbizaConnection",
       "secretStore": "AzureAppSettings"
+    },
+    "mssql3": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroup')]/providers/Microsoft.Sql/servers/hanbizamvcdbserver/databases/hanbizatest_db",
+      "type": "mssql.azure",
+      "connectionId": "TestConnection",
+      "secretStore": null
     }
   }
 }
