@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace HanbizaMVC.Models
 {
     public partial class 회사별메뉴
@@ -18,5 +17,7 @@ namespace HanbizaMVC.Models
         public string 비밀번호변경 { get; set; }
         public string 로그아웃 { get; set; }
         public string 신청 { get; set; }
+        public string 기타결재 { get; set; }
+        public string 인사평가 { get; set; }
     }
 }
