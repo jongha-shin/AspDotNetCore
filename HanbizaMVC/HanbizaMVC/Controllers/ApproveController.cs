@@ -41,7 +41,7 @@ namespace HanbizaMVC.Controllers
                     LoginUser.StaffId = item.StaffId;
                 }
 
-                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum && r.DName == LoginUser.Dname).ToList();
                 return true;
             }
             else
@@ -49,10 +49,31 @@ namespace HanbizaMVC.Controllers
                 return false;
             }
         }
-
-        // 30 휴가결재
+        // 30 OT결재
         [Authorize]
         public IActionResult Sub30()
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+
+            ViewBag.menulist = menulist;
+            //GetLoginUser();
+            //_logger.LogInformation("sub30(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
+
+            List<ApproveList> Alist = null;
+            _db.LoadStoredProc("dbo.OT_approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+               .AddParam("Dname", LoginUser.Dname).Exec(r => Alist = r.ToList<ApproveList>());
+            //Console.WriteLine("sub4 list count: " + Alist.Count());
+            if (Alist != null)
+            {
+                return View(Alist);
+            }
+
+            return View();
+        }
+        // 31 휴가결재
+        [Authorize]
+        public IActionResult Sub31()
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
@@ -72,9 +93,9 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
-        // 30-1 휴가 승인 프로세스
-        [Route("/Approve/Sub30_1/{checkedVacId}/{Gubun}")]
-        public string Sub30_1(string checkedVacId, string Gubun)
+        // 31-1 휴가 승인 프로세스
+        [Route("/Approve/Sub31_1/{type}/{checkedVacId}")]
+        public string Sub31_1(string type, string checkedVacId)
         {
             Boolean checkLogin = CheckLogin();
             string[] arrVacId = checkedVacId.Split(",");
@@ -82,7 +103,8 @@ namespace HanbizaMVC.Controllers
             int count = 0;
             for (int i = 0; i < arrVacId.Length; i++)
             {
-                var rs = _db.LoadStoredProc("vacation_process_allow").AddParam("approveID", LoginUser.StaffId).AddParam("VacID", arrVacId[i]).AddParam("Gubun", Gubun).ExecNonQuery();
+                var rs = _db.LoadStoredProc("apply_process_allow").AddParam("Type", type)
+                            .AddParam("approveID", LoginUser.StaffId).AddParam("VacID", arrVacId[i]).ExecNonQuery();
                 if (rs > 0) count++;
             }
             string result;
@@ -97,14 +119,15 @@ namespace HanbizaMVC.Controllers
                 return result;
             }
         }
-        // 30-2 휴가 반려 프로세스
-        [Route("/Approve/Sub30_2/{VacID}/{RereaSon}")]
-        public string Sub30_2(string VacID, string RereaSon)
+        // 31-2 휴가 반려 프로세스
+        [Route("/Approve/Sub31_2/{type}/{VacID}/{RereaSon}")]
+        public string Sub31_2(string type, string VacID, string RereaSon)
         {
             Boolean checkLogin = CheckLogin();
             string result;
             //_logger.LogInformation("sub4_2(): " + VacID + " / " + RereaSon);
-            var rs = _db.LoadStoredProc("vacation_process_reject").AddParam("approveID", LoginUser.StaffId).AddParam("VacID", VacID).AddParam("RereaSon", RereaSon).ExecNonQuery();
+            var rs = _db.LoadStoredProc("apply_process_reject").AddParam("Type", type)
+                        .AddParam("approveID", LoginUser.StaffId).AddParam("VacID", VacID).AddParam("RereaSon", RereaSon).ExecNonQuery();
             if (rs > 0)
             {
                 result = "success";

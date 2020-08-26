@@ -287,9 +287,7 @@
     });
     $(function () {
         set_preApprover();
-        //$("#Snal").click(function () {
-        //    alert("asdf");
-        //});
+        
         $("#Snal").datepicker({
             language: 'ko',
             autoclose: true
@@ -314,46 +312,6 @@
             //*/
             //        });
         });
-
-        //$(".OT_row").on("click", function () {
-            //let seqid = $(this).find("input").val();
-            //alert("asdf: " + seqid);
-            //if (confirm("선택한 OT신청을 취소하시겠습니까?")) {
-            //    //alert("취소");
-            //    $.ajax({
-            //        url: "/Apply/Sub20_2/" + seqid,
-            //        type: "GET",
-            //        dataType: "text",
-            //        contentType: "application/x-www-form-urlencoded;charset=utf-8",
-            //        charset: "utf-8",
-            //        success: function (result) {
-            //            if (result == "success") {
-            //                alert("OT신청이 취소되었습니다");
-
-            //            }
-            //            else if (result == "done") {
-            //                alert("결재가 마감된 신청입니다. 취소할 수 없습니다");
-            //                return;
-            //            }
-            //            else {
-            //                alert("취소신청이 실패하였습니다. 다시 시도해주세요.");
-
-            //            }
-            //            location.href = "/Apply/Sub20";
-
-            //        },
-            //        error: function () {
-            //            alert("err");
-            //        }
-            //    });
-
-            //} else {
-            //    //alert("OT취소의 취소");
-            //}
-
-
-
-        //});
 
         $("#searchBtn").click(function () {
             var searchWord = $("#searchWord").val().trim();
@@ -462,7 +420,7 @@
         //alert(id);
         $("#searchWord").val("");
         $("#stepModal").html(id);
-        $("#findApproverModal").modal('show'); // 입력 및 수정 폼 모달 창 열기
+        $("#findApproverModal").modal('show'); 
     }
 
     function enterkey() {
@@ -471,7 +429,7 @@
             getApproverTable(searchWord);
         }
     }
-
+     // 결재자 찾기
     function getApproverTable(searchWord) {
         let Sstep_num = $("#stepModal").text();
         let step_num = parseInt(Sstep_num);
@@ -499,19 +457,12 @@
                 staffList += keyArr[i] + ",";
             }
         }
-
         $.ajax({
             url: '/Apply/Sub21_1/' + searchWord + "/" + step_num + "/" + staffList,
             type: 'GET',
             dataType: "json",
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
             charset: "utf-8",
-            //date: {
-            //    "SearchKey" : searchKey,
-            //    "SearchWord" : searchWord,
-            //    "Step_num" : step_num,
-            //    "StaffList" : staffList
-            //},
             success: function (result) {
                 var sjson = JSON.parse(result);
                 //alert("succ");

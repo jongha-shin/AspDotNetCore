@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "OT결재";
+    ViewData["Title"] = "휴가결재";
     int a = 0;
     int b = 0;
     int c = 0;
@@ -46,6 +46,7 @@
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive">
+                <p style="text-align:right; margin:0px; font:small">* 신청자의 휴가 잔여일수가 없으면 <span style="color:red;">빨간</span>글씨로 표시됩니다</p>
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -60,19 +61,29 @@
                             if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
                             {
                                 <tr>
-                                    <td><input type="checkbox" class="checkBox_body" value="@item.OtID" /><input type="hidden" class="submit_result" value=""></td>
-                                    <td>@item.Staffname</td>
+                                    <td><input type="checkbox" class="checkBox_body" value="@item.VacID" /><input type="hidden" class="submit_result" value=""></td>
+
+                                    @if (item.잔여일수 > 0)
+                                    {
+                                        <td>@item.Staffname</td>
+
+                                    }
+                                    else
+                                    {
+                                        <td style="color:red;">@item.Staffname</td>
+
+                                    }
                                     <td>
-                                        @if (item.Gubun.Equals("C"))
+                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                                         {
-                                        <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                                         }
-                                        @if (item.Gubun.Equals("R"))
+                                        else
                                         {
-                                        <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
                                         }
                                         <br />
-                                        <span style="color:black">사유: @item.Reason</span><br />
+                                        <span style="color:black">사유: @item.VicReaSon</span><br />
                                         <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
                                             <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
                                             <div class="input-group-append">
@@ -121,16 +132,16 @@
                                 <tr>
                                     <td>@item.Staffname</td>
                                     <td>
-                                        @if (item.Gubun.Equals("C"))
+                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                                         {
-                                            <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                                         }
-                                        @if (item.Gubun.Equals("R"))
+                                        else
                                         {
-                                            <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
                                         }
                                         <br />
-                                        <span style="color:black">사유: @item.Reason</span><br />
+                                        <span style="color:black">@item.VicReaSon</span><br />
                                     </td>
                                 </tr>
                             b++;
@@ -163,16 +174,16 @@
                                 <tr>
                                     <td>@item.Staffname</td>
                                     <td>
-                                        @if (item.Gubun.Equals("C"))
+                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                                         {
-                                            <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                                         }
-                                        @if (item.Gubun.Equals("R"))
+                                        else
                                         {
-                                            <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
                                         }
                                         <br />
-                                        <span style="color:black">사유: @item.Reason</span><br />
+                                        <span style="color:black">@item.VicReaSon</span><br />
                                         <span style="color:red">@item.RereaSon</span>
 
                                     </td>
@@ -196,7 +207,7 @@
                     <thead>
                         <tr>
                             <th>신청자</th>
-                            <th>신청OT</th>
+                            <th>신청휴가</th>
                             <th>결재자</th>
                             <th>결과</th>
                         </tr>
@@ -239,20 +250,20 @@
         });
 
         $(".rejectBtn").on("click", function () {
-            if (confirm("선택한 OT신청을 반려하시겠습니까?")) {
+            if (confirm("선택한 휴가신청을 반려하시겠습니까?")) {
 
                 let VacID = $(this).closest("tr").find(".checkBox_body").val();
                 let RereaSon = $(this).closest("tr").find(".RereaSon").val();
                 //alert(VacID + "/" + RereaSon);
 
                 $.ajax({
-                    url: "/Approve/Sub31_2/OT/" + VacID + "/" + RereaSon,
+                    url: "/Approve/Sub31_2/" + VacID + "/" + RereaSon,
                     type: "GET",
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
                     dataType: "text",
                     success: function () {
-                        alert("선택한 OT 정보가 반려되었습니다.");
-                        location.href = "/Approve/Sub30";
+                        alert("선택한 휴가 정보가 반려되었습니다.");
+                        location.href = "/Approve/Sub31";
                     },
                     error: function () {
                         alert("err");
@@ -271,19 +282,19 @@
         checkedVacId = checkedVacId.substring(0, checkedVacId.lastIndexOf(","));
         if (checkedVacId == '') { alert('선택한 내용이 없습니다'); return; }
 
-        if (confirm("선택한 OT신청을 승인하시겠습니까?")) {
+        if (confirm("선택한 휴가신청을 승인하시겠습니까?")) {
             if ($(".openReason").length > 0) {
                 alert("반려 중인 신청이 있습니다.")
                 return;
             }
             $.ajax({
-                url: "/Approve/Sub31_1/OT/" + checkedVacId,
+                url: "/Approve/Sub31_1/vacation/" + checkedVacId,
                 type: "GET",
                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 dataType: "text",
                 success: function () {
-                    alert("선택한 OT 정보가 승인되었습니다.");
-                    location.href = "/Approve/Sub30";
+                    alert("선택한 휴가 정보가 승인되었습니다.");
+                    location.href = "/Approve/Sub31";
                 },
                 error: function () {
                     alert("err");

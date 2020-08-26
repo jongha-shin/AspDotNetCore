@@ -40,7 +40,7 @@ namespace HanbizaMVC.Controllers
                     LoginUser.StaffId = item.StaffId;
                 }
 
-                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum && r.DName == LoginUser.Dname).ToList();
                 return true;
             }
             else

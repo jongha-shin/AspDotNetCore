@@ -4,12 +4,14 @@ namespace HanbizaMVC.Models
     public partial class 회사별메뉴
     {
         public int Seqid { get; set; }
+        public string DName { get; set; }
         public string BizNum { get; set; }
         public string CompanyName { get; set; }
         public string 근태보기 { get; set; }
         public string OT신청 { get; set; }
         public string 휴가신청 { get; set; }
         public string 휴가결재 { get; set; }
+        public string OT결재 { get; set; }
         public string 기타결재 { get; set; }
         public string 연차보기 { get; set; }
         public string 급여명세서 { get; set; }
@@ -20,5 +22,6 @@ namespace HanbizaMVC.Models
         //public string 기타신청 { get; set; }
         public string 신청 { get; set; }
         public string 인사평가 { get; set; }
+
     }
 }
