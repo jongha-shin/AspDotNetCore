@@ -53,7 +53,7 @@
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive col-12">
-                <div class="form-group row mb-4 mt-3">
+                <div class="form-group row mt-3">
                     <label class="col-md-2 col-form-label">구분</label>
                     <select class="form-control form-control-sm col-md-4" id="Vicname" onchange="fn_timeHide()">
                         <option value="선택" selected disabled>휴가종류를 선택하세요</option>
@@ -405,13 +405,13 @@
                 $(".vacation_deleteBtn").hide();
             }
 
-            var VacID = $(this).find("input").val();
+            var SeqID = $(this).find("input").val();
             //alert(seq)
-            if (VacID == null || VacID == "") return;
+            if (SeqID == null || SeqID == "") return;
             $("#ApproveDetail").modal('show');
             $.ajax({
                 type: 'GET',
-                url: '/Apply/Sub21_2/' + VacID,
+                url: '/Apply/Sub21_2/vacation/' + SeqID,
                 dataType: "JSON",
                 contentType: 'application/json; charset=utf-8',
                 success: function (result) {
@@ -432,7 +432,7 @@
                             }
                             if (DeepNumChk < Number(sjson[i].DeepNum)) f_color = "gray";
                             s += "<tr>";
-                            s += "<td style='color:" + f_color + "' width=>" + sjson[i].DeepNum + "<input type='hidden' value='" + VacID +"'></td>"
+                            s += "<td style='color:" + f_color + "' width=>" + sjson[i].DeepNum + "<input type='hidden' value='" + SeqID +"'></td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].approveName + "</td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].Buseo + "</td>"
                             s += "<td style='color:" + f_color + "'>" + sjson[i].RereaSon + "</td>"
@@ -453,7 +453,7 @@
             let seqid = $(this).parent().parent().find("input").val();
             if (confirm("선택한 휴가신청을 취소하시겠습니까?")) {
                 $.ajax({
-                    url: "/Apply/Sub21_5/" + seqid,
+                    url: "/Apply/Sub21_5/vacation/" + seqid,
                     type: "GET",
                     dataType: "text",
                     contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -464,7 +464,7 @@
                         } else {
                             alert("휴가신청 취소가 실패하였습니다. 다시시도해주세요.");
                         }
-                            location.href = "Sub21";
+                        location.href = "Sub21";
                     },
                     error: function () {
                         alert("err");
@@ -473,7 +473,7 @@
             } else {
                 return;
             }
-        })
+        });
 
         $("#ProCDeep").change(function () {
             var optionValue = $("#ProCDeep option:selected").val();
@@ -513,7 +513,7 @@
 
    function set_preApprover() {
        $.ajax({
-           url: "/Apply/Sub21_6",
+           url: "/Apply/Sub21_6/vacation",
            type: "GET",
            contentType: "application/x-www-form-urlencoded; charset=utf-8",
            dataType: "json",
@@ -541,9 +541,6 @@
                alert("err");
            }
        })
-
-
-
     }
 
     function submitVacation() {
@@ -621,6 +618,7 @@
             contentType: "application/x-www-form-urlencoded; charset=utf-8",
             dataType: "text",
             data: {
+                "Type": "vacation",
                 "ProCDeep": ProCDeep,
                 "StaffID1": StaffID1,
                 "StaffID2": StaffID2,
@@ -645,8 +643,6 @@
                 alert("통신실패");
             }
         });
-
-
     }
     function checkInput() {
         //let ProCDeep = $("#ProCDeep ").val();
@@ -690,7 +686,7 @@
         for (var i = 1; i <= 5; i++) {
             if (i <= optionValue) {
                 if ($("#sign" + i).val() == "") {
-                    alert(i + "단계 결재자를 입력해 주세요")
+                    alert(i + "단계 결재자를 입력해 주세요");
                     $("#sign" + i).focus();
                     return;
                 }

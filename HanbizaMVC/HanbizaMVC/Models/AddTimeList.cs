@@ -17,10 +17,13 @@ namespace HanbizaMVC.Models
         public string Reason { get; set; }
         public string HbzMsend { get; set; }
         public DateTime HbzYymmdd { get; set; }
+        public int ProCDeep { get; set; }
+        public string AllProCess { get; set; }
         public DateTime Regdate { get; set; }
 
         public string Snals { get; set; }
         public string Enals { get; set; }
         public string 요일 { get; set; }
+        public int DeepNum { get; set; }
     }
 }
