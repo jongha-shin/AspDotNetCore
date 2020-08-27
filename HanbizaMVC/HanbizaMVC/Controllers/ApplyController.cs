@@ -154,7 +154,7 @@ namespace HanbizaMVC.Controllers
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
             ViewBag.menulist = menulist;
-            _logger.LogInformation("sub21_1(): " + SearchWord + " / " + Step_num);
+            //_logger.LogInformation("sub21_1(): " + SearchWord + " / " + Step_num);
             //Console.WriteLine("list: " + StaffList);
             var jsonString = "";
 

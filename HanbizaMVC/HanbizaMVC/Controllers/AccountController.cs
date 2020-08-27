@@ -53,7 +53,6 @@ namespace HanbizaMVC.Controllers
             string rs;
             if (LoginUser != null)
             {
-                rs = "success";
                 menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum && r.DName == LoginUser.Dname).ToList();
                 var claims = BuildClaims(LoginUser);
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -70,8 +69,14 @@ namespace HanbizaMVC.Controllers
                     //Console.WriteLine("------auto_save------");
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
                          new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(50) });
-                        //new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddSeconds(10) });
+                        //new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddSeconds(10)});
                 }
+                // 로그인 기록 남기기
+                int a = _db.LoadStoredProc("dbo.login_insert_Record").AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
+                           .AddParam("CompanyName", LoginUser.CompanyName).AddParam("StaffID", LoginUser.StaffId).ExecNonQuery();
+                if (a <= 0) return rs = "fail";
+
+                rs = "success";
             }
             else
             {

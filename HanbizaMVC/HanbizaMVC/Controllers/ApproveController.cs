@@ -93,7 +93,7 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
-        // 31-1 휴가 승인 프로세스
+        // (공용)31-1 휴가 승인 프로세스
         [Route("/Approve/Sub31_1/{type}/{checkedVacId}")]
         public string Sub31_1(string type, string checkedVacId)
         {
@@ -119,7 +119,7 @@ namespace HanbizaMVC.Controllers
                 return result;
             }
         }
-        // 31-2 휴가 반려 프로세스
+        // (공용)31-2 휴가 반려 프로세스
         [Route("/Approve/Sub31_2/{type}/{VacID}/{RereaSon}")]
         public string Sub31_2(string type, string VacID, string RereaSon)
         {
