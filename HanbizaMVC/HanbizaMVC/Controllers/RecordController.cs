@@ -273,6 +273,7 @@ namespace HanbizaMVC.Controllers
             List<PayList> monthList = null;
             if (Yyyymm == null || Ncount == null)
             {
+                // 초기 세팅
                 _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                    .AddParam("Dname", LoginUser.Dname).Exec(r => monthList = r.ToList<PayList>());
 
@@ -290,16 +291,17 @@ namespace HanbizaMVC.Controllers
 
                 ViewBag.선택월 = Yyyymm;
                 ViewBag.선택회차 = Ncount;
-
+                //Console.WriteLine("월정보xx: "+Yyyymm +" / "+ Ncount);
                 _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                    .AddParam("Dname", LoginUser.Dname).AddParam("Yyyymm", Yyyymm).AddParam("Ncount", int.Parse(Ncount))
                    .Exec(r => plist = r.ToList<PayList>());
             }
             else
             {
+                // 월 정보가 있을때
                 ViewBag.선택월 = Yyyymm;
                 ViewBag.선택회차 = Ncount;
-
+                //Console.WriteLine("월정보있음: "+Yyyymm + " / " + Ncount);
                 _db.LoadStoredProc("dbo.payment_lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
                    .AddParam("Dname", LoginUser.Dname).Exec(r => monthList = r.ToList<PayList>());
                 _db.LoadStoredProc("dbo.payment_getPayment").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
