@@ -10,6 +10,7 @@ using HanbizaMVC.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Newtonsoft.Json;
 
 namespace HanbizaMVC.Controllers
 {
@@ -136,7 +137,25 @@ namespace HanbizaMVC.Controllers
             result = "fail";
             return result;
         }
+        // (공용)31-3 결재결과 가져오기
+        public string Sub31_3(string Snal, string Enal)
+        {
+            Boolean checkLogin = CheckLogin();
+            var jsonString = "";
 
+            List<Approve_History> AHlist = null; ;
+            _db.LoadStoredProc("dbo.apply_resultHistory").AddParam("Type", "vacation").AddParam("Snal", Snal).AddParam("Enal", Enal)
+               .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+               .Exec(r => AHlist = r.ToList<Approve_History>());
+            if (AHlist != null)
+            {
+                jsonString = JsonConvert.SerializeObject(AHlist);
+                
+                return jsonString;
+            }
+            jsonString = "fail";
+            return jsonString;
+        }
        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -38,9 +38,9 @@
         <li class="nav-item">
             <a class="nav-link" id="pills-profile2-tab" data-toggle="pill" href="#pills-profile2" role="tab" aria-controls="pills-profile2" aria-selected="false">반려</a>
         </li>
-        @*<li class="nav-item">
+        <li class="nav-item">
             <a class="nav-link" id="pills-profile3-tab" data-toggle="pill" href="#pills-profile3" role="tab" aria-controls="pills-profile3" aria-selected="false">결재결과</a>
-        </li>*@
+        </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -199,6 +199,10 @@
             </div>
         </div>
         <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="form-group row ml-1">
+                <input id="Snal" class="form-control form-control-sm col-4 col-sm-2" autocomplete="off" /> &nbsp;~&nbsp;
+                <input id="Enal" class="form-control form-control-sm col-4 col-sm-2" autocomplete="off" />
+            </div>
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -213,6 +217,7 @@
                         <tr>
                             <td colspan="4">데이터가 없습니다</td>
                         </tr>
+                        <span id="result"></span>
                     </tbody>
                 </table>
             </div>
@@ -221,6 +226,21 @@
 </div>
 <script type="text/javascript">
     $(function () {
+        
+        $("#Snal").datepicker({
+            language: 'ko',
+            autoclose: true,
+            
+        });
+        
+        $("#Enal").datepicker({
+            language: 'ko',
+            autoclose: true
+        });
+        
+        $("#Snal").datepicker("setDate", "-15D"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후) 
+        $("#Enal").datepicker("setDate", "+15D");
+
         $("#checkBox_head").change(function () {
             if ($("#checkBox_head").is(":checked")) {
                 $(".checkBox_body").each(function () {
@@ -265,6 +285,17 @@
                     }
                 });
             }
+        });
+
+        $("#Snal").on("change", function () {
+            let snal = $("#Snal").val();
+            let enal = $("#Enal").val();
+            getHistory(snal, enal);
+        });
+        $("#Enal").on("change", function () {
+            let snal = $("#Snal").val();
+            let enal = $("#Enal").val();
+            getHistory(snal, enal);
         });
 
     });
@@ -318,6 +349,10 @@
         $("#beforeReason").show();
         $("#afterReason").hide();
         $(".reason_Div").hide();
+    }
+
+    function getHistory(Snal, Enal) {
+        alert(Snal +"/"+ Enal);
     }
 
 </script>
