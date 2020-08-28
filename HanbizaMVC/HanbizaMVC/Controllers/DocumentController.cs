@@ -61,7 +61,7 @@ namespace HanbizaMVC.Controllers
 
             List<문서함> mySign = null;
             _db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .AddParam("Dname", LoginUser.StaffId).Exec(r => mySign = r.ToList<문서함>());
+                .AddParam("Dname", LoginUser.Dname).Exec(r => mySign = r.ToList<문서함>());
 
             if (mySign.Count > 0)
             {
