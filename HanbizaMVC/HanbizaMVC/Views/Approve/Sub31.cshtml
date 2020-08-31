@@ -39,7 +39,7 @@
             <a class="nav-link" id="pills-profile2-tab" data-toggle="pill" href="#pills-profile2" role="tab" aria-controls="pills-profile2" aria-selected="false">반려</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="pills-profile3-tab" data-toggle="pill" href="#pills-profile3" role="tab" aria-controls="pills-profile3" aria-selected="false">결재결과</a>
+            <a class="nav-link" id="pills-profile3-tab" data-toggle="pill" href="#pills-profile3" role="tab" aria-controls="pills-profile3" aria-selected="false" onclick="getHistory()">결재결과</a>
         </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
@@ -200,26 +200,13 @@
         </div>
         <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="form-group row ml-1">
-                <input id="Snal" class="form-control form-control-sm col-4 col-sm-2" autocomplete="off" /> &nbsp;~&nbsp;
-                <input id="Enal" class="form-control form-control-sm col-4 col-sm-2" autocomplete="off" />
+                <input id="Snal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" /> &nbsp;~&nbsp;
+                <input id="Enal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" />
             </div>
             <div class="table-responsive">
-                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>신청자</th>
-                            <th>신청휴가</th>
-                            <th>결재자</th>
-                            <th>결과</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="4">데이터가 없습니다</td>
-                        </tr>
-                        <span id="result"></span>
-                    </tbody>
-                </table>
+                
+                <span id="result"></span>
+                
             </div>
         </div>
     </div>
@@ -272,7 +259,7 @@
                 //alert(VacID + "/" + RereaSon);
 
                 $.ajax({
-                    url: "/Approve/Sub31_2/" + VacID + "/" + RereaSon,
+                    url: "/Approve/Sub31_2/vacation/" + VacID + "/" + RereaSon,
                     type: "GET",
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
                     dataType: "text",
@@ -286,16 +273,11 @@
                 });
             }
         });
-
         $("#Snal").on("change", function () {
-            let snal = $("#Snal").val();
-            let enal = $("#Enal").val();
-            getHistory(snal, enal);
+            getHistory();
         });
         $("#Enal").on("change", function () {
-            let snal = $("#Snal").val();
-            let enal = $("#Enal").val();
-            getHistory(snal, enal);
+            getHistory();
         });
 
     });
@@ -351,8 +333,56 @@
         $(".reason_Div").hide();
     }
 
-    function getHistory(Snal, Enal) {
-        alert(Snal +"/"+ Enal);
+    function getHistory() {
+        let Snal = $("#Snal").val();
+        let Enal = $("#Enal").val();
+        //alert(Snal + "/" + Enal);
+        $.ajax({
+            url: "/Approve/Sub31_3/vacation/" + Snal+"/"+Enal,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            success: function (result) {
+                //console.log(result);
+                //location.href = "/Approve/Sub31";
+                var sjson = JSON.parse(result);
+             
+                var s = '<table id="ApproveHistoryTable" class="table-sm table-bordered col-sm-12">';
+                s += "<thead><tr><th align='center' width='15%'>신청자</th><th align='center' width='55%'>신청휴가</th>" 
+                s += "<th align='center' width='15%'> 결재자</th><th align='center' width='15%'>결과</th></tr ></thead>"
+                if (sjson.length == 0) {
+                    s += '<tr><td colspan="4" align="center">데이터가 없습니다</td></tr>';
+                } else {
+                    for (var i = 0; i < sjson.length; i++) {
+                        s += "<tr>";
+                        s += "<td>" + sjson[i].StaffName + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
+                        if (sjson[i].Vicname == '연차휴가(반차)' || sjson[i].Vicname == '반차휴가' || sjson[i].Vicname == '반차') {
+                            s += "<td>" + sjson[i].Vicname + " : " + sjson[i].SNal.substring(0, 10) + "(" + sjson[i].UseTime +"시간)</td>"
+                        }
+                        else {
+                            s += "<td>" + sjson[i].Vicname + " : " + sjson[i].SNal.substring(0, 10) + " ~ " + sjson[i].Enal.substring(0, 10) + "</td>"
+                        }
+                        
+                        s += "<td>" + sjson[i].approveName + "</td>"
+
+                        if (sjson[i].AResult == 'F') {
+                            s += "<td style='color:red'>반려</td>"
+                        }
+                        if (sjson[i].AResult == 'Y') {
+                            s += "<td style='color:blue'>승인</td>"
+                        }
+                        s += "</tr>"
+                    }
+                    s += "</table>"
+                }
+
+                $("#result").html(s);
+                $("#pills-profile3").tab('show');
+            },
+            error: function () {
+                alert("err");
+            }
+        });
     }
 
 </script>

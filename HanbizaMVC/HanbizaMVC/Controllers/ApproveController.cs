@@ -126,7 +126,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             string result;
-            //_logger.LogInformation("sub4_2(): " + VacID + " / " + RereaSon);
+            _logger.LogInformation("sub31_2(): " + VacID + " / " + RereaSon);
             var rs = _db.LoadStoredProc("apply_process_reject").AddParam("Type", type)
                         .AddParam("approveID", LoginUser.StaffId).AddParam("VacID", VacID).AddParam("RereaSon", RereaSon).ExecNonQuery();
             if (rs > 0)
@@ -138,13 +138,14 @@ namespace HanbizaMVC.Controllers
             return result;
         }
         // (공용)31-3 결재결과 가져오기
-        public string Sub31_3(string Snal, string Enal)
+        [Route("/Approve/Sub31_3/{Type}/{Snal}/{Enal}")]
+        public string Sub31_3(string type, string Snal, string Enal)
         {
             Boolean checkLogin = CheckLogin();
             var jsonString = "";
 
             List<Approve_History> AHlist = null; ;
-            _db.LoadStoredProc("dbo.apply_resultHistory").AddParam("Type", "vacation").AddParam("Snal", Snal).AddParam("Enal", Enal)
+            _db.LoadStoredProc("dbo.apply_resultHistory").AddParam("Type", type).AddParam("Snal", Snal).AddParam("Enal", Enal)
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => AHlist = r.ToList<Approve_History>());
             if (AHlist != null)
