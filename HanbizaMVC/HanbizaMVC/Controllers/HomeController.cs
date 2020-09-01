@@ -14,7 +14,7 @@ using System.Dynamic;
 using System.Security.Claims;
 
 namespace HanbizaMVC.Controllers
-{
+{ 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
