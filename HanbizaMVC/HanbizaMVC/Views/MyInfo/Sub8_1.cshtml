@@ -92,7 +92,7 @@
 </style>
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
-@*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <div id="signPage" style="white-space:nowrap; overflow:auto;">
     @if (ViewBag.IsSignature == "N") {
@@ -103,9 +103,9 @@
         </label>
         <button class="btn btn-sm btn-primary" id="saveBtn" type="button" onclick="pageLoading()">저장</button>
     }
-
-    <canvas id="the-canvas"></canvas>
-
+    <div id="SignCanvas">
+        <canvas id="the-canvas"></canvas>
+    </div>
     <div id="pageController">
         <div>
             <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
@@ -145,7 +145,7 @@
         var currP = null;
         var drawBackup = new Array();
 
-        $(function () {
+        $(document).ready(function () {
             var Seqid = "@ViewBag.Seqid";
             var Ftype = "@ViewBag.FileType";
             if (Ftype == ".pdf") ViewPDF(Seqid);
@@ -378,44 +378,18 @@
                 else location.reload();
 
             } else {
-                $("#ths-canvas").hide();
-                pdfDoc.getPage(num).then(function (page) {
-                    var viewport = page.getViewport({ scale: 3 });
-                    // width="773" height="1093"
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    //console.log("canvas.height: " + canvas.height + " / canvas.width: " + canvas.width);
-
-                    // Render PDF page into canvas context
-                    var renderContext = {
-                        canvasContext: ctx,
-                        viewport: viewport
-                    };
-                    var renderTask = page.render(renderContext);
-
-                    // Wait for rendering to finish
-                    renderTask.promise.then(function () {
-                        pageRendering = false;
-                        if (pageNumPending !== null) {
-                            // New page rendering is pending
-                            renderPage(pageNumPending);
-                            pageNumPending = null;
-                        }
-                    });
-                });
-
-                var canvas_save = document.getElementById('the-canvas');
-                canvas_save.scale(3, 3);
-                if (pageNum == 1) img1 = canvas_save.toDataURL('image/png', 1.0);
-                if (pageNum == 2) img2 = canvas_save.toDataURL('image/png', 1.0);
-                if (pageNum == 3) img3 = canvas_save.toDataURL('image/png', 1.0);
-                if (pageNum == 4) img4 = canvas_save.toDataURL('image/png', 1.0);
-                if (pageNum == 5) img5 = canvas_save.toDataURL('image/png', 1.0);
-                if (pageNum == 6) img6 = canvas_save.toDataURL('image/png', 1.0);
-                if (pageNum == 7) img7 = canvas_save.toDataURL('image/png', 1.0);
-                if (pageNum == 8) img8 = canvas_save.toDataURL('image/png', 1.0);
-                if (pageNum == 9) img9 = canvas_save.toDataURL('image/png', 1.0);
-                if (pageNum == 10) img10 = canvas_save.toDataURL('image/png', 1.0);
+                
+                var canvas_save = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                if (pageNum == 1) img1 = canvas_save;
+                if (pageNum == 2) img2 = canvas_save;
+                if (pageNum == 3) img3 = canvas_save;
+                if (pageNum == 4) img4 = canvas_save;
+                if (pageNum == 5) img5 = canvas_save;
+                if (pageNum == 6) img6 = canvas_save;
+                if (pageNum == 7) img7 = canvas_save;
+                if (pageNum == 8) img8 = canvas_save;
+                if (pageNum == 9) img9 = canvas_save;
+                if (pageNum == 10) img10 = canvas_save;
                 pageNum++;
                 queueRenderPage(pageNum);
             }
@@ -423,8 +397,19 @@
         function checkImg() {
             var maxPage = pdfDoc.numPages;
             if (maxPage == 1) {
-                if (pageNum == 1) img1 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                return true;
+                if (pageNum == 1) {
+                    html2canvas($("#SignCanvas")[0], {
+                        onrendered: function (canvas) {
+                            img1 = canvas.toDataURL('image/png', 1);
+                        },
+                        width: 2482,
+                        height: 3508
+                    }).then(function (canvas) {
+                        img1 = canvas.toDataURL('image/png', 1);
+                    });
+                    //if (pageNum == 1) img1 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                    return true;
+                }
             } else {
                 for (var i = 1; i < maxPage; i++) {
                     if (eval("img" + i) == null)
@@ -465,10 +450,9 @@
 
             if (pdfDoc.numPages == 1) {
                 //alert("1 page pdf");
-                var imgData = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
                 //console.log("3. pdf변환중 imgData: " + imgData.length)
                 //console.log("imgWidth: " + imgWidth + "/ imgHeight: " + imgHeight);
-                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.addImage(img1, 'PNG', 0, 0, imgWidth, imgHeight);
 
             } else {
                 //alert(pdfDoc.numPages + "page pdf");
@@ -499,22 +483,22 @@
             var formData = new FormData();	// formData 생성
             formData.append("file", file);	// file data 추가
 
-            //console.log("==****pdf.output() :" + pdf.output().length);
-            $.ajax({
-                url: "/File/SavePdfWithSign/" + Seqid,
-                type: "POST",
-                processData: false,	// data 파라미터 강제 string 변환 방지!!
-                contentType: false,	// application/x-www-form-urlencoded; 방지!!
-                data: formData,
-                success: function (rs) {
-                    $("#page-loading").hide();
-                    alert("서명이 등록되었습니다!");
-                    location.reload(true);
-                },
-                error: function (rs) {
-                    alert("요청 실패");
-                }
-            });
+            console.log("==****pdf.output() :" + pdf.output().length);
+            //$.ajax({
+            //    url: "/File/SavePdfWithSign/" + Seqid,
+            //    type: "POST",
+            //    processData: false,	// data 파라미터 강제 string 변환 방지!!
+            //    contentType: false,	// application/x-www-form-urlencoded; 방지!!
+            //    data: formData,
+            //    success: function (rs) {
+            //        $("#page-loading").hide();
+            //        alert("서명이 등록되었습니다!");
+            //        location.reload(true);
+            //    },
+            //    error: function (rs) {
+            //        alert("요청 실패");
+            //    }
+            //});
 
             //pdf.save('screenshot.pdf');
         }
