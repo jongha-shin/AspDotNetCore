@@ -103,7 +103,7 @@
         </label>
         <button class="btn btn-sm btn-primary" id="saveBtn" type="button" onclick="pageLoading()">저장</button>
     }
-    <div id="SignCanvas">
+    <div id="SignCanvas" style="transform:scale(0.6) translateY(-600px);">
         <canvas id="the-canvas"></canvas>
     </div>
     <div id="pageController">
@@ -132,7 +132,7 @@
             pageNum = 1,
             pageRendering = false,
             pageNumPending = null,
-            scale = 1.5,
+            scale = 3,
             canvas = document.getElementById('the-canvas'),
             ctx = canvas.getContext('2d');
 
@@ -397,19 +397,8 @@
         function checkImg() {
             var maxPage = pdfDoc.numPages;
             if (maxPage == 1) {
-                if (pageNum == 1) {
-                    html2canvas($("#SignCanvas")[0], {
-                        onrendered: function (canvas) {
-                            img1 = canvas.toDataURL('image/png', 1);
-                        },
-                        width: 2482,
-                        height: 3508
-                    }).then(function (canvas) {
-                        img1 = canvas.toDataURL('image/png', 1);
-                    });
-                    //if (pageNum == 1) img1 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                    return true;
-                }
+                img1 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+                return true;
             } else {
                 for (var i = 1; i < maxPage; i++) {
                     if (eval("img" + i) == null)
@@ -484,21 +473,21 @@
             formData.append("file", file);	// file data 추가
 
             console.log("==****pdf.output() :" + pdf.output().length);
-            //$.ajax({
-            //    url: "/File/SavePdfWithSign/" + Seqid,
-            //    type: "POST",
-            //    processData: false,	// data 파라미터 강제 string 변환 방지!!
-            //    contentType: false,	// application/x-www-form-urlencoded; 방지!!
-            //    data: formData,
-            //    success: function (rs) {
-            //        $("#page-loading").hide();
-            //        alert("서명이 등록되었습니다!");
-            //        location.reload(true);
-            //    },
-            //    error: function (rs) {
-            //        alert("요청 실패");
-            //    }
-            //});
+            $.ajax({
+                url: "/File/SavePdfWithSign/" + Seqid,
+                type: "POST",
+                processData: false,	// data 파라미터 강제 string 변환 방지!!
+                contentType: false,	// application/x-www-form-urlencoded; 방지!!
+                data: formData,
+                success: function (rs) {
+                    $("#page-loading").hide();
+                    alert("서명이 등록되었습니다!");
+                    location.reload(true);
+                },
+                error: function (rs) {
+                    alert("요청 실패");
+                }
+            });
 
             //pdf.save('screenshot.pdf');
         }

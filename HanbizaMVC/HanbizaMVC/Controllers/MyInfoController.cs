@@ -167,6 +167,7 @@ namespace HanbizaMVC.Controllers
             
             return result;
         }
+
         [Authorize]
         public IActionResult Sub9()
         {
@@ -281,23 +282,6 @@ namespace HanbizaMVC.Controllers
             return View();
         }
 
-        [Authorize]
-        [Route("/MyInfo/Sub88_1/{Seqid}")]
-        public IActionResult Sub88_1(int Seqid)
-        {
-            Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
-            _logger.LogInformation("sub88_1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
-            List<문서함> fileInfo = null;
-            _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
-
-            ViewBag.menulist = menulist;
-            ViewBag.IsSignature = fileInfo[0].IsSignature;
-            ViewBag.FileType = Path.GetExtension(fileInfo[0].FileName);
-            ViewBag.Seqid = Seqid;
-
-            return View();
-        }
         //[HttpPost]
         //public IActionResult LogIn(OnlyLogin model)
         //{
