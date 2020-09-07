@@ -6,20 +6,21 @@
             display: none;
         }
 
-        input[type=checkbox] + label {
-            position: fixed;
-            left: 8.5rem;
-            top: 4.5rem;
-            width: 4rem;
-            height: 2rem;
-            cursor: pointer;
-            font-size: 13px;
-            /*text-align: center;*/
-            line-height: 32px;
-            background-color: rgba(33, 64, 133, 0.1);
-            border-radius: 0.35rem;
-            border: solid 1px rgba(33, 64, 133, 0.7);
-        }
+    input[type=checkbox] + label {
+        z-index: 1;
+        position: fixed;
+        left: 8.5rem;
+        top: 4.5rem;
+        width: 4rem;
+        height: 2rem;
+        cursor: pointer;
+        font-size: 13px;
+        /*text-align: center;*/
+        line-height: 32px;
+        background-color: rgba(33, 64, 133, 0.1);
+        border-radius: 0.35rem;
+        border: solid 1px rgba(33, 64, 133, 0.7);
+    }
 
             input[type=checkbox] + label:before {
                 content: "";
@@ -48,12 +49,14 @@
         }
 
     #saveBtn {
+        z-index: 1;
         position: fixed;
         left: 18rem;
         top: 4.5rem;
         background-color: rgba(55, 99, 171,0.5);
     }
     #resetBtn {
+        z-index: 1;
         position: fixed;
         left: 13rem;
         top: 4.5rem;
@@ -89,10 +92,11 @@
         border-radius: 0.35rem;
         border: solid 1px rgba(33, 64, 133, 0.7);
     }
+    
 </style>
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
-<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+@*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
 
 <div id="signPage" style="white-space:nowrap; overflow:auto;">
     @if (ViewBag.IsSignature == "N") {
@@ -101,14 +105,15 @@
         <label for="signCheck">
             <i class="fas fa-pen-fancy ml-2"></i>
         </label>
-        <button class="btn btn-sm btn-primary" id="saveBtn" type="button" onclick="pageLoading()">저장</button>
+        <button class="btn btn-sm btn-primary" id="saveBtn" type="button" onclick="pageLoading()">페이지저장</button>
     }
     <div id="SignCanvas" style="transform:scale(0.6) translateY(-600px);">
         <canvas id="the-canvas"></canvas>
+        <img id="tempIMG" src="" alt="Alternate Text" style="display:none"/>
     </div>
     <div id="pageController">
         <div>
-            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+            <span>미리보기: <span id="page_num"></span> / <span id="page_count"></span></span>
         </div>
         <div class="btn-group btn-group-sm">
             <button class="btn btn-outline-secondary" id="prev" type="button" style="background-color: rgba(133, 135, 150,0.5); color:#fff">이전페이지</button>
@@ -303,10 +308,8 @@
             if (pageNum >= pdfDoc.numPages) {
                 return;
             }
-            //if (confirm("서명정보를 저장하시겠습니까?")) {
-                pageNum++;
-                queueRenderPage(pageNum);
-            //}
+            pageNum++;
+            queueRenderPage(pageNum);
         }
         document.getElementById('next').addEventListener('click', onNextPage);
         /**
@@ -334,9 +337,9 @@
         function renderPage(num) {
             $("#signCheck").prop("checked", false);
             if (num != pdfDoc.numPages) {
-                $("#saveBtn").html("저장");
+                $("#saveBtn").html("페이지저장");
             } else {
-                $("#saveBtn").html("서명저장");
+                $("#saveBtn").html("전송&저장");
             }
             pageRendering = true;
             // Using promise to fetch the page
@@ -346,6 +349,7 @@
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
                 //console.log("canvas.height: " + canvas.height + " / canvas.width: " + canvas.width);
+                //$("#signPage").height(viewport.height*0.8);
 
                 // Render PDF page into canvas context
                 var renderContext = {
@@ -370,9 +374,8 @@
         }
         function pageLoading() {
             if (pageNum == pdfDoc.numPages) {
-
+                $("#page-loading").show();
                 if ( checkImg() ) {
-                    $("#page-loading").show();
                     UploadPdf();
                 }
                 else location.reload();
@@ -404,7 +407,6 @@
                     if (eval("img" + i) == null)
                     {
                         alert("저장되지 않은 페이지가 있습니다. 첫페이지부터 순서대로 진행해 주세요.");
-
                         return false;
                     }
                 }
@@ -413,19 +415,22 @@
         }
 
         function showElseFile(data) {
-            console.log(data);
+            console.log(data.length);
             var imgClo = new Image();
-            imgClo.addEventListener('load', function () {
-                //로드된 이미지를 캔버스에 출력
-                var ctx = document.getElementById('the-canvas').getContext("2d");
-                ctx.drawImage(imgClo, 0, 0);
-
-            }, false);
-
-            //이미지 경로 설정
             imgClo.src = data;
-        }
+            //이미지 경로 설정
+            //$("#tempIMG").attr("src", data);
+            imgClo.onload = function () {
+                var ctx2 = document.getElementById("the-canvas").getContext("2d");
+                //$("#the-canvas").width("500");
+                $("#the-canvas").attr("width", imgClo.width);
+                $("#the-canvas").attr("height", imgClo.height);
+                ctx2.drawImage(imgClo, 0, 0, imgClo.width, imgClo.height);
+            }
+           
 
+        }
+       
         function UploadPdf() {
             
             var imgWidth = 210; // 이미지 가로 길이(mm) / A4 기준 210mm
