@@ -115,7 +115,22 @@
         border-radius: 0.35rem;
         border: solid 1px rgba(33, 64, 133, 0.7);
     }
+    #wrapper {
+        overflow-y: scroll;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    * {
+        box-sizing: border-box
+    }
+
+    html, body {
+        margin: 0px;
+        padding: 0px;
+    }
 </style>
+
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 @*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
@@ -135,7 +150,7 @@
     <button class="btn btn-sm btn-primary" id="startSign" type="button" onclick="startSign()">사인하기</button>
 </div>
 }
-<div id="signPage" style="white-space:nowrap; overflow:auto;">
+<div id="signPage" style="white-space:nowrap; overflow:auto; height: 81vh;">
     <div id="SignCanvas" style="height:730px;">
         <canvas id="the-canvas"></canvas>
         <img id="tempIMG" src="" alt="Alternate Text" style="display:none" />
@@ -160,9 +175,12 @@
 </div>
 
 <script>
+
+    //setTimeout(function () { if (window.pageYOffset == 0) { window.scrollTo(0, 1); } }, 50);
+
     //page 비율 => pageRatio()
     var ratio;
-    var firstRatio = 6;
+    var firstRatio = 4;
     pageRatio(firstRatio);
 
     // pdf 변수
@@ -185,8 +203,12 @@
     var scrollX = document.getElementById("signPage").scrollLeft;
     var scrollY = document.getElementById("signPage").scrollTop;
 
+
     $(document).ready(function () {
 
+        $("html,body,#wrapper").css({   // 상단 url 고정
+            height: $(window).height()
+        });
         var Seqid = "@ViewBag.Seqid";
         var Ftype = "@ViewBag.FileType";
 
@@ -269,8 +291,10 @@
         //console.log("position: X: " + X*1.4 + " / Y: " + Y*1.4);
         saveCanvas();
         ctx.beginPath();
+        
         if ($("#signCheck").is(":checked")) {
             e.preventDefault();
+            e.stopPropagation();
             isDraw = true;
         }
     });
@@ -286,12 +310,14 @@
         };
         if (isDraw) {
             e.preventDefault();
+            e.stopPropagation();
             draw_line(currP);
         }
     });
     $('#the-canvas').on('touchend', function (e) {
         if (isDraw) {
             e.preventDefault();
+            e.stopPropagation();
             isDraw = false;
         }
     });
@@ -443,6 +469,8 @@
                 if (pageNum == 10) img10 = canvas_save;
                 pageNum++;
                 queueRenderPage(pageNum);
+                $("#signPage").scrollTop(0);
+                $("#signPage").scrollLeft(0);
             }
         }
     function checkImg() {
@@ -547,7 +575,7 @@
 
     function pageRatio(tempRatio) {
         ratio = tempRatio;
-        $("#SignCanvas").css({ "transform": "scale(" + 0.1 * ratio + ")" });
+        $("#SignCanvas").css({ "transform": "scale(" + 0.1 * ratio + ")"});
         //console.log(ratio);
         $("#signPage").scrollTop(0);
         $("#signPage").scrollLeft(0);
