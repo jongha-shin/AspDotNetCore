@@ -5,56 +5,50 @@
     #signCheck {
         display: none;
     }
-
+    label{
+        margin-bottom: 0;
+    }
     input[type=checkbox] + label {
-        z-index: 1;
-        position: fixed;
-        left: 8.5rem;
-        top: 4.5rem;
         width: 4rem;
         height: 2rem;
         cursor: pointer;
         font-size: 13px;
-        /*text-align: center;*/
-        line-height: 32px;
         background-color: rgba(33, 64, 133, 0.1);
         border-radius: 0.35rem;
         border: solid 1px rgba(33, 64, 133, 0.7);
+        text-align: center;
+        vertical-align: bottom;
     }
-
         input[type=checkbox] + label:before {
             content: "";
             display: inline-block;
             width: 20px;
             height: 20px;
-            margin-right: 10px;
             margin-top: 5px;
-            position: absolute;
-            left: 2rem;
-            /*bottom: 10px;*/
             background-color: #ccc;
             border-radius: 2px;
             box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
+            line-height: 18px;
+            text-align: center;
+        }
+        input[type=checkbox]:checked + label:before {
+            content: "\2713"; /* 체크모양 */
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            background: #2f87c1;
+            text-align: center;
+            line-height: 18px;
         }
 
-    input[type=checkbox]:checked + label:before {
-        content: "\2713"; /* 체크모양 */
-        text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
-        font-size: 18px;
-        font-weight: 800;
-        color: #fff;
-        background: #2f87c1;
-        text-align: center;
-        line-height: 18px;
-    }
-
-    #saveBtn {
+ /*   #saveBtn {
         z-index: 1;
         position: fixed;
         left: 18rem;
         top: 4.5rem;
         background-color: rgba(55, 99, 171,0.5);
-    }
+    }*/
 
     #resetBtn {
         z-index: 1;
@@ -63,28 +57,31 @@
         top: 4.5rem;
         background-color: rgba(202, 102, 90,0.5);
     }
+    /*
     #biggerBtn {
         z-index: 1;
         position: fixed;
-        left: 18rem;
+        left: 19rem;
         top: 7rem;
-        background-color: rgba(133, 135, 150,0.5);
+        background-color: rgb(133, 135, 150);
     }
+
     #smallerBtn {
         z-index: 1;
         position: fixed;
-        left: 14rem;
+        left: 16rem;
         top: 7rem;
-        background-color: rgba(133, 135, 150,0.5);
+        background-color: rgb(133, 135, 150);
     }
+    */
     #startSign {
         z-index: 1;
         position: fixed;
-        left: 9rem;
+        left: 11rem;
         top: 7rem;
         background-color: rgba(55, 99, 171,0.5);
     }
-    
+
     /* page-loading */
     #page-loading {
         width: 100%;
@@ -115,13 +112,14 @@
         border-radius: 0.35rem;
         border: solid 1px rgba(33, 64, 133, 0.7);
     }
+
     #wrapper {
         /*overflow-y: scroll;
         overflow-x: scroll;*/
         -webkit-overflow-scrolling: touch;
     }
 
-   /* * {
+    /* * {
         box-sizing: border-box
     }*/
 
@@ -136,18 +134,33 @@
 @*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
 
 @if (ViewBag.IsSignature == "N") {
-<div id="signController" style="display:none;">
-    <button class="btn btn-sm btn-danger" id="resetBtn" onclick="reStart()">다시하기</button>
+<div id="signController" class="offset-2 offset-sm-4 mb-3" style="display:none;">
+    <button class="btn btn-sm btn-danger mr-2" onclick="reStart()" type="button"><i class="fas fa-eraser"></i></button>
     <input id="signCheck" type="checkbox" />
     <label for="signCheck">
         <i class="fas fa-pen-fancy ml-2"></i>
     </label>
-    <button class="btn btn-sm btn-primary" id="saveBtn" type="button" onclick="pageLoading()">다음</button>
+    <button id="saveBtn" class="btn btn-sm btn-primary ml-2 mr-2" type="button" onclick="pageLoading()">다음</button>
+    <button class="btn btn-sm btn-outline-secondary mr-1" id="smallerBtn" type="button"><i class="fas fa-minus"></i></button>
+    <button class="btn btn-sm btn-outline-secondary" id="biggerBtn" type="button"><i class="fas fa-plus"></i></button>
 </div>
-<div class="pageController">
-    <button class="btn btn-sm btn-secondary" id="biggerBtn" type="button"><i class="fas fa-plus"></i></button>
-    <button class="btn btn-sm btn-secondary" id="smallerBtn" type="button"><i class="fas fa-minus"></i></button>
-    <button class="btn btn-sm btn-primary" id="startSign" type="button" onclick="startSign()">사인하기</button>
+<div class="pageController mb-3 offset-sm-4">
+    <span class="ml-2 mr-2" style="font-size:smaller; ">page: <span id="page_num"></span> / <span id="page_count"></span></span>
+    <button class="btn btn-sm btn-danger mr-2" onclick="reStart()" type="button"><i class="fas fa-eraser"></i></button>
+    <a href="#" id="prev" class="mr-2"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+    <button class="btn btn-sm btn-primary mr-2" type="button" onclick="startSign()">사인하기</button>
+    @*<button class="btn btn-sm btn-primary" id="startSign" type="button" onclick="startSign()">사인하기</button>*@
+    <a href="#" id="next" class="mr-2"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+    <button class="btn btn-sm btn-outline-secondary mr-1" id="smallerBtn" type="button"><i class="fas fa-search-minus"></i></button>
+    <button class="btn btn-sm btn-outline-secondary" id="biggerBtn" type="button"><i class="fas fa-search-plus"></i></button>
+</div>
+}else{
+<div class="offset-2 offset-sm-4">
+    <a href="#" id="prev" class="mr-2"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+    <span class="mr-2">미리보기: <span id="page_num"></span> / <span id="page_count"></span></span>
+    <a href="#" id="next" class="mr-2"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+    <button class="btn btn-sm btn-outline-secondary" id="smallerBtn" type="button"><i class="fas fa-minus"></i></button>
+    <button class="btn btn-sm btn-outline-secondary mr-1" id="biggerBtn" type="button"><i class="fas fa-plus"></i></button>
 </div>
 }
 <div id="signPage" style="white-space:nowrap; overflow:auto; height: 81vh;">
@@ -155,16 +168,6 @@
         <canvas id="the-canvas"></canvas>
         <img id="tempIMG" src="" alt="Alternate Text" style="display:none" />
     </div>
-    <div id="pageController" class="pageController">
-        <div>
-            <span>미리보기: <span id="page_num"></span> / <span id="page_count"></span></span>
-        </div>
-        <div class="btn-group btn-group-sm">
-            <button class="btn btn-outline-secondary" id="prev" type="button" style="background-color: rgba(133, 135, 150,0.5); color:#fff">이전페이지</button>
-            <button class="btn btn-primary" id="next" type="button" style="background-color: rgba(55, 99, 171,0.5);">다음페이지</button>
-        </div>
-    </div>
-
 </div>
 
 @*<button id="btnClear">지우기</button>*@
@@ -180,7 +183,7 @@
 
     //page 비율 => pageRatio()
     var ratio;
-    var firstRatio = 5;
+    var firstRatio = 4;
     pageRatio(firstRatio);
 
     // pdf 변수
@@ -212,7 +215,7 @@
         var Seqid = "@ViewBag.Seqid";
         var Ftype = "@ViewBag.FileType";
 
-        //$("#SignCanvas").css({ "transform": "scale(" + 0.1 * ratio+")" });  // 이용자 편의를 위해 축소 
+        //$("#SignCanvas").css({ "transform": "scale(" + 0.1 * ratio+")" });  // 이용자 편의를 위해 축소
 
         if (Ftype == ".pdf") ViewPDF(Seqid);
         else ViewElseFile(Seqid);
@@ -291,7 +294,7 @@
         //console.log("position: X: " + X*1.4 + " / Y: " + Y*1.4);
         saveCanvas();
         ctx.beginPath();
-        
+
         if ($("#signCheck").is(":checked")) {
             e.preventDefault();
             e.stopPropagation();
@@ -321,14 +324,7 @@
             isDraw = false;
         }
     });
-    $("#biggerBtn").on("click", function () {
-        ratio += 1;
-        pageRatio(ratio);
-    });
-    $("#smallerBtn").on("click", function () {
-        ratio -= 1;
-        pageRatio(ratio);
-    });
+    
         // 선 그리기
     function draw_line(p) {
             ctx.lineWidth = width;
@@ -367,18 +363,28 @@
          * Displays previous page.
          */
     function onPrevPage() {
-            if (pageNum <= 1) {
+        if (pageNum <= 1) {
                 return;
-            }
-            pageNum--;
-            queueRenderPage(pageNum);
         }
+        if (eval("img" + (pageNum - 1)) != null) {
+            console.log("싸인있는 페이지");
+            showPageWithSign(pageNum - 1);
+            return;
+        }
+        pageNum--;
+        queueRenderPage(pageNum);
+    }
     document.getElementById('prev').addEventListener('click', onPrevPage);
         /**
          * Displays next page.
          */
     function onNextPage() {
         if (pageNum >= pdfDoc.numPages) {
+            return;
+        }
+        if (eval("img" + (pageNum + 1)) != null) {
+            console.log("싸인있는 페이지");
+            showPageWithSign(pageNum + 1);
             return;
         }
         pageNum++;
@@ -408,90 +414,100 @@
          * param num Page number.
          */
     function renderPage(num) {
-            $("#signCheck").prop("checked", false);
-            if (num != pdfDoc.numPages) {
-                $("#saveBtn").html("다음");
-            } else {
-                $("#saveBtn").html("저장");
-            }
-            pageRendering = true;
-            // Using promise to fetch the page
-            pdfDoc.getPage(num).then(function (page) {
-                var viewport = page.getViewport({ scale: scale });
-                // width="773" height="1093"
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+        console.log("현재페이지:" + num);
+        $("#page-loading").hide();
+        $("#signCheck").prop("checked", false);
+        if (num != pdfDoc.numPages) {
+            $("#saveBtn").html("다음");
+        } else {
+            $("#saveBtn").html("서명저장");
+        }
+        pageRendering = true;
+        // Using promise to fetch the page
+        pdfDoc.getPage(num).then(function (page) {
+            var viewport = page.getViewport({ scale: scale });
+            // width="773" height="1093"
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
 
-                //console.log("canvas.height: " + canvas.height + " / canvas.width: " + canvas.width);
-                //$("#signPage").height(viewport.height*0.8);
+            // Render PDF page into canvas context
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            var renderTask = page.render(renderContext);
 
-                // Render PDF page into canvas context
-                var renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
-                var renderTask = page.render(renderContext);
-
-                // Wait for rendering to finish
-                renderTask.promise.then(function () {
-                    pageRendering = false;
-                    if (pageNumPending !== null) {
-                        // New page rendering is pending
-                        renderPage(pageNumPending);
-                        pageNumPending = null;
-                    }
-                });
+            // Wait for rendering to finish
+            renderTask.promise.then(function () {
+                pageRendering = false;
+                if (pageNumPending !== null) {
+                    // New page rendering is pending
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
             });
+        });
 
-            // Update page counters
-            document.getElementById('page_num').textContent = num;
-        }
+        // Update page counters
+        document.getElementById('page_num').textContent = num;
+    }
+    // 다음페이지 눌렀을 때 그 페이지 저장하며 넘어감. 마지막 페이지일 경우 최종 업로드메소드 실행.
     function pageLoading() {
-            if (pageNum == pdfDoc.numPages) {
-                $("#page-loading").show();
-                if ( checkImg() ) {
-                    UploadPdf();
-                }
-                else location.reload();
+        // 마지막페이지일경우 저장 후 검사 실행
+        if (pageNum == pdfDoc.numPages) {
+            eval('img' + pdfDoc.numPages + "=\"" + document.getElementById('the-canvas').toDataURL('image/png', 1.0) + "\";");
 
+            $("#page-loading").show();
+
+            var checkPage = checkImg()
+            console.log("페이지로딩 checkImg():" + checkPage);
+            if (checkPage == -1) {
+                UploadPdf();
             } else {
-
-                var canvas_save = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 1) img1 = canvas_save;
-                if (pageNum == 2) img2 = canvas_save;
-                if (pageNum == 3) img3 = canvas_save;
-                if (pageNum == 4) img4 = canvas_save;
-                if (pageNum == 5) img5 = canvas_save;
-                if (pageNum == 6) img6 = canvas_save;
-                if (pageNum == 7) img7 = canvas_save;
-                if (pageNum == 8) img8 = canvas_save;
-                if (pageNum == 9) img9 = canvas_save;
-                if (pageNum == 10) img10 = canvas_save;
-                pageNum++;
-                queueRenderPage(pageNum);
-                $("#signPage").scrollTop(0);
-                $("#signPage").scrollLeft(0);
+                pageNum = checkPage
+                renderPage(pageNum);
+                return;
             }
+
+        } else {
+            if (eval("img" + (pageNum + 1)) != null) {
+                showPageWithSign(pageNum + 1);
+                return;
+            }
+            var canvas_save = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+            if (pageNum == 1) img1 = canvas_save;
+            if (pageNum == 2) img2 = canvas_save;
+            if (pageNum == 3) img3 = canvas_save;
+            if (pageNum == 4) img4 = canvas_save;
+            if (pageNum == 5) img5 = canvas_save;
+            if (pageNum == 6) img6 = canvas_save;
+            if (pageNum == 7) img7 = canvas_save;
+            if (pageNum == 8) img8 = canvas_save;
+            if (pageNum == 9) img9 = canvas_save;
+            if (pageNum == 10) img10 = canvas_save;
+            pageNum++;
+            queueRenderPage(pageNum);
+            $("#signPage").scrollTop(0);
+            $("#signPage").scrollLeft(0);
         }
+    }
     function checkImg() {
-            var maxPage = pdfDoc.numPages;
-            if (maxPage == 1) {
-                img1 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                return true;
-            } else {
-                for (var i = 1; i < maxPage; i++) {
-                    if (eval("img" + i) == null)
-                    {
-                        alert("저장되지 않은 페이지가 있습니다. 첫페이지부터 순서대로 진행해 주세요.");
-                        return false;
-                    }
-                }
+        var maxPage = pdfDoc.numPages;
+        var result = -1;
+        for (var i = 1; i < maxPage; i++) {
+            if (eval("img" + i) == null)
+            {
+                alert("저장되지 않은 페이지가 있습니다.");
+                console.log("저장안댐: "+i)
+                result = i;
+                break;
             }
-            return true;
         }
+        return result;
+    }
 
     function showElseFile(data) {
-            console.log(data.length);
+            //console.log(data.length);
             var imgClo = new Image();
             imgClo.src = data;
             //이미지 경로 설정
@@ -505,7 +521,28 @@
             }
 
 
+    }
+    function showPageWithSign(page) {
+        console.log("싸인있는 현재페이지:" + page);
+        if (page != pdfDoc.numPages) {
+            $("#saveBtn").html("다음");
+        } else {
+            $("#saveBtn").html("서명저장");
         }
+        var imgClo = new Image();
+        imgClo.src = eval("img"+page);
+        //이미지 경로 설정
+        //$("#tempIMG").attr("src", data);
+        imgClo.onload = function () {
+            var ctx2 = document.getElementById("the-canvas").getContext("2d");
+            //$("#the-canvas").width("500");
+            $("#the-canvas").attr("width", imgClo.width);
+            $("#the-canvas").attr("height", imgClo.height);
+            ctx2.drawImage(imgClo, 0, 0, imgClo.width, imgClo.height);
+        }
+        $("#page_num").text(page);
+        pageNum = page;
+    }
 
     function UploadPdf() {
 
@@ -520,25 +557,16 @@
 
             if (pdfDoc.numPages == 1) {
                 //alert("1 page pdf");
-                //console.log("3. pdf변환중 imgData: " + imgData.length)
-                //console.log("imgWidth: " + imgWidth + "/ imgHeight: " + imgHeight);
                 pdf.addImage(img1, 'PNG', 0, 0, imgWidth, imgHeight);
 
             } else {
-                //alert(pdfDoc.numPages + "page pdf");
+                // 첫페이지
                 pdf.addImage(img1, 'PNG', 0, 0, imgWidth, imgHeight);
-                //console.log("img1: " + img1.length);
                 // img2 부터 최대 페이지까지 반복
-                for (var i = 2; i < pdfDoc.numPages; i++) {
+                for (var i = 2; i <= pdfDoc.numPages; i++) {
                     pdf.addPage();
                     pdf.addImage(eval('img' + i), 'PNG', 0, 0, imgWidth, imgHeight);
-                    //console.log("img"+i+": "+eval('img' + i).length);
                 }
-                //
-                eval('img' + pdfDoc.numPages + "=\"" + document.getElementById('the-canvas').toDataURL('image/png', 1.0) +"\";");
-                pdf.addPage();
-                pdf.addImage(eval('img' + pdfDoc.numPages), 'PNG', 0, 0, imgWidth, imgHeight);
-                //console.log("img" + pdfDoc.numPages + ": " + eval('img' + pdfDoc.numPages).length);
             }
             var Seqid = "@ViewBag.Seqid";
             var blobBin = pdf.output(); // base64로 인코드
@@ -573,6 +601,16 @@
             //pdf.save('screenshot.pdf');
         }
 
+    $("#biggerBtn").on("click", function () {
+        ratio += 1;
+        if (ratio >= 11) return ratio = 10;
+        pageRatio(ratio);
+    });
+    $("#smallerBtn").on("click", function () {
+        ratio -= 1;
+        if (ratio <= 0) return ratio = 1;
+        pageRatio(ratio);
+    });
     function pageRatio(tempRatio) {
         ratio = tempRatio;
         $("#SignCanvas").css({ "transform": "scale(" + 0.1 * ratio + ")"});
@@ -585,12 +623,14 @@
         $("#signCheck").prop("checked", false);
     }
     function reStart() {
-        location.reload();
+        //location.reload();
+        eval('img' + pageNum + "=" + null + ";");
+        renderPage(pageNum);
         $(".pageController").show();
         $("#signController").hide();
-
     }
     function startSign() {
+        $("#signCheck").prop("checked", true);
         $("#signController").show();
         $(".pageController").hide();
     }

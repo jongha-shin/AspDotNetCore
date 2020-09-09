@@ -10,8 +10,8 @@
                 <tr style="background-color: #3763ab; color:white">
                     <th>수신일</th>
                     <th>파일명</th>
-                    <th>다운</th>
-                    <th>서명</th>
+                    <th width="10%">다운</th>
+                    <th width="10%">서명</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,16 +28,16 @@
                         <tr>
                             <td>@string.Format("{0:yyyy-MM-dd HH시 mm분}", item.Regdate)</td>
                             <td>@item.FileName</td>
-                            <td><a href="/File/FileDownload/@item.SeqId"><i class="fas fa-fw fa-download"></i><span>저장하기</span></a></td>
+                            <td><a href="/File/FileDownload/@item.SeqId"><i class="fas fa-fw fa-download"></i><br /><span>저장</span></a></td>
                             <td>
                                 <a href="/MyInfo/Sub8_1/@item.SeqId">
                                     @if (item.IsSignature.Equals("N"))
                                     {
-                                        <i class="fas fa-fw fa-signature"></i><span>서명하기</span>
+                                        <i class="fas fa-fw fa-signature"></i><br /><span>서명</span>
                                     }
                                     else
                                     {
-                                        <i class="fas fa-fw fa-envelope-open"></i><span>문서보기</span>
+                                        <i class="fas fa-fw fa-envelope-open"></i><br /><span>보기</span>
                                     }
                                 </a>
                             </td>
