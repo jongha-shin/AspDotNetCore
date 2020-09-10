@@ -6,19 +6,20 @@
         display: none;
     }
 
+    label {
+        margin-bottom: 0;
+    }
+
     input[type=checkbox] + label {
-        position: fixed;
-        left: 8.5rem;
-        top: 4.5rem;
         width: 4rem;
         height: 2rem;
         cursor: pointer;
         font-size: 13px;
-        /*text-align: center;*/
-        line-height: 32px;
         background-color: rgba(33, 64, 133, 0.1);
         border-radius: 0.35rem;
         border: solid 1px rgba(33, 64, 133, 0.7);
+        text-align: center;
+        vertical-align: bottom;
     }
 
         input[type=checkbox] + label:before {
@@ -26,14 +27,12 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            margin-right: 10px;
             margin-top: 5px;
-            position: absolute;
-            left: 2rem;
-            /*bottom: 10px;*/
             background-color: #ccc;
             border-radius: 2px;
             box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
+            line-height: 18px;
+            text-align: center;
         }
 
     input[type=checkbox]:checked + label:before {
@@ -47,19 +46,22 @@
         line-height: 18px;
     }
 
-    #saveBtn {
-        position: fixed;
-        left: 18rem;
-        top: 4.5rem;
-        background-color: rgba(55, 99, 171,0.5);
-    }
-
     #resetBtn {
+        z-index: 1;
         position: fixed;
         left: 13rem;
         top: 4.5rem;
         background-color: rgba(202, 102, 90,0.5);
     }
+
+    #startSign {
+        z-index: 1;
+        position: fixed;
+        left: 11rem;
+        top: 7rem;
+        background-color: rgba(55, 99, 171,0.5);
+    }
+
     /* page-loading */
     #page-loading {
         width: 100%;
@@ -90,34 +92,72 @@
         border-radius: 0.35rem;
         border: solid 1px rgba(33, 64, 133, 0.7);
     }
+
+    #wrapper {
+        /*overflow-y: scroll;
+        overflow-x: scroll;*/
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* * {
+        box-sizing: border-box
+    }*/
+
+    html, body {
+        margin: 0px;
+        padding: 0px;
+    }
 </style>
+
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 @*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
 
-<div id="signPage" style="white-space:nowrap; overflow:auto;">
-    @if (ViewBag.IsSignature == "N")
-    {
-        <button class="btn btn-sm btn-danger" id="resetBtn" onclick="location.reload()">다시하기</button>
-        <input id="signCheck" type="checkbox" />
-        <label for="signCheck">
-            <i class="fas fa-pen-fancy ml-2"></i>
-        </label>
-        <button class="btn btn-sm btn-primary" id="saveBtn" type="button" onclick="pageLoading()">저장</button>
-    }
+@if (ViewBag.IsSignature == "N")
+{
+    <div class="offset-sm-3 mb-2">
+        <span class="ml-3 mr-2" style="font-size:smaller; ">page: <span id="page_num"></span> / <span id="page_count"></span></span>
+        <button class="btn btn-sm btn-danger mr-2" onclick="reStart()" type="button"><i class="fas fa-eraser"></i></button>
 
-    <canvas id="the-canvas" width="773" height="1093"></canvas>
+        <span id="signController" class="mb-3" style="display:none;">
+            <a href="#" class="mr-2" onclick="pageLoading('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
 
-    <div id="pageController">
-        <div>
-            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-        </div>
-        <div class="btn-group btn-group-sm">
-            <button class="btn btn-outline-secondary" id="prev" type="button" style="background-color: rgba(133, 135, 150,0.5); color:#fff">이전페이지</button>
-            <button class="btn btn-primary" id="next" type="button" style="background-color: rgba(55, 99, 171,0.5);">다음페이지</button>
-        </div>
+            <input id="signCheck" type="checkbox" />
+            <label for="signCheck">
+                <i class="fas fa-pen-fancy ml-2"></i>
+            </label>
+
+            <a href="#" class="nextPage ml-2 mr-2" onclick="pageLoading('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+            <button class="btn btn-sm btn-primary ml-2 mr-2 lastPage" id="lastPage" onclick="pageLoading('+')" type="button" style="display:none;"><i class="fas fa-save"></i></button>
+        </span>
+        <span class="pageController mb-3">
+            <a href="#" id="prev" class="mr-2"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+
+            <button class="btn btn-sm btn-primary" type="button" id="doSign" onclick="startSign()">사인하기</button>
+
+            <a href="#" id="next" class="nextPage ml-2 mr-2 "><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+            <button class="btn btn-sm btn-primary ml-2 mr-2 lastPage" id="lastPage" onclick="pageLoading('+')" type="button" style="display:none;"><i class="fas fa-save"></i></button>
+        </span>
+
+        <button class="btn btn-sm btn-outline-secondary mr-1" id="smallerBtn" type="button"><i class="fas fa-search-minus"></i></button>
+        <button class="btn btn-sm btn-outline-secondary" id="biggerBtn" type="button"><i class="fas fa-search-plus"></i></button>
     </div>
-
+}
+else
+{
+    <div class="offset-2 offset-sm-4">
+        <a href="#" id="prev" class="mr-2"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+        <span class="mr-2">미리보기: <span id="page_num"></span> / <span id="page_count"></span></span>
+        <a href="#" id="next" class="mr-2"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        <button class="btn btn-sm btn-outline-secondary" id="smallerBtn" type="button"><i class="fas fa-search-minus"></i></button>
+        <button class="btn btn-sm btn-outline-secondary mr-1" id="biggerBtn" type="button"><i class="fas fa-search-plus"></i></button>
+    </div>
+}
+<div id="signPage" style="white-space:nowrap; overflow:auto; height: 81vh;">
+    <div id="SignCanvas" style="height:730px;">
+        <canvas id="the-canvas"></canvas>
+        <img id="tempIMG" src="" alt="Alternate Text" style="display:none" />
+    </div>
 </div>
 
 @*<button id="btnClear">지우기</button>*@
@@ -128,147 +168,169 @@
 </div>
 
 <script>
-        // pdf 변수
-        var img1 = null, img2 = null, img3 = null, img4 = null, img5 = null, img6 = null, img7 = null, img8 = null, img9 = null, img10 = null
-        var pdfDoc = null,
-            pageNum = 1,
-            pageRendering = false,
-            pageNumPending = null,
-            scale = 1.3,
-            canvas = document.getElementById('the-canvas'),
-            ctx = canvas.getContext('2d');
+
+    //setTimeout(function () { if (window.pageYOffset == 0) { window.scrollTo(0, 1); } }, 50);
+
+    //page 비율 => pageRatio()
+    var ratio;
+    var firstRatio = 4;
+    pageRatio(firstRatio);
+
+    // pdf 변수
+    var img1 = null, img2 = null, img3 = null, img4 = null, img5 = null, img6 = null, img7 = null, img8 = null, img9 = null, img10 = null
+    var pdfDoc = null,
+        pageNum = 1,
+        pageRendering = false,
+        pageNumPending = null,
+        scale = 3,
+        canvas = document.getElementById('the-canvas'),
+        ctx = canvas.getContext('2d');
+
+    // 싸인 변수
+    var isDraw = false;
+    var width = "2";
+    var color = "#000";
+    var pDraw = $('#the-canvas').offset();
+    var currP = null;
+    var drawBackup = new Array();
+    var scrollX = document.getElementById("signPage").scrollLeft;
+    var scrollY = document.getElementById("signPage").scrollTop;
 
 
-        // 싸인 변수
-        var isDraw = false;
-        var width = "2";
-        var color = "#000";
-        var pDraw = $('#the-canvas').offset();
-        var currP = null;
-        var drawBackup = new Array();
+    $(document).ready(function () {
 
-        $(function () {
-            var Seqid = "@ViewBag.Seqid";
-            var Ftype = "@ViewBag.FileType";
-            if (Ftype == ".pdf") ViewPDF(Seqid);
-            else ViewElseFile(Seqid);
-
-            $(".toWriteSignature").on("click", function () {
-                if (!$("#signCheck").is(":checked")) {
-                    console.log('not');
-                    $("#signCheck").prop("checked", true);
-
-                } else {
-                    console.log('yes');
-                    $("#signCheck").prop("checked", false);
-                }
-            });
+        $("html,body,#wrapper").css({   // 상단 url 고정
+            height: $(window).height()
         });
-        function ViewElseFile(Seqid) {
-            //alert("not pdf");
-            $.ajax({
-                url: "/MyInfo/Sub8_3/" + Seqid,
-                type: "GET",
-                data: Text,
-                success: function (rs) {
-                    showElseFile(rs);
-                },
-                error: function () {
-                    alert("err");
-                }
-            })
-        }
-        function ViewPDF(Seqid) {
-            $.ajax({
-                url: "/MyInfo/Sub8_2/" + Seqid,
-                type: "GET",
-                data: Text,
-                success: function (rs) {
-                    console.log("1 succ : " + rs.length);
-                    var data = atob(rs);
-                    console.log("2 data : " + data.length);
-                    showPDF(data);
-                },
-                error: function () {
-                    alert("err");
-                }
-            })
+        var Seqid = "@ViewBag.Seqid";
+        var Ftype = "@ViewBag.FileType";
 
-        }
+        //$("#SignCanvas").css({ "transform": "scale(" + 0.1 * ratio+")" });  // 이용자 편의를 위해 축소
 
+        if (Ftype == ".pdf") ViewPDF(Seqid);
+        else ViewElseFile(Seqid);
 
-        // Event (마우스)
-        $('#the-canvas').on('mousedown', function (e) {
-            if (e.button === 0) {
-                saveCanvas();
-                e.preventDefault();
-                ctx.beginPath();
-                if ($("#signCheck").is(":checked"))isDraw = true;
+        //$(".toWriteSignature").on("click", function () {
+        //    if (!$("#signCheck").is(":checked")) {
+        //        //console.log('not');
+        //        $("#signCheck").prop("checked", true);
+
+        //    } else {
+        //        //console.log('yes');
+        //        $("#signCheck").prop("checked", false);
+        //    }
+        //});
+    });
+    function ViewElseFile(Seqid) {
+        //alert("not pdf");
+        $.ajax({
+            url: "/Document/Sub41_3/" + Seqid,
+            type: "GET",
+            data: Text,
+            success: function (rs) {
+                showElseFile(rs);
+            },
+            error: function () {
+                alert("err");
             }
-        });
-        $('#the-canvas').on('mousemove', function (e) {
-            var event = e.originalEvent;
+        })
+    }
+    function ViewPDF(Seqid) {
+        $.ajax({
+            url: "/Document/Sub41_2/" + Seqid,
+            type: "GET",
+            data: Text,
+            success: function (rs) {
+                //console.log("1 succ : " + rs.length);
+                var data = atob(rs);
+                //console.log("2 data : " + data.length);
+                showPDF(data);
+            },
+            error: function () {
+                alert("err");
+            }
+        })
+    }
+
+
+    // Event (마우스)
+    $('#the-canvas').on('mousedown', function (e) {
+        if (e.button === 0) {
+            saveCanvas();
             e.preventDefault();
-            currP = { X: event.offsetX, Y: event.offsetY };
-            if (isDraw) draw_line(currP);
-            /*
+            ctx.beginPath();
+            if ($("#signCheck").is(":checked"))isDraw = true;
+        }
+    });
+    $('#the-canvas').on('mousemove', function (e) {
+        var event = e.originalEvent;
+        e.preventDefault();
+        currP = { X: event.offsetX, Y: event.offsetY };
+        if (isDraw) draw_line(currP);
+    });
+    $('#the-canvas').on('mouseup', function (e) {
+        e.preventDefault();
+        isDraw = false;
+    });
+    $('#the-canvas').on('mouseleave', function (e) {
+        isDraw = false;
+    });
+
+    // Event (터치스크린)
+    $('#the-canvas').on('touchstart', function (e) {
+        //var event = e.originalEvent;
+        //const X = event.touches[0].pageX - pDraw.left + document.getElementById("signPage").scrollLeft;
+        //const Y = event.touches[0].pageY - pDraw.top + document.getElementById("signPage").scrollTop;
+        //console.log("position: X: " + X*1.4 + " / Y: " + Y*1.4);
+        saveCanvas();
+        ctx.beginPath();
+
+        if ($("#signCheck").is(":checked")) {
+            e.preventDefault();
+            e.stopPropagation();
             isDraw = true;
-            */
-        });
-        $('#the-canvas').on('mouseup', function (e) {
+        }
+    });
+    $('#the-canvas').on('touchmove', function (e) {
+        scrollX = document.getElementById("signPage").scrollLeft;
+        scrollY = document.getElementById("signPage").scrollTop;
+
+        var event = e.originalEvent;
+        //console.log("터치중: " + ratio);
+        currP = {
+            X: (event.touches[0].pageX - pDraw.left + scrollX) * 10 / ratio,
+            Y: (event.touches[0].pageY - pDraw.top + scrollY) * 10 / ratio
+        };
+        if (isDraw) {
             e.preventDefault();
+            e.stopPropagation();
+            draw_line(currP);
+        }
+    });
+    $('#the-canvas').on('touchend', function (e) {
+        if (isDraw) {
+            e.preventDefault();
+            e.stopPropagation();
             isDraw = false;
-        });
-        $('#the-canvas').on('mouseleave', function (e) {
-            isDraw = false;
-        });
-
-        // Event (터치스크린)
-        $('#the-canvas').on('touchstart', function (e) {
-            //var event = e.originalEvent;
-            //const X = event.touches[0].pageX - pDraw.left + document.getElementById("signPage").scrollLeft;
-            //const Y = event.touches[0].pageY - pDraw.top;
-            if ($("#signCheck").is(":checked")) {
-                //alert("position: X: " + X + " / Y: " + Y);
-
-                saveCanvas();
-                e.preventDefault();
-                isDraw = true;
-                ctx.beginPath();
-            }
-        });
-        $('#the-canvas').on('touchmove', function (e) {
-            var event = e.originalEvent;
-            currP = { X: event.touches[0].pageX - pDraw.left + document.getElementById("signPage").scrollLeft, Y: event.touches[0].pageY - pDraw.top };
-            if (isDraw) {
-                e.preventDefault();
-                draw_line(currP);
-            }
-        });
-        $('#the-canvas').on('touchend', function (e) {
-            if (isDraw) {
-                e.preventDefault();
-                isDraw = false;
-            }
-        });
-
+        }
+    });
 
         // 선 그리기
-        function draw_line(p) {
+    function draw_line(p) {
             ctx.lineWidth = width;
             ctx.lineCap = 'round';
             ctx.lineTo(p.X, p.Y);
             ctx.moveTo(p.X, p.Y);
             ctx.strokeStyle = color;
             ctx.stroke();
-        }
+    }
 
-        function clearCanvas() {
+    function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.beginPath();
             localStorage.removeItem('imgCanvas');
         }
-        function saveCanvas() {
+    function saveCanvas() {
             drawBackup.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
         }
 
@@ -280,41 +342,49 @@
          * If another page rendering in progress, waits until the rendering is
          * finised. Otherwise, executes rendering immediately.
          */
-        function queueRenderPage(num) {
+    function queueRenderPage(num) {
             if (pageRendering) {
                 pageNumPending = num;
             } else {
                 renderPage(num);
             }
-        }
+    }
         /**
          * Displays previous page.
          */
-        function onPrevPage() {
-            if (pageNum <= 1) {
+    function onPrevPage() {
+        if (pageNum <= 1) {
                 return;
-            }
-            pageNum--;
-            queueRenderPage(pageNum);
         }
-        document.getElementById('prev').addEventListener('click', onPrevPage);
+        if (eval("img" + (pageNum - 1)) != null) {
+            //console.log("싸인있는 페이지");
+            showPageWithSign(pageNum - 1);
+            return;
+        }
+        pageNum--;
+        queueRenderPage(pageNum);
+    }
+    document.getElementById('prev').addEventListener('click', onPrevPage);
         /**
          * Displays next page.
          */
-        function onNextPage() {
-            if (pageNum >= pdfDoc.numPages) {
-                return;
-            }
-            //if (confirm("서명정보를 저장하시겠습니까?")) {
-                pageNum++;
-                queueRenderPage(pageNum);
-            //}
+    function onNextPage() {
+        if (pageNum >= pdfDoc.numPages) {
+            return;
         }
-        document.getElementById('next').addEventListener('click', onNextPage);
+        if (eval("img" + (pageNum + 1)) != null) {
+            //console.log("싸인있는 페이지");
+            showPageWithSign(pageNum + 1);
+            return;
+        }
+        pageNum++;
+        queueRenderPage(pageNum);
+    }
+    document.getElementById('next').addEventListener('click', onNextPage);
         /**
          * Asynchronously downloads PDF.
          */
-        function showPDF(data) {
+    function showPDF(data) {
             // Loaded via <script> tag, create shortcut to access PDF.js exports.
             var pdfjsLib = window['pdfjs-dist/build/pdf'];
             // The workerSrc property shall be specified.
@@ -333,95 +403,174 @@
          * Get page info from document, resize canvas accordingly, and render page.
          * param num Page number.
          */
-        function renderPage(num) {
-            $("#signCheck").prop("checked", false);
-            if (num != pdfDoc.numPages) {
-                $("#saveBtn").html("저장");
-            } else {
-                $("#saveBtn").html("서명저장");
-            }
-            pageRendering = true;
-            // Using promise to fetch the page
-            pdfDoc.getPage(num).then(function (page) {
-                var viewport = page.getViewport({ scale: scale });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+    function renderPage(num) {
+        //console.log("현재페이지:" + num);
+        if (eval("img" + pdfDoc.numPages) == null) $(".lastPage").prop("disabled", true);
 
-                //console.log("canvas.height: " + canvas.height + " / canvas.width: " + canvas.width);
+        $("#page-loading").hide();
+        $("#signCheck").prop("checked", false);
+        if (num != pdfDoc.numPages) {
+            $(".nextPage").show();
+            $(".lastPage").hide();
+            $("#signController").hide();
+            $(".pageController").show();
+        } else {
+            $(".nextPage").hide();
+            $(".lastPage").show();
+            $("#signController").hide();
+            $(".pageController").show();
+        }
+        pageRendering = true;
+        // Using promise to fetch the page
+        pdfDoc.getPage(num).then(function (page) {
+            var viewport = page.getViewport({ scale: scale });
+            // width="773" height="1093"
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
 
-                // Render PDF page into canvas context
-                var renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
-                var renderTask = page.render(renderContext);
+            // Render PDF page into canvas context
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            var renderTask = page.render(renderContext);
 
-                // Wait for rendering to finish
-                renderTask.promise.then(function () {
-                    pageRendering = false;
-                    if (pageNumPending !== null) {
-                        // New page rendering is pending
-                        renderPage(pageNumPending);
-                        pageNumPending = null;
-                    }
-                });
+            // Wait for rendering to finish
+            renderTask.promise.then(function () {
+                pageRendering = false;
+                if (pageNumPending !== null) {
+                    // New page rendering is pending
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
             });
+        });
 
-            // Update page counters
-            document.getElementById('page_num').textContent = num;
-        }
-        function pageLoading() {
-            if (pageNum == pdfDoc.numPages) {
+        // Update page counters
+        document.getElementById('page_num').textContent = num;
+    }
+    // 다음페이지 눌렀을 때 그 페이지 저장하며 넘어감. 마지막 페이지일 경우 최종 업로드메소드 실행.
+    function pageLoading(flag) {
+        // 마지막페이지일경우 저장 후 검사 실행
+        if (pageNum == pdfDoc.numPages) {
 
-                if ( checkImg() ) {
-                    $("#page-loading").show();
-                    UploadPdf();
+
+            eval('img' + pdfDoc.numPages + "=\"" + document.getElementById('the-canvas').toDataURL('image/png', 1.0) + "\";");
+            if (flag == '-') {
+                pageNum = pageNum - 1
+                if (pageNum <= 0) pageNum = 1;
+                if (eval("img" + (pageNum)) != null) {
+                    showPageWithSign(pageNum);
+                    return;
+                } else {
+                    renderPage(pageNum);
+                    return;
                 }
-                else location.reload();
 
+            }
+
+            $("#page-loading").show();
+
+            var checkPage = checkImg()
+            //console.log("페이지로딩 checkImg():" + checkPage);
+            if (checkPage == -1) {
+                UploadPdf();
             } else {
-                if (pageNum == 1) img1 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 2) img2 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 3) img3 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 4) img4 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 5) img5 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 6) img6 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 7) img7 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 8) img8 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 9) img9 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                if (pageNum == 10) img10 = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                pageNum++;
-                queueRenderPage(pageNum);
+                pageNum = checkPage
+                renderPage(pageNum);
+                return;
+            }
+
+        } else {
+            var nextPage = pageNum
+            if (flag == '+') nextPage = pageNum + 1;
+            if (flag == '-') {
+                nextPage = pageNum - 1;
+                if (nextPage <= 0) nextPage = 1;
+            }
+
+            var canvas_save = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
+            if (pageNum == 1) img1 = canvas_save;
+            if (pageNum == 2) img2 = canvas_save;
+            if (pageNum == 3) img3 = canvas_save;
+            if (pageNum == 4) img4 = canvas_save;
+            if (pageNum == 5) img5 = canvas_save;
+            if (pageNum == 6) img6 = canvas_save;
+            if (pageNum == 7) img7 = canvas_save;
+            if (pageNum == 8) img8 = canvas_save;
+            if (pageNum == 9) img9 = canvas_save;
+            if (pageNum == 10) img10 = canvas_save;
+            pageNum = nextPage
+            if (eval("img" + (nextPage)) != null) {
+                showPageWithSign(pageNum);
+                return;
+            }
+            queueRenderPage(pageNum);
+            $("#signPage").scrollTop(0);
+            $("#signPage").scrollLeft(0);
+        }
+    }
+    function checkImg() {
+        var maxPage = pdfDoc.numPages;
+        var result = -1;
+        for (var i = 1; i < maxPage; i++) {
+            if (eval("img" + i) == null)
+            {
+                alert("저장되지 않은 페이지가 있습니다.");
+                //console.log("저장안댐: "+i)
+                result = i;
+                break;
             }
         }
-        function checkImg() {
-            var maxPage = pdfDoc.numPages;
-            for (var i = 1; i <= maxPage; i++) {
-                if (eval("img" + i) == null)
-                {
-                    alert("저장되지 않은 페이지가 있습니다. 첫페이지부터 순서대로 진행해 주세요.");
+        return result;
+    }
 
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        function showElseFile(data) {
-            console.log(data);
+    function showElseFile(data) {
+            //console.log(data.length);
             var imgClo = new Image();
-            imgClo.addEventListener('load', function () {
-                //로드된 이미지를 캔버스에 출력
-                var ctx = document.getElementById('the-canvas').getContext("2d");
-                ctx.drawImage(imgClo, 0, 0);
-
-            }, false);
-
-            //이미지 경로 설정
             imgClo.src = data;
-        }
+            //이미지 경로 설정
+            //$("#tempIMG").attr("src", data);
+            imgClo.onload = function () {
+                var ctx2 = document.getElementById("the-canvas").getContext("2d");
+                //$("#the-canvas").width("500");
+                $("#the-canvas").attr("width", imgClo.width);
+                $("#the-canvas").attr("height", imgClo.height);
+                ctx2.drawImage(imgClo, 0, 0, imgClo.width, imgClo.height);
+            }
 
-        function UploadPdf() {
+
+    }
+    function showPageWithSign(page) {
+        $("#signCheck").prop("checked", false);
+        //console.log("싸인있는 현재페이지:" + page);
+        if (page != pdfDoc.numPages) {
+            $(".nextPage").show();
+            $(".lastPage").hide();
+            $("#signController").hide();
+            $(".pageController").show();
+        } else {
+            $(".nextPage").hide();
+            $(".lastPage").show();
+            $("#signController").hide();
+            $(".pageController").show();
+        }
+        var imgClo = new Image();
+        imgClo.src = eval("img"+page);
+        //이미지 경로 설정
+        //$("#tempIMG").attr("src", data);
+        imgClo.onload = function () {
+            var ctx2 = document.getElementById("the-canvas").getContext("2d");
+            //$("#the-canvas").width("500");
+            $("#the-canvas").attr("width", imgClo.width);
+            $("#the-canvas").attr("height", imgClo.height);
+            ctx2.drawImage(imgClo, 0, 0, imgClo.width, imgClo.height);
+        }
+        $("#page_num").text(page);
+        pageNum = page;
+    }
+
+    function UploadPdf() {
 
             var imgWidth = 210; // 이미지 가로 길이(mm) / A4 기준 210mm
             var imgHeight = 297; //document.getElementById('the-canvas').height * imgWidth / document.getElementById('the-canvas').width;
@@ -434,26 +583,16 @@
 
             if (pdfDoc.numPages == 1) {
                 //alert("1 page pdf");
-                var imgData = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
-                //console.log("3. pdf변환중 imgData: " + imgData.length)
-                //console.log("imgWidth: " + imgWidth + "/ imgHeight: " + imgHeight);
-                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.addImage(img1, 'PNG', 0, 0, imgWidth, imgHeight);
 
             } else {
-                //alert(pdfDoc.numPages + "page pdf");
+                // 첫페이지
                 pdf.addImage(img1, 'PNG', 0, 0, imgWidth, imgHeight);
-                console.log("img1: " + img1.length);
                 // img2 부터 최대 페이지까지 반복
-                for (var i = 2; i < pdfDoc.numPages; i++) {
+                for (var i = 2; i <= pdfDoc.numPages; i++) {
                     pdf.addPage();
                     pdf.addImage(eval('img' + i), 'PNG', 0, 0, imgWidth, imgHeight);
-                    //console.log("img"+i+": "+eval('img' + i).length);
                 }
-                //
-                eval('img' + pdfDoc.numPages + "=\"" + document.getElementById('the-canvas').toDataURL('image/png', 1.0) +"\";");
-                pdf.addPage();
-                pdf.addImage(eval('img' + pdfDoc.numPages), 'PNG', 0, 0, imgWidth, imgHeight);
-                //console.log("img" + pdfDoc.numPages + ": " + eval('img' + pdfDoc.numPages).length);
             }
             var Seqid = "@ViewBag.Seqid";
             var blobBin = pdf.output(); // base64로 인코드
@@ -487,6 +626,42 @@
 
             //pdf.save('screenshot.pdf');
         }
+
+    $("#biggerBtn").on("click", function () {
+        ratio += 1;
+        if (ratio >= 11) return ratio = 10;
+        pageRatio(ratio);
+    });
+    $("#smallerBtn").on("click", function () {
+        ratio -= 1;
+        if (ratio <= 0) return ratio = 1;
+        pageRatio(ratio);
+    });
+    function pageRatio(tempRatio) {
+        ratio = tempRatio;
+        $("#SignCanvas").css({ "transform": "scale(" + 0.1 * ratio + ")"});
+        //console.log(ratio);
+        $("#signPage").scrollTop(0);
+        $("#signPage").scrollLeft(0);
+        scrollX = document.getElementById("signPage").scrollLeft;
+        scrollY = document.getElementById("signPage").scrollTop;
+        pDraw = $('#the-canvas').offset();
+        $("#signCheck").prop("checked", false);
+    }
+    function reStart() {
+        //location.reload();
+        eval('img' + pageNum + "=" + null + ";");
+
+        renderPage(pageNum);
+        $("#signController").hide();
+        $(".pageController").show();
+    }
+    function startSign() {
+        $(".lastPage").prop("disabled", false);
+        $("#signCheck").prop("checked", true);
+        $("#signController").show();
+        $(".pageController").hide();
+    }
 
         @*function UploadPic() {
             var Seqid = "@ViewBag.Seqid";
