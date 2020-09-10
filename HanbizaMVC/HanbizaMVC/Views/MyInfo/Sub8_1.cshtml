@@ -42,14 +42,6 @@
             line-height: 18px;
         }
 
- /*   #saveBtn {
-        z-index: 1;
-        position: fixed;
-        left: 18rem;
-        top: 4.5rem;
-        background-color: rgba(55, 99, 171,0.5);
-    }*/
-
     #resetBtn {
         z-index: 1;
         position: fixed;
@@ -57,23 +49,7 @@
         top: 4.5rem;
         background-color: rgba(202, 102, 90,0.5);
     }
-    /*
-    #biggerBtn {
-        z-index: 1;
-        position: fixed;
-        left: 19rem;
-        top: 7rem;
-        background-color: rgb(133, 135, 150);
-    }
-
-    #smallerBtn {
-        z-index: 1;
-        position: fixed;
-        left: 16rem;
-        top: 7rem;
-        background-color: rgb(133, 135, 150);
-    }
-    */
+   
     #startSign {
         z-index: 1;
         position: fixed;
@@ -134,34 +110,41 @@
 @*<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>*@
 
 @if (ViewBag.IsSignature == "N") {
-<div id="signController" class="offset-2 offset-sm-4 mb-3" style="display:none;">
+<div class="offset-sm-3 mb-2">
+    <span class="ml-3 mr-2" style="font-size:smaller; ">page: <span id="page_num"></span> / <span id="page_count"></span></span>
     <button class="btn btn-sm btn-danger mr-2" onclick="reStart()" type="button"><i class="fas fa-eraser"></i></button>
-    <input id="signCheck" type="checkbox" />
-    <label for="signCheck">
-        <i class="fas fa-pen-fancy ml-2"></i>
-    </label>
-    <button id="saveBtn" class="btn btn-sm btn-primary ml-2 mr-2" type="button" onclick="pageLoading()">다음</button>
-    <button class="btn btn-sm btn-outline-secondary mr-1" id="smallerBtn" type="button"><i class="fas fa-minus"></i></button>
-    <button class="btn btn-sm btn-outline-secondary" id="biggerBtn" type="button"><i class="fas fa-plus"></i></button>
-</div>
-<div class="pageController mb-3 offset-sm-4">
-    <span class="ml-2 mr-2" style="font-size:smaller; ">page: <span id="page_num"></span> / <span id="page_count"></span></span>
-    <button class="btn btn-sm btn-danger mr-2" onclick="reStart()" type="button"><i class="fas fa-eraser"></i></button>
-    <a href="#" id="prev" class="mr-2"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
-    <button class="btn btn-sm btn-primary mr-2" type="button" onclick="startSign()">사인하기</button>
-    @*<button class="btn btn-sm btn-primary" id="startSign" type="button" onclick="startSign()">사인하기</button>*@
-    <a href="#" id="next" class="mr-2"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+    
+    <span id="signController" class="mb-3" style="display:none;">
+        <a href="#" class="mr-2" onclick="pageLoading('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+
+        <input id="signCheck" type="checkbox" />
+        <label for="signCheck">
+            <i class="fas fa-pen-fancy ml-2"></i>
+        </label>
+
+        <a href="#" class="nextPage ml-2 mr-2" onclick="pageLoading('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        <button class="btn btn-sm btn-primary ml-2 mr-2 lastPage" id="lastPage" onclick="pageLoading('+')" type="button" style="display:none;"><i class="fas fa-save"></i></button>
+    </span>
+    <span class="pageController mb-3">
+        <a href="#" id="prev" class="mr-2"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+
+        <button class="btn btn-sm btn-primary" type="button" id="doSign" onclick="startSign()">사인하기</button>
+
+        <a href="#" id="next" class="nextPage ml-2 mr-2 "><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        <button class="btn btn-sm btn-primary ml-2 mr-2 lastPage" id="lastPage" onclick="pageLoading('+')" type="button" style="display:none;"><i class="fas fa-save"></i></button>
+    </span>
+
     <button class="btn btn-sm btn-outline-secondary mr-1" id="smallerBtn" type="button"><i class="fas fa-search-minus"></i></button>
     <button class="btn btn-sm btn-outline-secondary" id="biggerBtn" type="button"><i class="fas fa-search-plus"></i></button>
 </div>
 }else{
-<div class="offset-2 offset-sm-4">
-    <a href="#" id="prev" class="mr-2"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
-    <span class="mr-2">미리보기: <span id="page_num"></span> / <span id="page_count"></span></span>
-    <a href="#" id="next" class="mr-2"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
-    <button class="btn btn-sm btn-outline-secondary" id="smallerBtn" type="button"><i class="fas fa-minus"></i></button>
-    <button class="btn btn-sm btn-outline-secondary mr-1" id="biggerBtn" type="button"><i class="fas fa-plus"></i></button>
-</div>
+    <div class="offset-2 offset-sm-4">
+        <a href="#" id="prev" class="mr-2"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+        <span class="mr-2">미리보기: <span id="page_num"></span> / <span id="page_count"></span></span>
+        <a href="#" id="next" class="mr-2"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        <button class="btn btn-sm btn-outline-secondary" id="smallerBtn" type="button"><i class="fas fa-search-minus"></i></button>
+        <button class="btn btn-sm btn-outline-secondary mr-1" id="biggerBtn" type="button"><i class="fas fa-search-plus"></i></button>
+    </div>
 }
 <div id="signPage" style="white-space:nowrap; overflow:auto; height: 81vh;">
     <div id="SignCanvas" style="height:730px;">
@@ -367,7 +350,7 @@
                 return;
         }
         if (eval("img" + (pageNum - 1)) != null) {
-            console.log("싸인있는 페이지");
+            //console.log("싸인있는 페이지");
             showPageWithSign(pageNum - 1);
             return;
         }
@@ -383,7 +366,7 @@
             return;
         }
         if (eval("img" + (pageNum + 1)) != null) {
-            console.log("싸인있는 페이지");
+            //console.log("싸인있는 페이지");
             showPageWithSign(pageNum + 1);
             return;
         }
@@ -414,13 +397,21 @@
          * param num Page number.
          */
     function renderPage(num) {
-        console.log("현재페이지:" + num);
+        //console.log("현재페이지:" + num);
+        if (eval("img" + pdfDoc.numPages) == null) $(".lastPage").prop("disabled", true);
+
         $("#page-loading").hide();
         $("#signCheck").prop("checked", false);
         if (num != pdfDoc.numPages) {
-            $("#saveBtn").html("다음");
+            $(".nextPage").show();
+            $(".lastPage").hide();
+            $("#signController").hide();
+            $(".pageController").show();
         } else {
-            $("#saveBtn").html("서명저장");
+            $(".nextPage").hide();
+            $(".lastPage").show();
+            $("#signController").hide();
+            $(".pageController").show();
         }
         pageRendering = true;
         // Using promise to fetch the page
@@ -452,15 +443,29 @@
         document.getElementById('page_num').textContent = num;
     }
     // 다음페이지 눌렀을 때 그 페이지 저장하며 넘어감. 마지막 페이지일 경우 최종 업로드메소드 실행.
-    function pageLoading() {
+    function pageLoading(flag) {
         // 마지막페이지일경우 저장 후 검사 실행
         if (pageNum == pdfDoc.numPages) {
+
+            
             eval('img' + pdfDoc.numPages + "=\"" + document.getElementById('the-canvas').toDataURL('image/png', 1.0) + "\";");
+            if (flag == '-') {
+                pageNum = pageNum - 1
+                if (pageNum <= 0) pageNum = 1;
+                if (eval("img" + (pageNum)) != null) {
+                    showPageWithSign(pageNum);
+                    return;
+                } else {
+                    renderPage(pageNum);
+                    return;
+                }
+               
+            }
 
             $("#page-loading").show();
 
             var checkPage = checkImg()
-            console.log("페이지로딩 checkImg():" + checkPage);
+            //console.log("페이지로딩 checkImg():" + checkPage);
             if (checkPage == -1) {
                 UploadPdf();
             } else {
@@ -470,10 +475,13 @@
             }
 
         } else {
-            if (eval("img" + (pageNum + 1)) != null) {
-                showPageWithSign(pageNum + 1);
-                return;
+            var nextPage = pageNum
+            if (flag == '+') nextPage = pageNum + 1;
+            if (flag == '-') {
+                nextPage = pageNum - 1;
+                if (nextPage <= 0) nextPage = 1;
             }
+              
             var canvas_save = document.getElementById('the-canvas').toDataURL('image/png', 1.0);
             if (pageNum == 1) img1 = canvas_save;
             if (pageNum == 2) img2 = canvas_save;
@@ -485,7 +493,11 @@
             if (pageNum == 8) img8 = canvas_save;
             if (pageNum == 9) img9 = canvas_save;
             if (pageNum == 10) img10 = canvas_save;
-            pageNum++;
+            pageNum = nextPage
+            if (eval("img" + (nextPage)) != null) {
+                showPageWithSign(pageNum);
+                return;
+            }
             queueRenderPage(pageNum);
             $("#signPage").scrollTop(0);
             $("#signPage").scrollLeft(0);
@@ -498,7 +510,7 @@
             if (eval("img" + i) == null)
             {
                 alert("저장되지 않은 페이지가 있습니다.");
-                console.log("저장안댐: "+i)
+                //console.log("저장안댐: "+i)
                 result = i;
                 break;
             }
@@ -523,11 +535,18 @@
 
     }
     function showPageWithSign(page) {
-        console.log("싸인있는 현재페이지:" + page);
+        $("#signCheck").prop("checked", false);
+        //console.log("싸인있는 현재페이지:" + page);
         if (page != pdfDoc.numPages) {
-            $("#saveBtn").html("다음");
+            $(".nextPage").show();
+            $(".lastPage").hide();
+            $("#signController").hide();
+            $(".pageController").show();
         } else {
-            $("#saveBtn").html("서명저장");
+            $(".nextPage").hide();
+            $(".lastPage").show();
+            $("#signController").hide();
+            $(".pageController").show();
         }
         var imgClo = new Image();
         imgClo.src = eval("img"+page);
@@ -625,11 +644,13 @@
     function reStart() {
         //location.reload();
         eval('img' + pageNum + "=" + null + ";");
+      
         renderPage(pageNum);
-        $(".pageController").show();
         $("#signController").hide();
+        $(".pageController").show();
     }
     function startSign() {
+        $(".lastPage").prop("disabled", false);
         $("#signCheck").prop("checked", true);
         $("#signController").show();
         $(".pageController").hide();
