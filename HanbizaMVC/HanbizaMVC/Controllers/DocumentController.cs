@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using StoredProcedureEFCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.IO;
 
 namespace HanbizaMVC.Controllers
 {
@@ -117,6 +118,55 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
+        [Authorize]
+        [Route("/Document/Sub41_1/{Seqid}")]
+        public IActionResult Sub41_1(int Seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+            //_logger.LogInformation("sub41_1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+            List<문서함> fileInfo = null;
+            _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
+
+            ViewBag.menulist = menulist;
+            ViewBag.IsSignature = fileInfo[0].IsSignature;
+            ViewBag.FileType = Path.GetExtension(fileInfo[0].FileName);
+            ViewBag.Seqid = Seqid;
+
+            return View();
+        }
+
+        [Authorize]
+        [Route("/Document/Sub41_2/{Seqid}")]
+        public byte[] Sub41_2(int Seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            _logger.LogInformation("sub41_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+            List<문서함> fileInfo = null;
+            _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
+
+            byte[] pdf_file = null;
+            pdf_file = fileInfo[0].FileBlob;
+
+            return pdf_file;
+        }
+
+        [Authorize]
+        [Route("/Document/Sub41_3/{Seqid}")]
+        public string Sub41_3(int Seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            _logger.LogInformation("sub41_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+            List<문서함> fileInfo = null;
+            _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
+
+            var stringify_byte = Convert.ToBase64String(fileInfo[0].FileBlob);
+
+            string result = "data:image/png;base64," + stringify_byte;
+
+            return result;
+        }
+
         // 9 비밀번호변경
         [Authorize]
         public IActionResult Sub9()

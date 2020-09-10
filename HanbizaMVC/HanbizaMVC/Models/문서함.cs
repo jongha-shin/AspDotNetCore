@@ -20,5 +20,7 @@ namespace HanbizaMVC.Models
         public string EditYn { get; set; }
         public string Ftype { get; set; }
         public int? Fsize { get; set; }
+        public string IsSignature { get; set; }
+        public string HbzMSend { get; set; }
     }
 }

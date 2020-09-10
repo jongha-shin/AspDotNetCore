@@ -103,6 +103,63 @@ namespace HanbizaMVC.Controllers
             
         }
 
+        [HttpPost]
+        [Route("/File/SavePngWithSign/{Seqid}")]
+        public async Task<IActionResult> SavePngWithSign(int Seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+
+            var form = await Request.ReadFormAsync();
+            var file = form.Files.First();
+            //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
+
+            _logger.LogInformation("SaveSign()1 :" + Seqid);
+            var fileBytes = new byte[file.OpenReadStream().Length];
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+
+            }
+            int SeqID = Seqid;
+
+            var rs = _db.LoadStoredProc("file_SavePngWithSign").AddParam("Base64string", fileBytes).AddParam("SEQID", SeqID)
+                        .ExecNonQuery();
+            string reponse = "fail";
+            if (rs > 0) reponse = "success";
+            return Json(reponse);
+
+        }
+        [HttpPost]
+        [Route("/File/SavePdfWithSign/{Seqid}")]
+        public async Task<IActionResult> SavePdfWithSign(int Seqid)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+
+            var form = await Request.ReadFormAsync();
+            var file = form.Files.First();
+            //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
+
+            _logger.LogInformation("SaveSign()1 :" + Seqid);
+            var fileBytes = new byte[file.OpenReadStream().Length];
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+
+            }
+            int SeqID = Seqid;
+            int FSize = fileBytes.Length;
+            var rs = _db.LoadStoredProc("file_SavePdfWithSign").AddParam("Base64string", fileBytes).AddParam("SEQID", SeqID).AddParam("FSize", FSize)
+                        .ExecNonQuery();
+            string reponse = "fail";
+            if (rs > 0) reponse = "success";
+            return Json(reponse);
+
+        }
+
         public FileContentResult SignDownload(int id)
         {
             //Console.WriteLine("sign down: seq ="+id);

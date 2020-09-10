@@ -2,22 +2,23 @@
     ViewData["Title"] = "내문서";
 }
 @model List<문서함>
-
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
     <div class="table-responsive">
+        <p style="text-align:right; margin:0px; font:small">* 서명은 <span style="color:red;">크롬</span> 및 <span style="color:red;">엣지</span>브라우저를 이용해주세요.</p>
         <table class="table-sm table-bordered" style="width:100%">
             <thead>
                 <tr style="background-color: #3763ab; color:white">
                     <th>수신일</th>
                     <th>파일명</th>
-                    <th>다운</th>
+                    <th width="11%">다운</th>
+                    <th width="11%">서명</th>
                 </tr>
             </thead>
             <tbody>
                 @if (Model == null)
                 {
                     <tr>
-                        <td colspan="3">데이터가 없습니다</td>
+                        <td colspan="4">데이터가 없습니다</td>
                     </tr>
                 }
                 else
@@ -27,7 +28,19 @@
                         <tr>
                             <td>@string.Format("{0:yyyy-MM-dd HH시 mm분}", item.Regdate)</td>
                             <td>@item.FileName</td>
-                            <td><a href="/File/FileDownload/@item.SeqId"><i class="fas fa-fw fa-download"></i><span>저장하기</span></a></td>
+                            <td><a href="/File/FileDownload/@item.SeqId"><i class="fas fa-fw fa-download"></i><span>저장</span></a></td>
+                            <td>
+                                <a href="/Document/Sub41_1/@item.SeqId">
+                                    @if (item.IsSignature.Equals("N"))
+                                    {
+                                        <i class="fas fa-fw fa-signature"></i><span>서명</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-fw fa-envelope-open"></i><span>보기</span>
+                                    }
+                                </a>
+                            </td>
                         </tr>
                     }
                 }
@@ -35,4 +48,3 @@
         </table>
     </div>
 </div>
-        
