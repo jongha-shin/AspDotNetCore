@@ -208,18 +208,9 @@ else
         //$("#SignCanvas").css({ "transform": "scale(" + 0.1 * ratio+")" });  // 이용자 편의를 위해 축소
 
         if (Ftype == ".pdf") ViewPDF(Seqid);
-        else ViewElseFile(Seqid);
+        else if (Ftype == ".jpg" || Ftype == ".png") ViewElseFile(Seqid);   // .jpg .png
+        else { alert("PDF 혹은 이미지 파일이 아닙니다."); location.href = "/Document/Sub41"; }
 
-        //$(".toWriteSignature").on("click", function () {
-        //    if (!$("#signCheck").is(":checked")) {
-        //        //console.log('not');
-        //        $("#signCheck").prop("checked", true);
-
-        //    } else {
-        //        //console.log('yes');
-        //        $("#signCheck").prop("checked", false);
-        //    }
-        //});
     });
     function ViewElseFile(Seqid) {
         //alert("not pdf");
