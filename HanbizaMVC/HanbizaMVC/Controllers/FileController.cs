@@ -114,7 +114,7 @@ namespace HanbizaMVC.Controllers
             var file = form.Files.First();
             //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
 
-            _logger.LogInformation("SaveSign()1 :" + Seqid);
+            //_logger.LogInformation("SaveSign()1 :" + Seqid);
             var fileBytes = new byte[file.OpenReadStream().Length];
             using (var ms = new MemoryStream())
             {
@@ -123,8 +123,8 @@ namespace HanbizaMVC.Controllers
 
             }
             int SeqID = Seqid;
-
-            var rs = _db.LoadStoredProc("file_SavePngWithSign").AddParam("Base64string", fileBytes).AddParam("SEQID", SeqID)
+            int FSize = fileBytes.Length;
+            var rs = _db.LoadStoredProc("file_SavePngWithSign").AddParam("Base64string", fileBytes).AddParam("SEQID", SeqID).AddParam("FSize", FSize)
                         .ExecNonQuery();
             string reponse = "fail";
             if (rs > 0) reponse = "success";
@@ -142,7 +142,7 @@ namespace HanbizaMVC.Controllers
             var file = form.Files.First();
             //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
 
-            _logger.LogInformation("SaveSign()1 :" + Seqid);
+            //_logger.LogInformation("SaveSign()1 :" + Seqid);
             var fileBytes = new byte[file.OpenReadStream().Length];
             using (var ms = new MemoryStream())
             {
