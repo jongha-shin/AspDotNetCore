@@ -116,7 +116,7 @@
 @if (ViewBag.IsSignature == "N")
 {
     <div class="offset-sm-3 mb-2">
-        <span class="ml-3 mr-2" style="font-size:smaller; ">page: <span id="page_num"></span> / <span id="page_count"></span></span>
+        <span class="ml-3 mr-2" style="font-size:smaller; ">page: <span id="page_num">1</span> / <span id="page_count">1</span></span>
         <button class="btn btn-sm btn-danger mr-2" onclick="reStart()" type="button"><i class="fas fa-eraser"></i></button>
 
         <span id="signController" class="mb-3" style="display:none;">
@@ -129,6 +129,7 @@
 
             <a href="#" class="nextPage ml-2 mr-2" onclick="pageLoading('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
             <button class="btn btn-sm btn-primary ml-2 mr-2 lastPage" id="lastPage" onclick="pageLoading('+')" type="button" style="display:none;"><i class="fas fa-save"></i></button>
+            <button class="btn btn-sm btn-primary ml-2 mr-2 jpgUpload" onclick="UploadPic()" type="button" style="display:none;"><i class="fas fa-save"></i></button>
         </span>
         <span class="pageController mb-3">
             <a href="#" id="prev" class="mr-2"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
@@ -137,6 +138,7 @@
 
             <a href="#" id="next" class="nextPage ml-2 mr-2 "><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
             <button class="btn btn-sm btn-primary ml-2 mr-2 lastPage" id="lastPage" onclick="pageLoading('+')" type="button" style="display:none;"><i class="fas fa-save"></i></button>
+            <button class="btn btn-sm btn-primary ml-2 mr-2 jpgUpload" onclick="UploadPic()" type="button" style="display:none;"><i class="fas fa-save"></i></button>
         </span>
 
         <button class="btn btn-sm btn-outline-secondary mr-1" id="smallerBtn" type="button"><i class="fas fa-search-minus"></i></button>
@@ -214,6 +216,13 @@ else
     });
     function ViewElseFile(Seqid) {
         //alert("not pdf");
+        $("#signController").hide();
+        $(".pageController").show();
+        $("#signCheck").prop("checked", false);
+        $(".jpgUpload").prop("disabled", true);
+        $(".jpgUpload").show();
+        $(".nextPage").hide();
+
         $.ajax({
             url: "/Document/Sub41_3/" + Seqid,
             type: "GET",
@@ -517,19 +526,19 @@ else
     }
 
     function showElseFile(data) {
-            //console.log(data.length);
-            var imgClo = new Image();
-            imgClo.src = data;
-            //이미지 경로 설정
-            //$("#tempIMG").attr("src", data);
-            imgClo.onload = function () {
-                var ctx2 = document.getElementById("the-canvas").getContext("2d");
-                //$("#the-canvas").width("500");
-                $("#the-canvas").attr("width", imgClo.width);
-                $("#the-canvas").attr("height", imgClo.height);
-                ctx2.drawImage(imgClo, 0, 0, imgClo.width, imgClo.height);
-            }
-
+        //console.log(data.length);
+        var imgClo = new Image();
+        imgClo.src = data;
+        //이미지 경로 설정
+        //$("#tempIMG").attr("src", data);
+        imgClo.onload = function () {
+            var ctx2 = document.getElementById("the-canvas").getContext("2d");
+            //$("#the-canvas").width("500");
+            $("#the-canvas").attr("width", imgClo.width);
+            $("#the-canvas").attr("height", imgClo.height);
+            ctx2.drawImage(imgClo, 0, 0, imgClo.width, imgClo.height);
+        }
+        
 
     }
     function showPageWithSign(page) {
@@ -641,6 +650,11 @@ else
     }
     function reStart() {
         //location.reload();
+        if ("@ViewBag.FileType" != ".pdf") {
+            ViewElseFile("@ViewBag.Seqid");
+            return;
+        }
+
         eval('img' + pageNum + "=" + null + ";");
 
         renderPage(pageNum);
@@ -648,13 +662,16 @@ else
         $(".pageController").show();
     }
     function startSign() {
+        if ("@ViewBag.FileType" != ".pdf") {
+            $(".jpgUpload").prop("disabled", false);
+        }
         $(".lastPage").prop("disabled", false);
         $("#signCheck").prop("checked", true);
         $("#signController").show();
         $(".pageController").hide();
     }
 
-        @*function UploadPic() {
+        function UploadPic() {
             var Seqid = "@ViewBag.Seqid";
             var imgDataUrl = document.getElementById("the-canvas").toDataURL("image/png"); // 캔버스 이미지 정보를 base64 문자열로 변환 png
             //console.log("3 imgDataUrl: "+imgDataUrl);
@@ -672,7 +689,7 @@ else
             var formData = new FormData();	// formData 생성
             formData.append("file", file);	// file data 추가
 
-            alert("===일시정지===" + formData.get("file").size);
+            //alert("===일시정지===" + formData.get("file").size);
 
             $.ajax({
                 url: "/File/SavePngWithSign/" + Seqid,
@@ -689,6 +706,6 @@ else
                 }
             });
 
-        }*@
+        }
 
 </script>
