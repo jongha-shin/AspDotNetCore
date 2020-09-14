@@ -157,7 +157,44 @@ namespace HanbizaMVC.Controllers
             jsonString = "fail";
             return jsonString;
         }
-       
+
+        // 32 인사평가
+        [Authorize]
+        public IActionResult Sub32()
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+
+            ViewBag.menulist = menulist;
+            //_logger.LogInformation("sub32(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
+
+            List<인사평가> HRlist = null; ;
+            _db.LoadStoredProc("dbo.HR_Assessee_list")
+               .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+               .Exec(r => HRlist = r.ToList<인사평가>());
+            
+            if (HRlist != null) return View(HRlist);
+
+            return View();
+        }
+        // 32_1 인사평가
+        [Route("/Approve/Sub32_1/{BigSubject}/{Gubun}/{StaffID}")]
+        [Authorize]
+        public IActionResult Sub32_1(string BigSubject, string Gubun, int StaffID)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+            ViewBag.menulist = menulist;
+
+            List<인사평가> HR_Detail_list = null; ;
+            _db.LoadStoredProc("dbo.HR_Detail_list").AddParam("BigSubject", BigSubject).AddParam("Gubun", Gubun)
+               .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+               .Exec(r => HR_Detail_list = r.ToList<인사평가>());
+
+            if (HR_Detail_list != null) return View(HR_Detail_list);
+
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

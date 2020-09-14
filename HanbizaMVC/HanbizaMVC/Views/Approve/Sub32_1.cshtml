@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "인사평가";
+}
+@model List<인사평가>
+<div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
+    <div class="table-responsive">
+        <table class="table-sm table-bordered" style="width:100%">
+            <thead>
+                <tr style="background-color: #3763ab; color:white">
+                    <th>피평가자</th>
+                    <th>평가지</th>
+                    <th>평가</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null)
+                {
+                    <tr>
+                        <td colspan="4">데이터가 없습니다</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                    <tr>
+                        <td class="AssessName">@item.피평가자</td>
+                        <td class="second_td">
+                            <span class="BigSubject" style="font-weight:bold">@item.평가지</span> <br />
+                            &lt <span class="Gubun">@item.구분</span> &gt
+                            <input class="StaffID" type="hidden" value="@item.피평가자ID" />
+                        </td>
+                        <td><button class="btn btn-sm btn-outline-primary startHR">평가시작</button></td>
+                    </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function (e) {
+        genRowspan("AssessName");
+
+        $(".startHR").click(function () {
+            let BigSubject = $(this).parent().parent().find("td.second_td").find("span.BigSubject").text();
+            let Gubun = $(this).parent().parent().find("td.second_td").find("span.Gubun").text();
+            let StaffID = $(this).parent().parent().find("td.second_td").find("input.StaffID").val();
+            //alert(BigSubject + " / " + Gubun + " / " + StaffID);
+
+            location.href = "/Approve/32_1/" + BigSubject + "/" + Gubun + "/" + StaffID;
+
+        });
+
+    });
+    
+    function genRowspan(className) {
+        $("." + className).each(function () {
+            let rows = $("." + className + ":contains('" + $(this).text() + "')");
+            if (rows.length > 1) {
+                rows.eq(0).attr("rowspan", rows.length);
+                rows.not(":eq(0)").remove();
+            }
+        });
+    }
+    
+</script>
+
+
+
+
+
