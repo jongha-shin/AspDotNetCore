@@ -1,71 +1,91 @@
 ﻿@{
-    ViewData["Title"] = "인사평가";
+    ViewData["Title"] = "인사평가 세부내용";
+    int i = 1;
+    int j = 1;
+
 }
+<style>
+    .scoreBtn:hover {
+        cursor: pointer;
+        background-color: #5783c3;
+        color: white;
+    }
+
+    .title {
+        color: black;
+    }
+
+    .selectScore {
+        background-color: #5783c3;
+        color: white;
+    }
+</style>
 @model List<인사평가>
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
     <div class="table-responsive">
         <table class="table-sm table-bordered" style="width:100%">
-            <thead>
-                <tr style="background-color: #3763ab; color:white">
-                    <th>피평가자</th>
-                    <th>평가지</th>
-                    <th>평가</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model == null)
-                {
-                    <tr>
-                        <td colspan="4">데이터가 없습니다</td>
-                    </tr>
-                }
-                else
-                {
-                    foreach (var item in Model)
-                    {
-                    <tr>
-                        <td class="AssessName">@item.피평가자</td>
-                        <td class="second_td">
-                            <span class="BigSubject" style="font-weight:bold">@item.평가지</span> <br />
-                            &lt <span class="Gubun">@item.구분</span> &gt
-                            <input class="StaffID" type="hidden" value="@item.피평가자ID" />
-                        </td>
-                        <td><button class="btn btn-sm btn-outline-primary startHR">평가시작</button></td>
-                    </tr>
-                    }
+            @for (i = j; i < Model.Count;)
+            {
+                <tr style="border-top:double;">
 
-                }
-            </tbody>
+                    <td class="title" colspan="@Model[i - 1].colspan" style="background-color:#e0e0e0">
+                        @Model[i - 1].평가기준
+                        <input type="hidden" class="evalueSEQID" value="@Model[i-1].SEQID" />
+                    </td>
+                </tr>
+                <tr>
+
+                    @for (j = i; j <= Model.Count;)
+                    {
+                        int col = 1;
+                        <td class="scoreBtn score_@i">
+                            @Model[j - 1].등급목록 ( @Model[j - 1].배점목록 점 )
+                            <input type="hidden" class="answerSEQID" value="@Model[j - 1].답변ID" />
+                            @if (j == Model.Count)
+                            {
+                                i = Model.Count;
+                                break;
+                            }
+                            else if (Model[j - 1].답변ID == Model[j].답변ID)
+                            {
+                                j++;
+                                col++;
+                            }
+                            else
+                            {
+                                i = j + 1;
+                                break;
+                            }
+                        </td>
+                    }
+                </tr>
+            }
         </table>
+        <div class="row m-3">
+            <button class="btn btn-danger col-4" type="button" onclick="goBack()">뒤로가기</button>
+            <button class="btn btn-primary offset-4 col-4" type="button">저장하기</button>
+        </div>
     </div>
 </div>
 
 <script>
+
+
     $(document).ready(function (e) {
-        genRowspan("AssessName");
-
-        $(".startHR").click(function () {
-            let BigSubject = $(this).parent().parent().find("td.second_td").find("span.BigSubject").text();
-            let Gubun = $(this).parent().parent().find("td.second_td").find("span.Gubun").text();
-            let StaffID = $(this).parent().parent().find("td.second_td").find("input.StaffID").val();
-            //alert(BigSubject + " / " + Gubun + " / " + StaffID);
-
-            location.href = "/Approve/32_1/" + BigSubject + "/" + Gubun + "/" + StaffID;
-
-        });
 
     });
-    
-    function genRowspan(className) {
-        $("." + className).each(function () {
-            let rows = $("." + className + ":contains('" + $(this).text() + "')");
-            if (rows.length > 1) {
-                rows.eq(0).attr("rowspan", rows.length);
-                rows.not(":eq(0)").remove();
-            }
+    $(".scoreBtn").on("click", function () {
+        var cls = $(this).prop("className").split(' ');
+        $("." + cls[1]).each(function () {
+            $("." + cls[1]).removeClass("selectScore");
         });
+        $(this).addClass("selectScore");
+    });
+
+
+    function goBack() {
+        history.back();
     }
-    
 </script>
 
 

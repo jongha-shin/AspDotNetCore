@@ -47,17 +47,15 @@
         $(".startHR").click(function () {
             let BigSubject = $(this).parent().parent().find("td.second_td").find("span.BigSubject").text();
             let Gubun = $(this).parent().parent().find("td.second_td").find("span.Gubun").text();
-            let StaffID = $(this).parent().parent().find("td.second_td").find("input.StaffID").val();
+            let AssesseeID = $(this).parent().parent().find("td.second_td").find("input.StaffID").val();
             //alert(BigSubject + " / " + Gubun + " / " + StaffID);
-
 
             if (BigSubject.indexOf('/') != -1)
             {
                 BigSubject = BigSubject.replace(/\//gi, '-');
             }
-          
 
-            location.href = "/Approve/Sub32_1/" + BigSubject + "/" + Gubun + "/" + StaffID;
+            location.href = "/Approve/Sub32_1/" + BigSubject + "/" + Gubun + "/" + AssesseeID;
 
         });
 
@@ -72,7 +70,8 @@
             }
         });
     }
-    
+
+
 </script>
 
 

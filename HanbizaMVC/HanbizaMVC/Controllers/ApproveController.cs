@@ -178,18 +178,50 @@ namespace HanbizaMVC.Controllers
             return View();
         }
         // 32_1 인사평가
-        [Route("/Approve/Sub32_1/{BigSubject}/{Gubun}/{StaffID}")]
+        [Route("/Approve/Sub32_1/{BigSubject}/{Gubun}/{AssesseeID}")]
         [Authorize]
-        public IActionResult Sub32_1(string BigSubject, string Gubun, int StaffID)
+        public IActionResult Sub32_1(string BigSubject, string Gubun, int AssesseeID)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
             ViewBag.menulist = menulist;
 
+            if (BigSubject.Contains("-")) BigSubject = BigSubject.Replace("-", "/");
+            
             List<인사평가> HR_Detail_list = null; ;
-            _db.LoadStoredProc("dbo.HR_Detail_list").AddParam("BigSubject", BigSubject).AddParam("Gubun", Gubun)
+            _db.LoadStoredProc("dbo.HR_Detail_list").AddParam("BigSubject", BigSubject).AddParam("Gubun", Gubun).AddParam("AssesseeID", AssesseeID)
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => HR_Detail_list = r.ToList<인사평가>());
+            int i = 1;
+            int j = 1;
+            
+            for(i = j; i < HR_Detail_list.Count;)
+            {
+                Console.WriteLine(HR_Detail_list[i - 1].평가기준);
+               
+                for(j = i; j <= HR_Detail_list.Count;)
+                    {
+                    Console.WriteLine(HR_Detail_list[j - 1].등급목록);
+                    if( j == HR_Detail_list.Count) 
+                    {
+                        i = HR_Detail_list.Count;
+                        break;
+                    }
+                    else if(HR_Detail_list[j - 1].답변ID == HR_Detail_list[j].답변ID)
+                    {
+                        j++;
+                    }
+                    else
+                    {
+                        i = j+1;
+                        goto Out;
+                    }
+                }
+                
+            }
+        Out:
+            ViewBag.z = j;
+            Console.WriteLine(j);
 
             if (HR_Detail_list != null) return View(HR_Detail_list);
 

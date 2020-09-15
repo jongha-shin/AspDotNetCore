@@ -26,5 +26,11 @@ namespace HanbizaMVC.Models
         public string 한비자전송 { get; set; }
         public DateTime Regdate { get; set; }
 
+        public int DetailSEQID { get; set; }
+        public string 등급목록 { get; set; }
+        public double 배점목록 { get; set; }
+        public long colspan { get; set; }
+
+
     }
 }
