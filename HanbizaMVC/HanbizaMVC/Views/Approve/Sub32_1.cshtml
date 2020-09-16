@@ -6,9 +6,11 @@
 }
 <style>
     .scoreBtn:hover {
-        cursor: pointer;
-        background-color: #5783c3;
-        color: white;
+        @if(ViewBag.flag.Equals("start")){
+            @:cursor: pointer;
+            @:background-color: #5783c3;
+            @:color: white;
+        }
     }
 
     .title {
@@ -27,31 +29,32 @@
             @for (i = j; i < Model.Count;)
             {
                 <tr style="border-top:double;">
-
                     <td class="title" colspan="@Model[i - 1].colspan" style="background-color:#e0e0e0">
-                        @Model[i - 1].평가기준
+                        @Model[i - 1].평가기준 (@Model[i - 1].배점 점)
                         <input type="hidden" class="evalueSEQID" value="@Model[i-1].SEQID" />
                     </td>
                 </tr>
-                <tr>
 
+                <tr>
                     @for (j = i; j <= Model.Count;)
                     {
                         int col = 1;
-                        <td class="scoreBtn score_@i">
+                        <td class="scoreBtn score_@i @(!Model[j - 1].등급.Equals("-1")? 
+                                                            Model[j - 1].등급.Equals(Model[j - 1].등급목록)?"selectScore ":""
+                                                        :"")">
                             @Model[j - 1].등급목록 ( @Model[j - 1].배점목록 점 )
-                            <input type="hidden" class="answerSEQID" value="@Model[j - 1].답변ID" />
-                            @if (j == Model.Count)
+                            <input type="hidden" class="answerSEQID"  value="@Model[j - 1].DetailSEQID" />
+                            @if (j == Model.Count)  // 마지막 줄
                             {
                                 i = Model.Count;
                                 break;
                             }
-                            else if (Model[j - 1].답변ID == Model[j].답변ID)
+                            else if (Model[j - 1].답변ID == Model[j].답변ID)    // 같은 질문
                             {
                                 j++;
                                 col++;
                             }
-                            else
+                            else // 다른 질문으로 넘어갈 때
                             {
                                 i = j + 1;
                                 break;
@@ -62,8 +65,15 @@
             }
         </table>
         <div class="row m-3">
-            <button class="btn btn-danger col-4" type="button" onclick="goBack()">뒤로가기</button>
-            <button class="btn btn-primary offset-4 col-4" type="button">저장하기</button>
+            @if (ViewBag.flag.Equals("start"))
+            {
+                <button class="btn btn-danger col-4" type="button" onclick="goBack()">뒤로가기</button>
+                <button class="btn btn-primary offset-4 col-4" type="button" onclick="checkValue()">저장하기</button>
+            }
+            else
+            {
+                <button class="btn btn-danger offset-4 col-4" type="button" onclick="goBack()">뒤로가기</button>
+            }
         </div>
     </div>
 </div>
@@ -75,17 +85,58 @@
 
     });
     $(".scoreBtn").on("click", function () {
-        var cls = $(this).prop("className").split(' ');
-        $("." + cls[1]).each(function () {
-            $("." + cls[1]).removeClass("selectScore");
-        });
-        $(this).addClass("selectScore");
+        var flag = "@ViewBag.flag";
+        if (flag == "start") {
+            var cls = $(this).prop("className").split(' ');
+            $("." + cls[1]).each(function () {
+                $("." + cls[1]).removeClass("selectScore");
+            });
+            $(this).addClass("selectScore");
+        }
     });
-
 
     function goBack() {
         history.back();
     }
+
+    function checkValue() {
+        let Qlist = $("input.evalueSEQID");
+        let Alist = $("td.selectScore").children("input.answerSEQID");
+        
+        if (Qlist.length == Alist.length) {
+            saveAnswer(Qlist, Alist);
+        } else {
+            alert("누락된 답변이 있습니다." + Qlist.length + "?" + Alist.length);
+        }
+    }
+
+    function saveAnswer(Qlist, Alist) {
+        let QseqIDs = [];
+        let AseqIDs = [];
+        for (var i = 0; i < Qlist.length; i++) {
+            //console.log(Qlist[i].value + " / " + Alist[i].value);
+            QseqIDs.push(Qlist[i].value);
+            AseqIDs.push(Alist[i].value);
+        }
+
+        $.ajax({
+            url: '/Approve/Sub32_2/' + QseqIDs + "/" + AseqIDs,
+            type: 'GET',
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            charset: "utf-8",
+            success: function (result) {
+                if (result == "success") {
+                    alert("저장완료");
+                    location.href = "/Approve/Sub32";
+                }
+            },
+            error: function () {
+                alert("err");
+            },
+
+        });
+    }
+
 </script>
 
 

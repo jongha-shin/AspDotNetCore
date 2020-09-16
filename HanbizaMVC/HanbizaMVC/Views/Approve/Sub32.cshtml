@@ -23,17 +23,23 @@
                 {
                     foreach (var item in Model)
                     {
-                    <tr>
-                        <td class="AssessName">@item.피평가자</td>
-                        <td class="second_td">
-                            <span class="BigSubject" style="font-weight:bold">@item.평가지</span> <br />
-                            &lt <span class="Gubun">@item.구분</span> &gt
-                            <input class="StaffID" type="hidden" value="@item.피평가자ID" />
-                        </td>
-                        <td><button class="btn btn-sm btn-outline-primary startHR">평가시작</button></td>
-                    </tr>
+                        <tr>
+                            <td class="AssessName">@item.피평가자</td>
+                            <td class="second_td">
+                                <span class="BigSubject" style="font-weight:bold">@item.평가지</span> <br />
+                                &lt <span class="Gubun">@item.구분</span> &gt
+                                <input class="StaffID" type="hidden" value="@item.피평가자ID" />
+                            </td>
+                            @if (item.마감.Equals("N"))
+                            {
+                                <td><button class="btn btn-sm btn-outline-primary startHR" value="start">평가시작</button></td>
+                            }
+                            else
+                            {
+                                <td><button class="btn btn-sm btn-primary startHR" value="show">평가보기</button></td>
+                            }
+                        </tr>
                     }
-
                 }
             </tbody>
         </table>
@@ -45,9 +51,11 @@
         genRowspan("AssessName");
 
         $(".startHR").click(function () {
+            let flag = $(this).val();
             let BigSubject = $(this).parent().parent().find("td.second_td").find("span.BigSubject").text();
             let Gubun = $(this).parent().parent().find("td.second_td").find("span.Gubun").text();
             let AssesseeID = $(this).parent().parent().find("td.second_td").find("input.StaffID").val();
+
             //alert(BigSubject + " / " + Gubun + " / " + StaffID);
 
             if (BigSubject.indexOf('/') != -1)
@@ -55,12 +63,12 @@
                 BigSubject = BigSubject.replace(/\//gi, '-');
             }
 
-            location.href = "/Approve/Sub32_1/" + BigSubject + "/" + Gubun + "/" + AssesseeID;
+            location.href = "/Approve/Sub32_1/" + flag + "/" + BigSubject + "/" + Gubun + "/" + AssesseeID;
 
         });
-
+        
     });
-    
+
     function genRowspan(className) {
         $("." + className).each(function () {
             let rows = $("." + className + ":contains('" + $(this).text() + "')");
