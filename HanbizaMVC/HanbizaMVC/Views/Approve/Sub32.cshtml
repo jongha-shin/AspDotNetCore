@@ -13,10 +13,10 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model == null)
+                @if (Model.Count == 0)
                 {
                     <tr>
-                        <td colspan="4">데이터가 없습니다</td>
+                        <td colspan="3">데이터가 없습니다</td>
                     </tr>
                 }
                 else
@@ -36,7 +36,7 @@
                             }
                             else
                             {
-                                <td><button class="btn btn-sm btn-primary startHR" value="show">평가보기</button></td>
+                                <td><button class="btn btn-sm btn-primary startHR" value="show">평가완료</button></td>
                             }
                         </tr>
                     }
@@ -56,17 +56,13 @@
             let Gubun = $(this).parent().parent().find("td.second_td").find("span.Gubun").text();
             let AssesseeID = $(this).parent().parent().find("td.second_td").find("input.StaffID").val();
 
-            //alert(BigSubject + " / " + Gubun + " / " + StaffID);
-
             if (BigSubject.indexOf('/') != -1)
             {
                 BigSubject = BigSubject.replace(/\//gi, '-');
             }
 
             location.href = "/Approve/Sub32_1/" + flag + "/" + BigSubject + "/" + Gubun + "/" + AssesseeID;
-
         });
-        
     });
 
     function genRowspan(className) {
@@ -78,8 +74,6 @@
             }
         });
     }
-
-
 </script>
 
 

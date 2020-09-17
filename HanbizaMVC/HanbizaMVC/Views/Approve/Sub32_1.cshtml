@@ -79,20 +79,17 @@
 </div>
 
 <script>
-
-
     $(document).ready(function (e) {
-
-    });
-    $(".scoreBtn").on("click", function () {
-        var flag = "@ViewBag.flag";
-        if (flag == "start") {
-            var cls = $(this).prop("className").split(' ');
-            $("." + cls[1]).each(function () {
-                $("." + cls[1]).removeClass("selectScore");
-            });
-            $(this).addClass("selectScore");
-        }
+        $(".scoreBtn").on("click", function () {
+            var flag = "@ViewBag.flag";
+            if (flag == "start") {
+                var cls = $(this).prop("className").split(' ');
+                $("." + cls[1]).each(function () {
+                    $("." + cls[1]).removeClass("selectScore");
+                });
+                $(this).addClass("selectScore");
+            }
+        });
     });
 
     function goBack() {
@@ -106,7 +103,7 @@
         if (Qlist.length == Alist.length) {
             saveAnswer(Qlist, Alist);
         } else {
-            alert("누락된 답변이 있습니다." + Qlist.length + "?" + Alist.length);
+            alert("누락된 답변이 있습니다");
         }
     }
 
@@ -133,13 +130,6 @@
             error: function () {
                 alert("err");
             },
-
         });
     }
-
 </script>
-
-
-
-
-

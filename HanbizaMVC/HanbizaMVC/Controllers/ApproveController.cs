@@ -52,6 +52,7 @@ namespace HanbizaMVC.Controllers
         }
         // 30 OT결재
         [Authorize]
+        
         public IActionResult Sub30()
         {
             Boolean checkLogin = CheckLogin();
@@ -94,6 +95,7 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
+        
         // (공용)31-1 휴가 승인 프로세스
         [Route("/Approve/Sub31_1/{type}/{checkedVacId}")]
         public string Sub31_1(string type, string checkedVacId)
@@ -177,9 +179,9 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
-        // 32_1 인사평가
-        [Route("/Approve/Sub32_1/{flag}/{BigSubject}/{Gubun}/{AssesseeID}")]
+        // 32_1 인사평가 세부내용
         [Authorize]
+        [Route("/Approve/Sub32_1/{flag}/{BigSubject}/{Gubun}/{AssesseeID}")]
         public IActionResult Sub32_1(string flag, string BigSubject, string Gubun, int AssesseeID)
         {
             Boolean checkLogin = CheckLogin();
@@ -198,8 +200,8 @@ namespace HanbizaMVC.Controllers
             return View();
         }
         // 32_2 인사평가 저장
-        [Route("/Approve/Sub32_2/{QseqIDs}/{AseqIDs}")]
         [Authorize]
+        [Route("/Approve/Sub32_2/{QseqIDs}/{AseqIDs}")]
         public string Sub32_2(string QseqIDs, string AseqIDs)
         {
             Boolean checkLogin = CheckLogin();
