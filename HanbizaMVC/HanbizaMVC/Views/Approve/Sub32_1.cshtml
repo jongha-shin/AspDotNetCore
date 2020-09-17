@@ -1,8 +1,9 @@
 ﻿@{
     ViewData["Title"] = "인사평가 세부내용";
-    int i = 1;
-    int j = 1;
-
+    int c = 1;
+    int b = 1;
+    int a = 1;
+    int Q_number = 1;
 }
 <style>
     .scoreBtn:hover {
@@ -25,38 +26,40 @@
 @model List<인사평가>
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
     <div class="table-responsive">
+        @for(){}
         <table class="table-sm table-bordered" style="width:100%">
-            @for (i = j; i < Model.Count;)
+            @for (b = a; b < Model.Count;)
             {
                 <tr style="border-top:double;">
-                    <td class="title" colspan="@Model[i - 1].colspan" style="background-color:#e0e0e0">
-                        @Model[i - 1].평가기준 (@Model[i - 1].배점 점)
-                        <input type="hidden" class="evalueSEQID" value="@Model[i-1].SEQID" />
+                    <td class="title" colspan="@Model[b - 1].colspan" style="background-color:#e0e0e0">
+                      @Q_number. &nbsp; @Model[b - 1].평가기준 (@Model[b - 1].배점 점)
+                        <input type="hidden" class="evalueSEQID" value="@Model[b-1].SEQID" />
+                       @{ Q_number++; }
                     </td>
                 </tr>
 
                 <tr>
-                    @for (j = i; j <= Model.Count;)
+                    @for (a = b; a <= Model.Count;)
                     {
                         int col = 1;
-                        <td class="scoreBtn score_@i @(!Model[j - 1].등급.Equals("-1")? 
-                                                            Model[j - 1].등급.Equals(Model[j - 1].등급목록)?"selectScore ":""
+                        <td class="scoreBtn score_@i @(!Model[a - 1].등급.Equals("-1")? 
+                                                            Model[a - 1].등급.Equals(Model[a - 1].등급목록)?"selectScore ":""
                                                         :"")">
-                            @Model[j - 1].등급목록 ( @Model[j - 1].배점목록 점 )
-                            <input type="hidden" class="answerSEQID"  value="@Model[j - 1].DetailSEQID" />
-                            @if (j == Model.Count)  // 마지막 줄
+                            @Model[a - 1].등급목록 ( @Model[a - 1].배점목록 점 )
+                            <input type="hidden" class="answerSEQID"  value="@Model[a - 1].DetailSEQID" />
+                            @if (a == Model.Count)  // 마지막 줄
                             {
-                                i = Model.Count;
+                                b = Model.Count;
                                 break;
                             }
-                            else if (Model[j - 1].답변ID == Model[j].답변ID)    // 같은 질문
+                            else if (Model[a - 1].답변ID == Model[a].답변ID)    // 같은 질문
                             {
-                                j++;
+                                a++;
                                 col++;
                             }
                             else // 다른 질문으로 넘어갈 때
                             {
-                                i = j + 1;
+                                b = a + 1;
                                 break;
                             }
                         </td>
@@ -68,7 +71,7 @@
             @if (ViewBag.flag.Equals("start"))
             {
                 <button class="btn btn-danger col-4" type="button" onclick="goBack()">뒤로가기</button>
-                <button class="btn btn-primary offset-4 col-4" type="button" onclick="checkValue()">저장하기</button>
+                <button class="btn btn-primary offset-4 col-4" type="button" onclick="checkValue()">제출하기</button>
             }
             else
             {

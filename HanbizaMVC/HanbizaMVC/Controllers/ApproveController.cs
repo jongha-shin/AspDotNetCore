@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Newtonsoft.Json;
+using System.Dynamic;
 
 namespace HanbizaMVC.Controllers
 {
@@ -166,6 +167,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
+            //dynamic mymodel = new ExpandoObject();
 
             ViewBag.menulist = menulist;
             //_logger.LogInformation("sub32(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
@@ -175,14 +177,18 @@ namespace HanbizaMVC.Controllers
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => HRlist = r.ToList<인사평가>());
             
+            //mymodel.HRlist = HRlist;
+            //mymodel.HRDone = HRDone;
+
             if (HRlist != null) return View(HRlist);
 
             return View();
         }
-        // 32_1 인사평가 세부내용
+        // 32_1 인사평가 평가시작 세부내용
         [Authorize]
-        [Route("/Approve/Sub32_1/{flag}/{BigSubject}/{Gubun}/{AssesseeID}")]
-        public IActionResult Sub32_1(string flag, string BigSubject, string Gubun, int AssesseeID)
+        //[Route("/Approve/Sub32_1/{flag}/{BigSubject}/{Gubun}/{AssesseeID}")]
+        [Route("/Approve/Sub32_1/{flag}/{BigSubject}/{AssesseeID}")]
+        public IActionResult Sub32_1(string flag, string BigSubject, /*string Gubun,*/ int AssesseeID)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
@@ -190,7 +196,7 @@ namespace HanbizaMVC.Controllers
             if (BigSubject.Contains("-")) BigSubject = BigSubject.Replace("-", "/");
             
             List<인사평가> HR_Detail_list = null; ;
-            _db.LoadStoredProc("dbo.HR_Detail_list").AddParam("BigSubject", BigSubject).AddParam("Gubun", Gubun).AddParam("AssesseeID", AssesseeID)
+            _db.LoadStoredProc("dbo.HR_Detail_list").AddParam("BigSubject", BigSubject)/*.AddParam("Gubun", Gubun)*/.AddParam("AssesseeID", AssesseeID)
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => HR_Detail_list = r.ToList<인사평가>());
         
