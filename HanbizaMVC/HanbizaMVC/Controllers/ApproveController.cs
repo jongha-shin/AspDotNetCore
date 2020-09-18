@@ -163,11 +163,14 @@ namespace HanbizaMVC.Controllers
 
         // 32 인사평가
         [Authorize]
-        public IActionResult Sub32()
+        [Route("/Approve/Sub32")]
+        [Route("/Approve/Sub32/{HRsubmit}")]
+        public IActionResult Sub32(string HRsubmit)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
             //dynamic mymodel = new ExpandoObject();
+            if (HRsubmit == null) HRsubmit = "";
 
             ViewBag.menulist = menulist;
             //_logger.LogInformation("sub32(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
@@ -176,10 +179,10 @@ namespace HanbizaMVC.Controllers
             _db.LoadStoredProc("dbo.HR_Assessee_list")
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => HRlist = r.ToList<인사평가>());
-            
-            //mymodel.HRlist = HRlist;
-            //mymodel.HRDone = HRDone;
 
+            //mymodel.HRlist = HRlist;
+            //mymodel.HRDone = HRDone;   
+            ViewBag.HRsubmit = HRsubmit;
             if (HRlist != null) return View(HRlist);
 
             return View();
@@ -199,13 +202,70 @@ namespace HanbizaMVC.Controllers
             _db.LoadStoredProc("dbo.HR_Detail_list").AddParam("BigSubject", BigSubject)/*.AddParam("Gubun", Gubun)*/.AddParam("AssesseeID", AssesseeID)
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => HR_Detail_list = r.ToList<인사평가>());
-        
+
             ViewBag.flag = flag;
+            ViewBag.AssesseeID = AssesseeID;
+            ViewBag.BigSubject = BigSubject;
+            
             if (HR_Detail_list != null) return View(HR_Detail_list);
 
             return View();
+            /*
+            var a = 1;
+            var b = 1;
+            var c = 1;
+
+            for (c = a; c < HR_Detail_list.Count;)
+            {
+                Console.WriteLine("다른 테이블");
+
+                for (b = a; b < HR_Detail_list.Count;)
+                {
+                    if (b == -1)
+                    {
+                        Console.WriteLine(a);
+                        c = a + 1;
+                        b = a + 1;
+                        a = a + 1;
+                        break;
+                    }
+                    if (a == HR_Detail_list.Count)
+                    {
+                        goto Out;
+                    }
+                    Console.WriteLine("1: " + HR_Detail_list[b].평가기준 + "a: " + a + "/ b : " + b);
+                    for (a = b; a < HR_Detail_list.Count;)
+                    {
+                        Console.Write("2:" + HR_Detail_list[a - 1].등급목록);
+                        if (a == HR_Detail_list.Count)
+                        {
+                            goto Out;
+                        }
+                        else if (HR_Detail_list[a - 1].구분 == HR_Detail_list[a].구분)   // 같은 구분
+                        {
+                            if (HR_Detail_list[a - 1].답변ID == HR_Detail_list[a].답변ID)    // 같은 질문
+                            {
+                                a++;
+                            }
+                            else // 다른 질문으로  넘어갈 때
+                            {
+                                b = a + 1;
+                                break;
+                            }
+                        }
+                        else  // 다른 구분
+                        {
+                            Console.WriteLine("a= " + a + " / b= " + b + " : 다른구분");
+                            b = -1;
+                            break;
+                        }
+                    }
+                }
+            }
+        Out: Console.WriteLine("끝");
+            */ // console 테스트
         }
-        // 32_2 인사평가 저장
+        // 32_2 인사평가 임시 저장 - 마감: T
         [Authorize]
         [Route("/Approve/Sub32_2/{QseqIDs}/{AseqIDs}")]
         public string Sub32_2(string QseqIDs, string AseqIDs)
@@ -221,7 +281,23 @@ namespace HanbizaMVC.Controllers
 
             return rs;
         }
+        // 32_3 인사평가 제출 - 마감: Y
+        [Authorize]
+        [Route("/Approve/Sub32_3/{AssesseeID}/{BigSubject}")]
+        public string Sub32_3(string AssesseeID, string BigSubject)
+        {
+            Boolean checkLogin = CheckLogin();
+            ViewBag.menulist = menulist;
+            Console.WriteLine("Y"+BigSubject);
+            var a = _db.LoadStoredProc("dbo.HR_Submit")
+                       .AddParam("AssesseeID", AssesseeID).AddParam("BigSubject", BigSubject).AddParam("StaffName", LoginUser.StaffName)
+                       .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                       .ExecNonQuery();
+            var rs = "fail";
+            if (a > 0) rs = "success";
 
+            return rs;
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
