@@ -1,0 +1,237 @@
+﻿@{
+    ViewData["Title"] = "인사평가 세부내용";
+    int c = 1;
+    int b = 1;
+    int a = 1;
+    int Q_number = 1;
+    int T_number = 1;
+}
+<style>
+    .scoreBtn:hover {
+        @if(ViewBag.flag.Equals("start")){
+            @:cursor: pointer;
+            @:background-color: #5783c3;
+            @:color: white;
+        }
+    }
+
+    .title {
+        color: black;
+    }
+
+    .selectScore {
+        background-color: #5783c3;
+        color: white;
+    }
+</style>
+@model List<인사평가>
+
+<div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
+    <div class="tab-content" id="pills-tabContent">
+        <input id="BigSubject" type="hidden" value="@ViewBag.BigSubject" />
+        <input id="AssesseeID" type="hidden" value="@ViewBag.AssesseeID" />
+        @for (c = b; c < Model.Count;)
+        {
+            <div class="tab-pane-@T_number fade show active" id="pills-@T_number" role="tabpanel" aria-labelledby="pills-tab-@T_number">
+                <div class="table-responsive">
+                    <table class="table-sm table-bordered" style="width:100%">
+                        @for (b = a; b < Model.Count;)
+                        {
+                            if (b == -1)
+                            {
+                                c = a + 1;
+                                b = a + 1;
+                                a = a + 1;
+                                break;
+                            }
+                            if (a == Model.Count)
+                            {
+                                c = Model.Count;
+                                break;
+                            }
+
+                            <tr style="border-top:double;">
+                                <td class="title_@T_number" colspan="@Model[b - 1].colspan" style="background-color:#e0e0e0">
+                                    @Q_number. &nbsp; @Model[b - 1].평가기준 (@Model[b - 1].배점 점)
+                                    <input type="hidden" class="evalueSEQID" value="@Model[b - 1].SEQID" />
+                                    @{ Q_number++; }
+                                </td>
+                            </tr>
+
+                            <tr class="title_@T_number">
+                                @for (a = b; a <= Model.Count;)
+                                {
+                                    <td class="scoreBtn score_@b @(!Model[a - 1].등급.Equals("-1") ?
+                                                Model[a - 1].등급.Equals(Model[a - 1].등급목록) ? "selectScore " : ""
+                                            : "")">
+                                        @Model[a - 1].등급목록 ( @Model[a - 1].배점목록 점 )
+                                        <input type="hidden" class="answerSEQID" value="@Model[a - 1].DetailSEQID" />
+                                        @if (a == Model.Count)  // 마지막 구분 마지막 줄
+                                        {
+                                            break;
+                                        }
+                                        else if (Model[a - 1].구분 == Model[a].구분)   // 같은 구분
+                                        {
+                                            if (Model[a - 1].답변ID == Model[a].답변ID)    // 같은 질문
+                                            {
+                                                a++;
+                                            }
+                                            else // 다른 질문으로  넘어갈 때
+                                            {
+                                                b = a + 1;
+                                                break;
+                                            }
+                                        }
+                                        else // 다른 구분으로 넘어갈 때
+                                        {
+                                            b = -1;
+                                            break;
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                    <div class="row m-3 btn-@T_number">
+                        <button class="btn btn-danger col-4 prevBtn_@T_number" type="button" onclick="checkValue(@T_number, '-')">이전</button>
+
+                        <button class="btn btn-primary offset-4 col-4 nextBtn_@T_number" type="button" onclick="checkValue(@T_number,'+')">다음</button>
+
+                    </div>
+                    @{ T_number++; }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    var flag = "@ViewBag.flag";
+    var MaxPage = "@T_number";
+
+    $(document).ready(function (e) {
+
+        $(".scoreBtn").on("click", function () {
+
+            if (flag == "start") {
+                var cls = $(this).prop("className").split(' ');
+                $("." + cls[1]).each(function () {
+                    $("." + cls[1]).removeClass("selectScore");
+                });
+                $(this).addClass("selectScore");
+            }
+        });
+        showPage(1, '.');
+        changelastBtn();
+
+        $(".submitHR").click(function () {
+            alert("제출하기");
+            var assesseeID = $("#AssesseeID").val();
+            var BigSubject = $("#BigSubject").val();
+            console.log(assesseeID + "/" + BigSubject);
+            $.ajax({
+                url: '/Approve/Sub32_3/' + assesseeID + "/" + BigSubject,
+                type: 'GET',
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                charset: "utf-8",
+                success: function (result) {
+                    if (result == "success") {
+                        alert("제출완료");
+                        location.href = "/Approve/Sub32";
+                    }
+                },
+                error: function () {
+                    alert("err");
+                },
+            });
+        });
+    });
+
+    function showPage(now, arrow) {
+        if (arrow == '-') {
+            now -= 1;
+
+            if (now < 1) {
+                if ("@ViewBag.flag" == "start") history.back();
+                else {
+                    location.href = "/approve/Sub32/HRsubmit";
+                }
+            }
+        }
+        if (arrow == '+')
+        {
+            now += 1;
+            if (now >= MaxPage) now = MaxPage;
+        }
+
+        var NowPage = now;
+        var MaxPage = "@T_number";
+
+        if (NowPage == MaxPage) return;
+
+        for (var i = 1; i <= MaxPage; i++) {
+            if (i == NowPage) {
+                $("#pills-" + i).show();
+            } else {
+                $("#pills-" + i).hide();
+            }
+        }
+    }
+    function goBack() {
+        history.back();
+    }
+
+    function checkValue(i, s) {
+        let Qlist = $("td.title_"+i+" > input.evalueSEQID");
+        let Alist = $("tr.title_" + i + " > td.selectScore").children("input.answerSEQID");
+        if (s == '-') return showPage(i, s);
+
+        if (Qlist.length == Alist.length) {
+            //alert(Qlist.length + "/" + Alist.length);
+            if(flag == "start") saveAnswer(Qlist, Alist);
+            showPage(i, s);
+        } else {
+            //alert(Qlist.length + "/" + Alist.length);
+            alert("누락된 답변이 있습니다");
+        }
+    }
+
+    function saveAnswer(Qlist, Alist) {
+        let QseqIDs = [];
+        let AseqIDs = [];
+        for (var i = 0; i < Qlist.length; i++) {
+            //console.log(Qlist[i].value + " / " + Alist[i].value);
+            QseqIDs.push(Qlist[i].value);
+            AseqIDs.push(Alist[i].value);
+        }
+
+        $.ajax({
+            url: '/Approve/Sub32_2/' + QseqIDs + "/" + AseqIDs,
+            type: 'GET',
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            charset: "utf-8",
+            success: function (result) {
+                if (result == "success") {
+                    //alert("저장완료");
+                    //location.href = "/Approve/Sub32";
+                }
+            },
+            error: function () {
+                alert("err");
+            },
+        });
+    }
+
+
+
+    function changelastBtn() {
+        var Max = MaxPage - 1;
+        if (flag == 'show') $(".nextBtn_" + Max).hide();
+        else {
+            $(".nextBtn_" + Max).text("제출하기");
+            $(".nextBtn_" + Max).addClass("submitHR");
+            $(".nextBtn_" + Max).removeAttr("onclick");
+        }
+        //console.log(".nextBtn_" + Max);
+    }
+</script>

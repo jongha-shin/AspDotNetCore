@@ -9,20 +9,18 @@ using System.Collections.Generic;
 using StoredProcedureEFCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using HanbizaMVC.ViewModel;
-using Newtonsoft.Json;
 using System.IO;
 
 namespace HanbizaMVC.Controllers
 {
-    public class MyInfoController : Controller
+    public class DocumentController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HanbizaContext _db;
         private LoginInfor LoginUser;
         private List<회사별메뉴> menulist;
 
-        public MyInfoController(ILogger<HomeController> logger, HanbizaContext db)
+        public DocumentController(ILogger<HomeController> logger, HanbizaContext db)
         {
             _logger = logger;
             _db = db;
@@ -43,7 +41,7 @@ namespace HanbizaMVC.Controllers
                     LoginUser.StaffId = item.StaffId;
                 }
 
-                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum).ToList();
+                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum && r.DName == LoginUser.Dname).ToList();
                 return true;
             }
             else
@@ -52,19 +50,19 @@ namespace HanbizaMVC.Controllers
             }
         }
 
-        // 7 확인서명
+        // 40 확인서명
         [Authorize]
-        public IActionResult Sub7()
+        public IActionResult Sub40()
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
-            //_logger.LogInformation("sub7(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub40(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<문서함> mySign = null;
             _db.LoadStoredProc("dbo.file_getSignature").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .AddParam("Dname", LoginUser.StaffId).Exec(r => mySign = r.ToList<문서함>());
+                .AddParam("Dname", LoginUser.Dname).Exec(r => mySign = r.ToList<문서함>());
 
             if (mySign.Count > 0)
             {
@@ -99,15 +97,15 @@ namespace HanbizaMVC.Controllers
         }
 
 
-        // 8 내 문서
+        // 41 내 문서
         [Authorize]
-        public IActionResult Sub8()
+        public IActionResult Sub41()
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
-            //_logger.LogInformation("sub8(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub41(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<문서함> fileList = null;
             _db.LoadStoredProc("dbo.filelist").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
@@ -121,12 +119,12 @@ namespace HanbizaMVC.Controllers
             return View();
         }
         [Authorize]
-        [Route("/MyInfo/Sub8_1/{Seqid}")]
-        public IActionResult Sub8_1(int Seqid)
+        [Route("/Document/Sub41_1/{Seqid}")]
+        public IActionResult Sub41_1(int Seqid)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
-            _logger.LogInformation("sub8_1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+            //_logger.LogInformation("sub41_1(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
             List<문서함> fileInfo = null;
             _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
 
@@ -134,40 +132,42 @@ namespace HanbizaMVC.Controllers
             ViewBag.IsSignature = fileInfo[0].IsSignature;
             ViewBag.FileType = Path.GetExtension(fileInfo[0].FileName);
             ViewBag.Seqid = Seqid;
-         
+
             return View();
         }
+
         [Authorize]
-        [Route("/MyInfo/Sub8_2/{Seqid}")]
-        public byte[] Sub8_2(int Seqid)
+        [Route("/Document/Sub41_2/{Seqid}")]
+        public byte[] Sub41_2(int Seqid)
         {
             Boolean checkLogin = CheckLogin();
-            _logger.LogInformation("sub8_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId +" / "+ Seqid);
+            _logger.LogInformation("sub41_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
             List<문서함> fileInfo = null;
             _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
 
             byte[] pdf_file = null;
             pdf_file = fileInfo[0].FileBlob;
-            
+
             return pdf_file;
         }
 
         [Authorize]
-        [Route("/MyInfo/Sub8_3/{Seqid}")]
-        public string Sub8_3(int Seqid)
+        [Route("/Document/Sub41_3/{Seqid}")]
+        public string Sub41_3(int Seqid)
         {
             Boolean checkLogin = CheckLogin();
-            _logger.LogInformation("sub8_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+            _logger.LogInformation("sub41_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
             List<문서함> fileInfo = null;
             _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
-            
+
             var stringify_byte = Convert.ToBase64String(fileInfo[0].FileBlob);
-            
+
             string result = "data:image/png;base64," + stringify_byte;
-            
+
             return result;
         }
 
+        // 9 비밀번호변경
         [Authorize]
         public IActionResult Sub9()
         {
@@ -221,66 +221,10 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
-        // Sub10 기타신청
-        [Authorize]
-        public IActionResult Sub10()
-        {
-            Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
 
-            ViewBag.menulist = menulist;
-            return View();
-        }
-        // 10-1 기타신청 결재자 찾기
-        [Authorize]
-        [Route("/Home/Sub10_1/{SearchWord}/{Step_num}/{StaffList}")]
-        public IActionResult Sub10_1(string SearchWord, string Step_num, string StaffList)
-        {
-            Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
-            ViewBag.menulist = menulist;
-            
-            var jsonString = "";
+        
 
-            if (SearchWord != null)
-            {
-                if (!SearchWord.Equals(""))
-                {
-                    List<Approver> Datatable = null;
-                    _db.LoadStoredProc("vacation_getApprover").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
-                      .AddParam("Dname", LoginUser.Dname).AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
-                      .Exec(r => Datatable = r.ToList<Approver>());
 
-                    jsonString = JsonConvert.SerializeObject(Datatable);
-                }
-            }
-            return new JsonResult(jsonString);
-        }
-
-        // 10-2 기타 신청 하기
-        public IActionResult Sub10_2()
-        {
-            Console.WriteLine("");
-            return View();
-        }
-        public IActionResult Sub11()
-        {
-            Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
-
-            ViewBag.menulist = menulist;
-            //_logger.LogInformation("sub4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-
-            List<ApproveList> Alist = null; ;
-            _db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                .AddParam("Dname", LoginUser.StaffId).Exec(r => Alist = r.ToList<ApproveList>());
-            //Console.WriteLine("sub4 list count: " + Alist.Count());
-            if (Alist != null)
-            {
-                return View(Alist);
-            }
-            return View();
-        }
 
         //[HttpPost]
         //public IActionResult LogIn(OnlyLogin model)

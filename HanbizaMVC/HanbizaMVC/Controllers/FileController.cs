@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 
 namespace HanbizaMVC.Controllers
 {
@@ -64,16 +63,16 @@ namespace HanbizaMVC.Controllers
                 FileDownloadName = fileInfo[0].FileName
             };
             return fileRes;
-        }
+       }
         [HttpPost]
         public async Task<IActionResult> SaveSign()
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
 
-            var form = await Request.ReadFormAsync();
+            var form = await Request.ReadFormAsync(); 
             var file = form.Files.First();
-            //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
+            var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
 
             //_logger.LogInformation("SaveSign()1 :" + bytes);
             var fileBytes = new byte[file.OpenReadStream().Length];
@@ -81,7 +80,7 @@ namespace HanbizaMVC.Controllers
             {
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
-
+                
                 // act on the Base64 data
             }
             int SeqID = 0;
@@ -101,7 +100,7 @@ namespace HanbizaMVC.Controllers
             string reponse = "fail";
             if (rs > 0) reponse = "success";
             return Json(reponse);
-
+            
         }
 
         [HttpPost]
@@ -115,7 +114,7 @@ namespace HanbizaMVC.Controllers
             var file = form.Files.First();
             //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
 
-            _logger.LogInformation("SaveSign()1 :" + Seqid);
+            //_logger.LogInformation("SaveSign()1 :" + Seqid);
             var fileBytes = new byte[file.OpenReadStream().Length];
             using (var ms = new MemoryStream())
             {
@@ -124,8 +123,8 @@ namespace HanbizaMVC.Controllers
 
             }
             int SeqID = Seqid;
-            
-            var rs = _db.LoadStoredProc("file_SavePngWithSign").AddParam("Base64string", fileBytes).AddParam("SEQID", SeqID)
+            int FSize = fileBytes.Length;
+            var rs = _db.LoadStoredProc("file_SavePngWithSign").AddParam("Base64string", fileBytes).AddParam("SEQID", SeqID).AddParam("FSize", FSize)
                         .ExecNonQuery();
             string reponse = "fail";
             if (rs > 0) reponse = "success";
@@ -143,7 +142,7 @@ namespace HanbizaMVC.Controllers
             var file = form.Files.First();
             //var bytes = /*file.OpenReadStream().GetType();*/ file.OpenReadStream();
 
-            _logger.LogInformation("SaveSign()1 :" + Seqid);
+            //_logger.LogInformation("SaveSign()1 :" + Seqid);
             var fileBytes = new byte[file.OpenReadStream().Length];
             using (var ms = new MemoryStream())
             {
@@ -160,7 +159,7 @@ namespace HanbizaMVC.Controllers
             return Json(reponse);
 
         }
-        
+
         public FileContentResult SignDownload(int id)
         {
             //Console.WriteLine("sign down: seq ="+id);
@@ -168,7 +167,7 @@ namespace HanbizaMVC.Controllers
             _db.LoadStoredProc("file_data").AddParam("SeqID", id).Exec(r => mySign = r.ToList<문서함>());
 
             //Console.WriteLine("byte[] : " + mySign[0].FileBlob.ToArray());
-
+           
             var fileRes = new FileContentResult(mySign[0].FileBlob.ToArray(), "application/octet-stream")
             {
                 FileDownloadName = mySign[0].FileName

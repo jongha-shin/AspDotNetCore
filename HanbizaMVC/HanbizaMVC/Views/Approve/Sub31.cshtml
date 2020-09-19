@@ -1,12 +1,11 @@
 ﻿@{
-    ViewData["Title"] = "기타결재";
+    ViewData["Title"] = "휴가결재";
     int a = 0;
     int b = 0;
     int c = 0;
 }
 @using HanbizaMVC.ViewModel
 @model List<ApproveList>
-
 
 <style>
     table {
@@ -39,125 +38,87 @@
         <li class="nav-item">
             <a class="nav-link" id="pills-profile2-tab" data-toggle="pill" href="#pills-profile2" role="tab" aria-controls="pills-profile2" aria-selected="false">반려</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-profile3-tab" data-toggle="pill" href="#pills-profile3" role="tab" aria-controls="pills-profile3" aria-selected="false" onclick="getHistory()">결재결과</a>
+        </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive">
-                <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <p style="text-align:right; margin:0px; font:small">* 신청자의 휴가 잔여일수가 없으면 <span style="color:red;">빨간</span>글씨로 표시됩니다</p>
+                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th width="14%">신청자</th>
-                            <th width="14%">구분</th>
+                            <th width="5%"><input type="checkbox" id="checkBox_head"></th>
+                            <th width="15%">신청자</th>
                             <th>기간 및 사유</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @*@foreach (var item in Model)
+                        @foreach (var item in Model)
                         {
                             if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
-                            {*@
+                            {
                                 <tr>
-                                    <td>강사원</td>
-                                    <td>사직</td>
-                                    <td>
-                                        신청일 : 2020-08-31 <br />
-                                        사유 : 사유 첫줄. 클릭하여 확인
-                                        @*@if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
-                                            {
-                                                <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
-                                            }
-                                            else
-                                            {
-                                                <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
-                                            }
-                                            <br />
-                                            <span style="color:black">사유: @item.VicReaSon</span><br />
-                                            <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
-                                                <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-danger rejectBtn">반려</button>
-                                                </div>
-                                            </div>*@
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>최주임</td>
-                                    <td>사직</td>
-                                    <td>
-                                        신청일 : 2020-08-31 <br />
-                                        사유 : 사유 첫줄. 클릭하여 확인
-                                    </td>
-                                </tr>
-                                @*a++;
-                            }
+                                    <td><input type="checkbox" class="checkBox_body" value="@item.VacID" /><input type="hidden" class="submit_result" value=""></td>
 
+                                    @if (item.잔여일수 > 0)
+                                    {
+                                        <td>@item.Staffname</td>
+
+                                    }
+                                    else
+                                    {
+                                        <td style="color:red;">@item.Staffname</td>
+
+                                    }
+                                    <td>
+                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
+                                        {
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
+                                        }
+                                        <br />
+                                        <span style="color:black">사유: @item.VicReaSon</span><br />
+                                        <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
+                                            <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
+                                            <div class="input-group-append">
+                                                <button class="btn btn-danger rejectBtn">반려</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                a++;
+                            }
                         }
                         @if (a == 0)
                         {
                             <tr>
                                 <td colspan="3">데이터가 없습니다</td>
                             </tr>
-                        }*@
+                        }
                     </tbody>
                 </table>
             </div>
-            @*<div class="row p-3">
-                    <button id="allowBtn" class="btn btn-primary btn-user btn-block col-4" onclick="allowVacation(0)">승인</button>
-                    <div class="col-4 offset-4 p-0" id="beforeReason">
-                        <button class="btn btn-danger btn-user btn-block" id="beforeReason" onclick="displayReason()">반려</button>
-                    </div>
-                    <div class="col-4 offset-4 p-0" id="afterReason" style="display:none">
-                        <button class="btn btn-danger btn-user btn-block" id="" onclick="resetReason()">전체 취소</button>
-                    </div>
-                </div>*@
-            <!-- ApproveDetail modal block -->
-            <div id="EtcCheck" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <p class="modal-title" id="exampleModalLongTitle">
-                                기타신청 세부내역
-                            </p>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table table-sm table-bordered">
-                                <tr>
-                                    <th width="20%">신청자</th>
-                                    <td>최주임</td>
-                                </tr>
-                                <tr>
-                                    <th>구분</th>
-                                    <td>사직</td>
-                                </tr>
-                                <tr>
-                                    <th>신청일</th>
-                                    <td>2020-08-31</td>
-                                </tr>
-                                <tr>
-                                    <th>사유</th>
-                                    <td>사유 전체 내용 사유 전체 내용 사유 전체 내용 사유 전체 내용 사유 전체 내용 사유 전체 내용 사유 전체 내용 사유 전체 내용</td>
-                                </tr>
-                            </table>
-                            <span id="result2"></span>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="allowBtn" class="btn btn-primary btn-user btn-block" onclick="allowVacation(0)">승인</button>
-                            <button id="beforeReason" class="btn btn-danger btn-user btn-block m-0" onclick="displayReason()">반려</button>
-                        </div>
-                    </div>
+            <div class="row p-3">
+                <button id="allowBtn" class="btn btn-primary btn-user btn-block col-4" onclick="allowVacation()">승인</button>
+                <div class="col-4 offset-4 p-0" id="beforeReason">
+                    <button class="btn btn-danger btn-user btn-block" id="beforeReason" onclick="displayReason()">반려</button>
+                </div>
+                <div class="col-4 offset-4 p-0" id="afterReason" style="display:none">
+                    <button class="btn btn-danger btn-user btn-block" id="" onclick="resetReason()">전체 취소</button>
                 </div>
             </div>
-            <!-- /ApproveDetail modal block -->
         </div>
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>신청자</th>
+                            <th width="15%">신청자</th>
                             <th>기간 및 사유</th>
                         </tr>
                     </thead>
@@ -181,8 +142,8 @@
                                         <span style="color:black">@item.VicReaSon</span><br />
                                     </td>
                                 </tr>
-                            }
                             b++;
+                            }
                         }
                         @if (b == 0)
                         {
@@ -199,7 +160,7 @@
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>신청자</th>
+                            <th width="15%">신청자</th>
                             <th>기간 및 사유</th>
                         </tr>
                     </thead>
@@ -222,7 +183,6 @@
                                         <br />
                                         <span style="color:black">@item.VicReaSon</span><br />
                                         <span style="color:red">@item.RereaSon</span>
-
                                     </td>
                                 </tr>
                                 c++;
@@ -238,10 +198,36 @@
                 </table>
             </div>
         </div>
+        <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="form-group row ml-1">
+                <input id="Snal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" /> &nbsp;~&nbsp;
+                <input id="Enal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" />
+            </div>
+            <div class="table-responsive">
+                
+                <span id="result"></span>
+                
+            </div>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
     $(function () {
+        
+        $("#Snal").datepicker({
+            language: 'ko',
+            autoclose: true,
+            
+        });
+        
+        $("#Enal").datepicker({
+            language: 'ko',
+            autoclose: true
+        });
+        
+        $("#Snal").datepicker("setDate", "-15D"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후) 
+        $("#Enal").datepicker("setDate", "+15D");
+
         $("#checkBox_head").change(function () {
             if ($("#checkBox_head").is(":checked")) {
                 $(".checkBox_body").each(function () {
@@ -273,27 +259,29 @@
                 //alert(VacID + "/" + RereaSon);
 
                 $.ajax({
-                    url: "/Home/Sub4_2/" + VacID + "/" + RereaSon,
+                    url: "/Approve/Sub31_2/vacation/" + VacID + "/" + RereaSon,
                     type: "GET",
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
                     dataType: "text",
                     success: function () {
                         alert("선택한 휴가 정보가 반려되었습니다.");
-                        location.href = "/Home/Sub4";
+                        location.href = "/Approve/Sub31";
                     },
                     error: function () {
                         alert("err");
                     }
                 });
             }
-
         });
-        $("#dataTable tr").click(function () {
-            $("#EtcCheck").modal('show');
+        $("#Snal").on("change", function () {
+            getHistory();
+        });
+        $("#Enal").on("change", function () {
+            getHistory();
         });
 
     });
-    function allowVacation(Gubun) { // Gubun == 0 : 승인, == 1 : 거절
+    function allowVacation() {
         let checkedVacId = "";
         $(".checkBox_body:checked").each(function () {
             checkedVacId += $(this).val() + ",";
@@ -307,13 +295,13 @@
                 return;
             }
             $.ajax({
-                url: "/Home/Sub4_1/" + checkedVacId + "/" + Gubun,
+                url: "/Approve/Sub31_1/vacation/" + checkedVacId,
                 type: "GET",
                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 dataType: "text",
                 success: function () {
                     alert("선택한 휴가 정보가 승인되었습니다.");
-                    location.href = "/Home/Sub4";
+                    location.href = "/Approve/Sub31";
                 },
                 error: function () {
                     alert("err");
@@ -343,6 +331,58 @@
         $("#beforeReason").show();
         $("#afterReason").hide();
         $(".reason_Div").hide();
+    }
+
+    function getHistory() {
+        let Snal = $("#Snal").val();
+        let Enal = $("#Enal").val();
+        //alert(Snal + "/" + Enal);
+        $.ajax({
+            url: "/Approve/Sub31_3/vacation/" + Snal+"/"+Enal,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            success: function (result) {
+                //console.log(result);
+                //location.href = "/Approve/Sub31";
+                var sjson = JSON.parse(result);
+             
+                var s = '<table id="ApproveHistoryTable" class="table-sm table-bordered col-sm-12">';
+                s += "<thead><tr><th align='center' width='15%'>신청자</th><th align='center' width='55%'>신청휴가</th>" 
+                s += "<th align='center' width='15%'> 결재자</th><th align='center' width='15%'>결과</th></tr ></thead>"
+                if (sjson.length == 0) {
+                    s += '<tr><td colspan="4" align="center">데이터가 없습니다</td></tr>';
+                } else {
+                    for (var i = 0; i < sjson.length; i++) {
+                        s += "<tr>";
+                        s += "<td>" + sjson[i].StaffName + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
+                        if (sjson[i].Vicname == '연차휴가(반차)' || sjson[i].Vicname == '반차휴가' || sjson[i].Vicname == '반차') {
+                            s += "<td>" + sjson[i].Vicname + " : " + sjson[i].SNal.substring(0, 10) + "(" + sjson[i].UseTime +"시간)</td>"
+                        }
+                        else {
+                            s += "<td>" + sjson[i].Vicname + " : " + sjson[i].SNal.substring(0, 10) + " ~ " + sjson[i].Enal.substring(0, 10) + "</td>"
+                        }
+                        
+                        s += "<td>" + sjson[i].approveName + "</td>"
+
+                        if (sjson[i].AResult == 'F') {
+                            s += "<td style='color:red'>반려</td>"
+                        }
+                        if (sjson[i].AResult == 'Y') {
+                            s += "<td style='color:blue'>승인</td>"
+                        }
+                        s += "</tr>"
+                    }
+                    s += "</table>"
+                }
+
+                $("#result").html(s);
+                $("#pills-profile3").tab('show');
+            },
+            error: function () {
+                alert("err");
+            }
+        });
     }
 
 </script>

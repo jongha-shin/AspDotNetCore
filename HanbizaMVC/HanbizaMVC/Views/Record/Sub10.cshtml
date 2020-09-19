@@ -25,10 +25,10 @@
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style="font-size:small;">
         <li class="nav-item">
-            <a class="nav-link active" href="/Home/Sub1/@ViewBag.선택월" aria-selected="true">월별근태내역</a>
+            <a class="nav-link active" href="/Record/Sub10/@ViewBag.선택월" aria-selected="true">월별근태내역</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="/Home/Sub1_1/@ViewBag.선택월" aria-selected="false">출퇴근기록</a>
+            <a class="nav-link " href="/Record/Sub10_1/@ViewBag.선택월" aria-selected="false">출퇴근기록</a>
         </li>
         <ul class="nav justify-content-end" style="font-size:small; position:absolute; right:0px">
             <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
@@ -132,7 +132,7 @@
                 alert("데이터가 없습니다.")
             }
             else {
-                location.href = "/Home/Sub1/" + monthList[current_num - 1];
+                location.href = "/Record/Sub10/" + monthList[current_num - 1];
             }
         } else {    // '-' 배열 index 증가
             if (current_num + 1 > monthList.length -1) {
@@ -140,7 +140,7 @@
             }
             else {
                 //alert(monthList[current_num + 1])
-                location.href = "/Home/Sub1/" + monthList[current_num + 1];
+                location.href = "/Record/Sub10/" + monthList[current_num + 1];
             }
         }
     }

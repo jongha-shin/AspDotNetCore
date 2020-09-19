@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "기타 신청";
+    ViewData["Title"] = "각종 신청";
 }
 <style>
     .table-hover > tbody > tr {
@@ -37,7 +37,7 @@
             <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">신청</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">기타신청내역</a>
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">각종신청내역</a>
         </li>
     </ul>
     @* tap1 *@
@@ -46,7 +46,7 @@
             <div class="table-responsive col-12">
                 <div class="form-group row mb-3 mt-3">
                     <label class="col-md-2 col-form-label">구분</label>
-                    <select class="form-control form-control-sm col-md-4" id="Gubun">
+                    <select class="form-control form-control-sm col-md-4" id="Vicname">
                         <option value="선택" selected disabled>신청 종류를 선택하세요</option>
                         <option value="사직">사직</option>
                         <option value="휴직">휴직</option>
@@ -59,7 +59,7 @@
 
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">사유</label>
-                    <textarea class="form-control form-control-sm col-md-10" id="EtcReason" rows="5" placeholder="사유를 입력하세요(최대 500글자)" maxlength="500"></textarea>
+                    <textarea class="form-control form-control-sm col-md-10" id="VicReason" rows="5" placeholder="사유를 입력하세요(최대 500글자)" maxlength="500"></textarea>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">결재단계</label>
@@ -176,7 +176,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <p class="modal-title" id="exampleModalLongTitle">각종신청 세부내역</p>
+                    <p class="modal-title" id="exampleModalLongTitle">각종신청 세부내역 @*<br />신청 사유 : <span id="vicReason"></span>*@</p>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -230,6 +230,7 @@
 <script>
     // 동적 테이블(결재자 찾기) 생성 후 (row)클릭 이벤트
     $(document).on("click", "#approverTable tr", function () {
+        //alert("");
         let step_num = $("#stepModal").text();
         let name = $(this).find("td").eq(1).text();
         let staffID = $(this).find("input").val();
@@ -239,7 +240,6 @@
         $("#sign" + step_num).val(name);
         $("#findApproverModal").modal('toggle');
         $("#result").html("");
-
     });
     $(function () {
         $("#Snal").datepicker({
@@ -261,22 +261,24 @@
         });
 
         $("#searchBtn").click(function () {
+            //var searchKey = $("#searchKey").val();
             let searchWord = $("#searchWord").val().trim();
+            //alert(searchKey + "/" + searchWord);
             if (searchWord == null || searchWord == "") {
                 alert("검색어를 입력해 주세요");
                 this.focus();
             } else {
-                getApproverTable(searchWord);
+                getApproverTable(/*searchKey,*/ searchWord);
             }
 
         });
     });
 
     function checkInput() {
-        alert($("#Gubun").val());
-        if ($("#Gubun").val() == null) {
+        alert($("#Vicname").val());
+        if ($("#Vicname").val() == null) {
             alert("신청 구분을 선택해주세요");
-            $("#Gubun").focus();
+            $("#Vicname").focus();
             return;
         }
         if ($("#Snal").val() == "") {
@@ -285,7 +287,7 @@
             return;
         }
         
-        if ($("#EtcReason").val() == "") {
+        if ($("#VicReason").val() == "") {
             alert("사유를 입력해 주세요");
             $("#UseTime").focus();
             return;
@@ -376,54 +378,6 @@
         $("#searchWord").val("");
         $("#stepModal").html(id);
         $("#findApproverModal").modal('show'); // 입력 및 수정 폼 모달 창 열기
-    }
-
-    function submitVacation() {
-        
-        let Gubun = $("#Gubun").val();
-        let Snal = $("#Snal").val();
-        let EtcReason = $("#EtcReason").val();
-        let ProCDeep = $("#ProCDeep ").val();
-
-        if (ProCDeep == "") ProCDeep = 0;
-
-        if (ProCDeep > 0) {
-            // 휴가정보 등록(Vacation_List)
-            $.ajax({
-                url: "/MyInfo/Sub10_2",
-                type: "GET",
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                dataType: "text",
-                data: {
-                    "Gubun": Gubun,
-                    "Snal": Snal,
-                    "ProCDeep": ProCDeep,
-                    "EtcReason": EtcReason
-                },
-                success: function (result) {
-                    if (result == "success") {
-
-                        //insertApprover();
-
-                        $("#Gubun").val("선택");
-                        $("#Snal").val("");
-                        $("#EtcReason").val("");
-                        $("#ProCDeep ").val(1);
-                        $("#sign1").val("");
-                        $("#sign2").val("");
-                        $("#sign3").val("");
-                        $("#sign4").val("");
-                        $("#sign5").val("");
-
-                    } else {
-                        alert("신청 실패")
-                    }
-                },
-                error: function () {
-                    alert("error");
-                }
-            });
-        }
     }
 
 </script>

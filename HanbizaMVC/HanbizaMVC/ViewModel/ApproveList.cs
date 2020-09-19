@@ -5,6 +5,7 @@ namespace HanbizaMVC.ViewModel
     public class ApproveList
     {
         public int VacID { get; set; }
+            public int OtID { get; set; }           // OT
         public string AResult { get; set; }
         public string processPoint { get; set; }
         public string RereaSon { get; set; }
@@ -12,9 +13,12 @@ namespace HanbizaMVC.ViewModel
         public DateTime SNal { get; set; }
         public DateTime ENal { get; set; }
         public string Vicname { get; set; }
+            public string Gubun { get; set; }       // OT
         public double UseTime { get; set; }
         public string Staffname { get; set; }
         public string VicReaSon { get; set; }
+            public string Reason { get; set; }      // OT
         public string AllProCess { get; set; }
+        public double 잔여일수 { get; set; }
     }
 }

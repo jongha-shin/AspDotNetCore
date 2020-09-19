@@ -1,0 +1,643 @@
+﻿@{
+    ViewData["Title"] = "OT신청";
+}
+@model List<AddTimeList>
+<style>
+    .table-hover > tbody > tr {
+        cursor: pointer
+    }
+
+    table {
+        font-size: small;
+    }
+
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
+        }
+
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+        color: #214085
+    }
+
+    .nav-tabs .nav-link {
+        color: grey;
+    }
+
+    label {
+        font-weight: bold
+    }
+
+    .linePerWord {
+        word-break: keep-all;
+    }
+
+    .approval_input {
+        text-align: center;
+        cursor: pointer;
+        width: inherit;
+        padding: 0px
+    }
+</style>
+
+<div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
+    <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">OT신청</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">OT신청내역</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="table-responsive col-12">
+                <div class="form-group row mt-3">
+                    <label class="col-sm-2 col-form-label">구분</label>
+                    <select id="Gubun" class="form-control form-control-sm col-sm-4">
+                        <option value="S" selected disabled>OT를 선택하세요</option>
+                        <option value="C">평일근로</option>
+                        <option value="R">휴일근로</option>
+                    </select>
+                    <label class="col-sm-2 col-form-label">신청일</label>
+                    <input id="Snal" class="form-control form-control-sm col-sm-4" autocomplete="off" placeholder="신청 날짜를 선택하세요" />
+                </div>
+                <div class="form-group row">
+                    <label class="col-2 col-form-label">시작</label>
+                    <div class="col-10 col-md-4">
+                        <select id="Snal_h" class="form-control form-control-sm col-5" style="float:left">
+                            @for (int i = 0; i < 24; i++)
+                            {
+                                <option value="@i.ToString("D2")">@i.ToString("D2") 시</option>
+                            }
+                        </select>
+                        &nbsp;: &nbsp;
+                        <select id="Snal_m" class="form-control form-control-sm col-5" style="float:right">
+                            <option value="00">00 분</option>
+                            <option value="15">15 분</option>
+                            <option value="30">30 분</option>
+                            <option value="45">45 분</option>
+                        </select>
+                    </div>
+                    <label class="col-2 col-form-label">종료</label>
+                    <div class="col-10 col-md-4">
+                        <select id="Enal_h" class="form-control form-control-sm col-5" style="float:left">
+                            @for (int i = 0; i < 24; i++)
+                            {
+                                <option value="@i.ToString("D2")">@i.ToString("D2") 시</option>
+                            }
+                        </select>
+                        &nbsp;: &nbsp;
+                        <select id="Enal_m" class="form-control form-control-sm col-5" style="float:right">
+                            <option value="00">00 분</option>
+                            <option value="15">15 분</option>
+                            <option value="30">30 분</option>
+                            <option value="45">45 분</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">사유</label>
+                    <textarea id="Reason" class="form-control form-control-sm col-md-10" placeholder="사유를 입력하세요(최대 50글자)" maxlength="50"></textarea>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">결재단계</label>
+                    <select class="form-control form-control-sm col-md-4" id="ProCDeep">
+                        @{ int a; }
+                        @for (a = 1; a < 6; a++)
+                        {
+                            <option value="@a">@a 단계</option>
+                        }
+                    </select>
+
+                    <label class="col-md-2 col-form-label">결재자</label>
+                    <div id="" class="inputCls1 col-md-4 p-0 pt-2 pb-md-2" style="text-align:left">
+                        <input type="hidden" id="StaffID1">
+                        <input class="approval_input" type="text" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');" value="">
+                    </div>
+
+                    <div id="" class="inputCls2 col-md-4 offset-md-8 mt-2 mt-md-0 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID2">
+                        <input class="approval_input" type="text" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
+                    </div>
+
+                    <div id="" class="inputCls3 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID3">
+                        <input class="approval_input" type="text" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
+                    </div>
+
+                    <div id="" class="inputCls4 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID4">
+                        <input class="approval_input" type="text" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
+                    </div>
+
+                    <div id="" class="inputCls5 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                        <input type="hidden" id="StaffID5">
+                        <input class="approval_input" type="text" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
+                    </div>
+                </div>
+                <div class="col-4 offset-4 mb-2">
+                    <button class="btn btn-primary btn-user btn-block" onclick="checkInput()" style="min-width:86px; display:inline-block">신청하기</button>
+                </div>
+            </div>
+        </div>
+        @* layer1 *@
+        <!-- findApproverModal modal block -->
+        <div id="findApproverModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-primary modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p class="modal-title"><span id="stepModal"></span>단계 결재자 찾기</p>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="p-3 row input-group">
+                            @*<select class="form-control form-control-sm col-2" id="searchKey">
+                                <option value="부서" selected>부서</option>
+                                <option value="이름">이름</option>
+                            </select>*@
+                            <input class="form-control col-8 offset-2" type="text" placeholder="부서명 또는 이름을 입력하세요" id="searchWord" onkeyup="enterkey()" />
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" id="searchBtn">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                            @*<input class="form-control form-control-sm col-2" type="submit" value="검색" id="searchBtn" />*@
+                        </div>
+                        @* ajax로 데이터 가져옴 *@
+                        <spand id="result"></spand>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /findApproverModal modal block -->
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <p style="text-align:right; margin:0px; font:small">* 결재단계가 진행 되기 전에 선택하여 취소할 수 있습니다</p>
+            <div class="table-responsive">
+                <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">신청일</th>
+                            <th style="text-align:center">OT신청시간</th>
+                            <th style="text-align:center">결재현황</th>
+                            <th style="text-align:center">결과</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null)
+                        {
+                            <tr style="cursor:default; background-color:white">
+                                <td colspan="4">데이터가 없습니다</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                
+                                <tr class="OT_row">
+                                    @if (item.Snal.DayOfWeek.ToString("d").Equals("0"))
+                                    {
+                                        <th style="color:red">@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
+                                    }
+                                    else if (item.Snal.DayOfWeek.ToString("d").Equals("6"))
+                                    {
+                                        <th style="color:blue">@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
+                                    }
+                                    else
+                                    {
+                                        <th>@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
+                                    }
+                                    <td>@item.Snals ~ @item.Enals <input type="hidden" value="@item.Seqid"></td>
+                                    <td class="status">
+                                        @if (item.AllProCess.Equals("N"))
+                                        {
+                                            item.DeepNum = item.DeepNum - 1;
+                                            @item.DeepNum
+                                        }
+                                        else
+                                        {@item.DeepNum}  / @item.ProCDeep
+                                    </td>
+
+                                    @if (@item.AllProCess.Equals("F"))
+                                    {
+                                        <td style="color:red">반려</td>
+                                    }
+                                    else if (@item.AllProCess.Equals("S"))
+                                    {
+                                        <td style="color:blue">승인</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color:grey">대기</td>
+                                    }
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @* layer2 *@
+        <!-- ApproveDetail modal block -->
+        <div id="ApproveDetail" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p class="modal-title" id="exampleModalLongTitle">OT신청 세부내역 <br />신청 사유 : <span id="vicReason"></span></p>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <span id="result2"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-danger btn-sm vacation_deleteBtn" data-dismiss="modal" style="display:none">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /ApproveDetail modal block -->
+    </div>
+</div>
+
+<script type="text/javascript">
+    // 동적 테이블(결재자 찾기) 생성 후 (row)클릭 이벤트
+    $(document).on("click", "#approverTable tr", function () {
+        //alert("");
+        var step_num = $("#stepModal").text();
+        var name = $(this).find("td").eq(1).text();
+        var staffID = $(this).find("input").val();
+        //alert(name + "/" + staffID + "/" + step_num);
+
+        $("#StaffID" + step_num).val(staffID);
+        $("#sign" + step_num).val(name);
+        $("#findApproverModal").modal('toggle');
+        $("#result").html("");
+    });
+    $(function () {
+        set_preApprover();
+        
+        $("#Snal").datepicker({
+            language: 'ko',
+            autoclose: true
+            //        $(".datepicker").datepicker({
+            //            autoSize: true,
+            //            yearRange: "-1:+1", // last hundred years
+            //            showOn: "both",
+            ///*
+            //buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+            //buttonImageOnly: true, //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+            //*/
+            //            buttonText: "", /*달력 이미지 아이콘 숨기기 */
+            //            showButtonPanel: true,
+            //            changeYear: false,
+            //            dateFormat: "yy-mm-dd",
+            //            showOtherMonths: false,
+            //            // showWeek: true, /* 주수 출력 여부*/
+            //            // weekHeader: "주", /* 주수 출력 여부*/
+            ///*
+            //            ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+            //            ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
+            //*/
+            //        });
+        });
+
+        $("#searchBtn").click(function () {
+            var searchWord = $("#searchWord").val().trim();
+            if (searchWord == null || searchWord == "") {
+                alert("검색어를 입력해 주세요");
+                this.focus();
+            } else {
+                getApproverTable(searchWord);
+            }
+        });
+
+        $("#ProCDeep").change(function () {
+            var optionValue = $("#ProCDeep option:selected").val();
+            //	   alert(optionValue);
+            for (var i = 1; i <= 5; i++) {
+                if (i <= optionValue) {
+                    $(".inputCls" + i).show();
+                } else {
+                    $("#StaffID" + i).val("");
+                    $("#sign" + i).val("");
+                    $(".inputCls" + i).hide();
+                }
+            }
+        });
+
+        $("#dataTable tr").click(function () {
+            var status = $(this).find(".status").text().substring(0, 2).trim();
+            //alert(status);
+            if (status == '0') {
+                $(".vacation_deleteBtn").show();
+            } else {
+                $(".vacation_deleteBtn").hide();
+            }
+
+            var SeqID = $(this).find("input").val();
+            //alert(SeqID)
+            if (SeqID == null || SeqID == "") return;
+            $("#ApproveDetail").modal('show');
+            $.ajax({
+                type: 'GET',
+                url: '/Apply/Sub21_2/OT/' + SeqID,
+                dataType: "JSON",
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    var sjson = JSON.parse(result);
+                    //alert("succ");
+                    var s = '<table id="VPTable" class="table-sm table-bordered col-sm-12">';
+                    s += "<thead><tr><th align='center' width='15%' >결재</th><th align='center' width='15%'>이름</th><th align='center' width='20%'>부서</th><th align='center'>반려사유</th></tr></thead>"
+                    if (sjson.length == 0) {
+                        s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
+                    } else {
+                        for (var i = 0; i < sjson.length; i++) {
+                            var f_color = '';
+                            if (sjson[i].AResult == 'N' && sjson[i].processPoint == 'N') f_color = "gray";
+                            if (sjson[i].AResult == 'Y' && sjson[i].processPoint == 'N') f_color = "blue";
+                            if (sjson[i].AResult == 'F' && sjson[i].processPoint == 'N') {
+                                f_color = "red";
+                                var DeepNumChk = Number(sjson[i].DeepNum);
+                            }
+                            if (DeepNumChk < Number(sjson[i].DeepNum)) f_color = "gray";
+                            s += "<tr>";
+                            s += "<td style='color:" + f_color + "' width=>" + sjson[i].DeepNum + "<input type='hidden' value='" + SeqID + "'></td>";
+                            s += "<td style='color:" + f_color + "'>" + sjson[i].approveName + "</td>";
+                            s += "<td style='color:" + f_color + "'>" + sjson[i].Buseo + "</td>";
+                            s += "<td style='color:" + f_color + "'>" + sjson[i].RereaSon + "</td>";
+                            s += "</tr>"
+                            //alert(sjson[i].Buseo);
+                        }
+                        s += "</table>"
+                    }
+                    $("#vicReason").text(sjson[0].ReaSon);
+                    $("#result2").html(s);
+                },
+                error: function () {
+                    alert("err");
+                }
+            })
+        });
+        $(".vacation_deleteBtn").on('click', function () {
+            let seqid = $(this).parent().parent().find("input").val();
+            if (confirm("선택한 OT신청을 취소하시겠습니까?")) {
+                $.ajax({
+                    url: "/Apply/Sub21_5/OT/" + seqid,
+                    type: "GET",
+                    dataType: "text",
+                    contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                    charset: "utf-8",
+                    success: function (result) {
+                        if (result == 'success') {
+                            alert("선택한 OT신청이 취소되었습니다.");
+                        } else {
+                            alert("OT신청 취소가 실패하였습니다. 다시시도해주세요.");
+                        }
+                        location.href = "Sub20";
+                    },
+                    error: function () {
+                        alert("err");
+                    }
+                });
+            } else {
+                return;
+            }
+        });
+    });
+    function layer_open(id) {
+        //alert(id);
+        $("#searchWord").val("");
+        $("#stepModal").html(id);
+        $("#findApproverModal").modal('show'); 
+    }
+
+    function enterkey() {
+        var searchWord = $("#searchWord").val().trim();
+        if (window.event.keyCode == 13) {
+            getApproverTable(searchWord);
+        }
+    }
+     // 결재자 찾기
+    function getApproverTable(searchWord) {
+        let Sstep_num = $("#stepModal").text();
+        let step_num = parseInt(Sstep_num);
+
+        let sf1 = $("#StaffID1").val();
+        let sf2 = $("#StaffID2").val();
+        let sf3 = $("#StaffID3").val();
+        let sf4 = $("#StaffID4").val();
+        let sf5 = $("#StaffID5").val();
+
+        if (sf1 == "") { sf1 = "9999999" };
+        if (sf2 == "") { sf2 = "9999999" };
+        if (sf3 == "") { sf3 = "9999999" };
+        if (sf4 == "") { sf4 = "9999999" };
+        if (sf5 == "") { sf5 = "9999999" };
+
+        let keyArr = [sf1, sf2, sf3, sf4, sf5]
+
+        let staffList = [];
+
+        for (let i = 0; i < step_num; i++) {
+            if (i == step_num - 1) {
+                staffList += keyArr[i];
+            } else {
+                staffList += keyArr[i] + ",";
+            }
+        }
+        $.ajax({
+            url: '/Apply/Sub21_1/' + searchWord + "/" + step_num + "/" + staffList,
+            type: 'GET',
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            charset: "utf-8",
+            success: function (result) {
+                var sjson = JSON.parse(result);
+                //alert("succ");
+                var s = '<table id="approverTable" class="table-sm table-bordered table-hover col-sm-12">';
+                s += "<thead><tr><th align='center' width='50%'>부서명</th><th align='center' width='50%'>이름</th></tr></thead>"
+                if (sjson.length == 0) {
+                    s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
+                } else {
+                    for (var i = 0; i < sjson.length; i++) {
+                        s += "<tr>";
+                        s += "<td>" + sjson[i].Buseo + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
+
+                        s += "<td>" + sjson[i].StaffName + "</td>"
+                        s += "</tr>"
+                        //alert(sjson[i].Buseo);
+                    }
+                    s += "</table>"
+                }
+
+                $("#result").html(s);
+            },
+            error: function () {
+                alert("err");
+            }
+        })
+    }
+
+    function OTsubmit() {
+        //alert("asdf");
+        let Gubun = $("#Gubun").val();
+
+        let Snal_1 = $("#Snal").val();
+        let Snal_h = $("#Snal_h").val();
+        let Snal_m = $("#Snal_m").val();
+
+        let Snal = Snal_1 + " " + Snal_h + ":" + Snal_m;
+
+        let Enal_h = $("#Enal_h").val();
+        let Enal_m = $("#Enal_m").val();
+
+        let Enal = Snal_1 + " " + Enal_h + ":" + Enal_m;
+        let ProCDeep = $("#ProCDeep ").val();
+        let Reason = $("#Reason").val();
+        //alert(Gubun + "/" + Snal + "/" + Enal + "/" + Reason);
+
+        $.ajax({
+            url: "/Apply/Sub20_1/",
+            type: "GET",
+            dataType: "text",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            charset: "utf-8",
+            data: { "Gubun": Gubun, "Snal": Snal, "Enal": Enal, "ProCDeep": ProCDeep, "Reason": Reason },
+            success: function (result) {
+                if (result == "success") {
+                    insertApprover();
+
+                    $("#Gubun").val("선택");
+                    $("#Snal").val("");
+                    $("#Snal_h").val("00");
+                    $("#Snal_m").val("00");
+                    $("#Enal_h").val("00");
+                    $("#Enal_m").val("00");
+                    $("#Reason").val("");
+
+                    //alert("신청 완료");
+                    //location.href = "Sub20";
+                } else {
+                    alert("신청 실패")
+                }
+            },
+            error: function () {
+                alert("err")
+            }
+        });
+    }
+    function insertApprover() {
+        let ProCDeep = $("#ProCDeep ").val();
+        let StaffID1 = $("#StaffID1").val();
+        let StaffID2 = $("#StaffID2").val();
+        let StaffID3 = $("#StaffID3").val();
+        let StaffID4 = $("#StaffID4").val();
+        let StaffID5 = $("#StaffID5").val();
+        let sign1 = $("#sign1").val();
+        let sign2 = $("#sign2").val();
+        let sign3 = $("#sign3").val();
+        let sign4 = $("#sign4").val();
+        let sign5 = $("#sign5").val();
+
+        $.ajax({
+            url: "/Apply/Sub21_4",
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            data: {
+                "Type": "OT",
+                "ProCDeep": ProCDeep,
+                "StaffID1": StaffID1,
+                "StaffID2": StaffID2,
+                "StaffID3": StaffID3,
+                "StaffID4": StaffID4,
+                "StaffID5": StaffID5,
+                "Sign1": sign1,
+                "Sign2": sign2,
+                "Sign3": sign3,
+                "Sign4": sign4,
+                "Sign5": sign5
+            },
+            success: function (result) {
+                if (result == "success") {
+                    alert("신청 완료");
+                    location.href = "Sub20";
+                } else {
+                    alert("신청 실패");
+                }
+            },
+            error: function () {
+                alert("통신실패");
+            }
+        });
+    }
+
+    function checkInput() {
+        if ($("#Gubun").val() == null) {
+            alert("OT를 선택해주세요");
+            $("#Gubun").focus();
+            return;
+        }
+        if ($("#Snal").val() == "") {
+            alert("날짜를 선택해주세요");
+            $("#Snal").focus();
+            return;
+        }
+        if ($("#Snal_h").val() == $("#Enal_h").val()
+            && $("#Snal_m").val() == $("#Enal_m").val()) {
+            alert("시작시간과 종료시간이 같습니다");
+            $("#Enal_h").focus();
+            return;
+        }
+        if ($("#Reason").val() == "") {
+            alert("사유를 입력해주세요");
+            $("#Reason").focus();
+            return;
+        }
+
+        OTsubmit();
+    }
+    function set_preApprover() {
+        $.ajax({
+            url: "/Apply/Sub21_6/OT",
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var preApprover = JSON.parse(result);
+                //alert("success: " + preApprover.length + " /" + preApprover[0].StaffName);
+                $("#ProCDeep").val(preApprover.length);
+
+                if (preApprover.length == 0) { $("#ProCDeep").val(1); return };
+
+                for (var i = 1; i <= 5; i++) {
+                    if (i <= preApprover.length) {
+                        $("#StaffID" + i).val(preApprover[i - 1].StaffID);
+                        $("#sign" + i).val(preApprover[i - 1].StaffName);
+                        $(".inputCls" + i).show();
+                    } else {
+                        $("#StaffID" + i).val("");
+                        $("#sign" + i).val("");
+                        $(".inputCls" + i).hide();
+                    }
+                }
+
+            },
+            error: function () {
+                alert("err");
+            }
+        })
+    }
+</script>

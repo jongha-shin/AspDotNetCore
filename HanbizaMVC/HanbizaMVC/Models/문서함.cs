@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HanbizaMVC.Models
 {
@@ -21,6 +22,5 @@ namespace HanbizaMVC.Models
         public int? Fsize { get; set; }
         public string IsSignature { get; set; }
         public string HbzMSend { get; set; }
-        
     }
 }
