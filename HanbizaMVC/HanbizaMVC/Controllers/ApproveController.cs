@@ -198,7 +198,7 @@ namespace HanbizaMVC.Controllers
             ViewBag.menulist = menulist;
             if (BigSubject.Contains("-")) BigSubject = BigSubject.Replace("-", "/");
             
-            List<인사평가> HR_Detail_list = null; ;
+            List<인사평가> HR_Detail_list = null;
             _db.LoadStoredProc("dbo.HR_Detail_list").AddParam("BigSubject", BigSubject)/*.AddParam("Gubun", Gubun)*/.AddParam("AssesseeID", AssesseeID)
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => HR_Detail_list = r.ToList<인사평가>());
@@ -272,7 +272,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             ViewBag.menulist = menulist;
-
+            //Console.WriteLine("T저장: "+QseqIDs + AseqIDs);
             var a = _db.LoadStoredProc("dbo.HR_Save")
                        .AddParam("QseqIDs", QseqIDs).AddParam("AseqIDs", AseqIDs).AddParam("StaffName", LoginUser.StaffName)
                        .ExecNonQuery();
@@ -288,7 +288,9 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             ViewBag.menulist = menulist;
-            Console.WriteLine("Y"+BigSubject);
+            //Console.WriteLine("Y: "+BigSubject);
+
+            if (BigSubject.Contains("-")) BigSubject = BigSubject.Replace("-", "/");
             var a = _db.LoadStoredProc("dbo.HR_Submit")
                        .AddParam("AssesseeID", AssesseeID).AddParam("BigSubject", BigSubject).AddParam("StaffName", LoginUser.StaffName)
                        .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
@@ -298,7 +300,34 @@ namespace HanbizaMVC.Controllers
 
             return rs;
         }
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
+        // 32_4 인사평가 제출 전 검사
+        [Authorize]
+        [Route("/Approve/Sub32_4/{AssesseeID}/{BigSubject}")]
+        public string Sub32_4(string AssesseeID, string BigSubject)
+        {
+            Boolean checkLogin = CheckLogin();
+            ViewBag.menulist = menulist;
+
+            List<인사평가> status = null;
+            var checkString = "";
+            _db.LoadStoredProc("dbo.HR_CheckAnswer")
+                       .AddParam("AssesseeID", AssesseeID).AddParam("BigSubject", BigSubject)
+                       .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                       .Exec(r => status = r.ToList<인사평가>());
+
+            foreach (var item in status)
+            {
+                checkString = item.마감;
+            }
+
+            var rs = "fail";
+            if (checkString.Equals("T") ) rs = "success";
+
+            return rs;
+        }
+
+            [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

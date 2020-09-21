@@ -124,27 +124,31 @@
         showPage(1, '.');
         changelastBtn();
 
-        $(".submitHR").click(function () {
-            alert("제출하기");
-            var assesseeID = $("#AssesseeID").val();
-            var BigSubject = $("#BigSubject").val();
-            console.log(assesseeID + "/" + BigSubject);
-            $.ajax({
-                url: '/Approve/Sub32_3/' + assesseeID + "/" + BigSubject,
-                type: 'GET',
-                contentType: "application/x-www-form-urlencoded;charset=utf-8",
-                charset: "utf-8",
-                success: function (result) {
-                    if (result == "success") {
-                        alert("제출완료");
-                        location.href = "/Approve/Sub32";
-                    }
-                },
-                error: function () {
-                    alert("err");
-                },
-            });
-        });
+        //$(".submitHR").click(function () {
+        //    alert("제출하기");
+        //    var assesseeID = $("#AssesseeID").val();
+        //    var BigSubject = $("#BigSubject").val();
+        //    //console.log(assesseeID + "/" + BigSubject);
+        //    if (BigSubject.indexOf('/') != -1) {
+        //        BigSubject = BigSubject.replace(/\//gi, '-');
+        //    }
+
+        //    //$.ajax({
+        //    //    url: '/Approve/Sub32_3/' + assesseeID + "/" + BigSubject,
+        //    //    type: 'GET',
+        //    //    contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        //    //    charset: "utf-8",
+        //    //    success: function (result) {
+        //    //        if (result == "success") {
+        //    //            alert("제출완료");
+        //    //            location.href = "/Approve/Sub32";
+        //    //        }
+        //    //    },
+        //    //    error: function () {
+        //    //        alert("err");
+        //    //    },
+        //    //});
+        //});
     });
 
     function showPage(now, arrow) {
@@ -152,7 +156,7 @@
             now -= 1;
 
             if (now < 1) {
-                if ("@ViewBag.flag" == "start") history.back();
+                if ("@ViewBag.flag" == "start") location.href = "/approve/Sub32";
                 else {
                     location.href = "/approve/Sub32/HRsubmit";
                 }
@@ -181,22 +185,26 @@
         history.back();
     }
 
-    function checkValue(i, s) {
-        let Qlist = $("td.title_"+i+" > input.evalueSEQID");
-        let Alist = $("tr.title_" + i + " > td.selectScore").children("input.answerSEQID");
-        if (s == '-') return showPage(i, s);
+    function checkValue(page, s) {
+        let Qlist = $("td.title_" + page+" > input.evalueSEQID");
+        let Alist = $("tr.title_" + page + " > td.selectScore").children("input.answerSEQID");
+        if (s == '-') {
+            //alert(Qlist.length + "/" + Alist.length);
+            if (flag == "start") saveAnswer(Qlist, Alist, page);
+            return showPage(page, s);
+        } 
 
         if (Qlist.length == Alist.length) {
             //alert(Qlist.length + "/" + Alist.length);
-            if(flag == "start") saveAnswer(Qlist, Alist);
-            showPage(i, s);
+            if (flag == "start") saveAnswer(Qlist, Alist, page);
+            showPage(page, s);
         } else {
             //alert(Qlist.length + "/" + Alist.length);
             alert("누락된 답변이 있습니다");
         }
     }
 
-    function saveAnswer(Qlist, Alist) {
+    function saveAnswer(Qlist, Alist, page) {
         let QseqIDs = [];
         let AseqIDs = [];
         for (var i = 0; i < Qlist.length; i++) {
@@ -214,6 +222,10 @@
                 if (result == "success") {
                     //alert("저장완료");
                     //location.href = "/Approve/Sub32";
+                    if (page == MaxPage) {
+                        alert("제출완료");
+                        location.href = "/Approve/Sub32";
+                    }
                 }
             },
             error: function () {
@@ -222,15 +234,13 @@
         });
     }
 
-
-
     function changelastBtn() {
         var Max = MaxPage - 1;
         if (flag == 'show') $(".nextBtn_" + Max).hide();
         else {
             $(".nextBtn_" + Max).text("제출하기");
-            $(".nextBtn_" + Max).addClass("submitHR");
-            $(".nextBtn_" + Max).removeAttr("onclick");
+            //$(".nextBtn_" + Max).addClass("submitHR");
+            //$(".nextBtn_" + Max).removeAttr("onclick");
         }
         //console.log(".nextBtn_" + Max);
     }

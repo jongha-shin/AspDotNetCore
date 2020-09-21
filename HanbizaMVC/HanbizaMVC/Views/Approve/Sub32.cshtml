@@ -18,14 +18,14 @@
     <input id="HRsubmit" type="hidden" value="@ViewBag.HRsubmit"/>
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">평가요청</a>
+            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">평가요청</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">평가완료내역</a>
         </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="tab-pane fade" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive">
                 <table class="table-sm table-bordered" style="width:100%">
                     <thead>
@@ -50,14 +50,14 @@
                                     </td>
                                     @if (item.마감.Equals("T"))   // 미제출 평가
                                     {
-                                        <td>
+                                        <td class="third_td">
                                             <button class="btn btn-sm btn-outline-primary startHR" value="start">수정하기</button>
                                             <button class="btn btn-sm btn-primary submitHR">제출하기</button>
                                         </td>
                                     }
                                     @if (item.마감.Equals("N"))   // 새 평가
                                     {
-                                        <td><button class="btn btn-sm btn-outline-primary startHR" value="start">평가시작</button></td>
+                                        <td class="third_td"><button class="btn btn-sm btn-outline-primary startHR" value="start">평가시작</button></td>
                                     }
                                 </tr>
                             }
@@ -122,15 +122,16 @@
 </div>
 <script>
     var HRsubmit = $("#HRsubmit").val();
+    if (HRsubmit == 'HRsubmit') {
+        $("#pills-profile-tab").tab('show');
+    } else {
+        $("#pills-home-tab").tab('show');
+    }
     $(document).ready(function (e) {
         genRowspan("AssessName");
+        genRowspan("second_td");
+        genRowspan("third_td");
         genRowspan("AssessNameY");
-        
-        
-        if (HRsubmit == 'HRsubmit') {
-            $("#pills-home").tab('dispose');
-            $("#pills-profile").tab('show');
-        } 
 
         $(".startHR").click(function () {
             let flag = $(this).val();
@@ -156,8 +157,51 @@
             location.href = "/Approve/Sub32_1/" + flag + "/" + BigSubject + "/" + AssesseeID;
 
         });
-    });
 
+        $(".submitHR").click(function () {
+            let BigSubject = $(this).parent().parent().find("td.second_td").find("span.BigSubject").text();
+            let AssesseeID = $(this).parent().parent().find("td.second_td").find("input.StaffID").val();
+            if (BigSubject.indexOf('/') != -1) {
+                BigSubject = BigSubject.replace(/\//gi, '-');
+            }
+            
+            $.ajax({
+                url: '/Approve/Sub32_4/' + AssesseeID + "/" + BigSubject,
+                type: 'GET',
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                charset: "utf-8",
+                success: function (result) {
+                    if (result == "success") {
+                        submitHR(AssesseeID, BigSubject);
+                    } else {
+                        alert("누락된 답변이 있습니다");
+                    }
+                },
+                error: function () {
+                    alert("err");
+                },
+            });
+        });
+    });
+    
+    function submitHR(AssesseeID, BigSubject) {
+        $.ajax({
+            url: '/Approve/Sub32_3/' + AssesseeID + "/" + BigSubject,
+            type: 'GET',
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            charset: "utf-8",
+            success: function (result) {
+                if (result == "success") {
+                    alert("제출완료");
+                    location.href = "/Approve/Sub32";
+                }
+            },
+            error: function () {
+                alert("err");
+            },
+        });
+    }
+    
     function genRowspan(className) {
         $("." + className).each(function () {
             let rows = $("." + className + ":contains('" + $(this).text() + "')");
