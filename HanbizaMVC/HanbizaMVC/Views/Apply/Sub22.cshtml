@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "각종 신청";
+    ViewData["Title"] = "기타 신청";
 }
 <style>
     .table-hover > tbody > tr {
@@ -31,6 +31,7 @@
         font-weight: bold
     }
 </style>
+@model List<Etc_List>
 <div class="text-center col-12 col-md-8 offset-md-2 p-2" style="background-color:white">
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
         <li class="nav-item">
@@ -46,15 +47,24 @@
             <div class="table-responsive col-12">
                 <div class="form-group row mb-3 mt-3">
                     <label class="col-md-2 col-form-label">구분</label>
-                    <select class="form-control form-control-sm col-md-4" id="Vicname">
+                    <select class="form-control form-control-sm col-md-4" id="Vicname" onchange="showGubun2()">
                         <option value="선택" selected disabled>신청 종류를 선택하세요</option>
                         <option value="사직">사직</option>
                         <option value="휴직">휴직</option>
+                        <option value="증명서">증명서</option>
+                    </select>
+                    <label class="col-md-2 col-form-label" id="CertificateLabel" style="display:none">종류</label>
+                    <select class="form-control form-control-sm col-md-4" id="Certificate" style="display:none">
+                        <option value="선택" selected disabled>원하는 종류를 선택하세요</option>
+                        <option value="재직">재직증명서</option>
+                        <option value="재직">재직증명서</option>
                     </select>
                 </div>
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">신청일</label>
-                    <input id="Snal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="신청일을 선택하세요" />
+                    <label class="col-md-2 col-form-label">희망일</label>
+                    <input id="Snal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="희망일을 선택하세요" />
+                    <label class="col-md-2 col-form-label" id="EnalLabel" style="display:none">종료일</label>
+                    <input id="Enal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="종료일을 선택하세요" style="display:none" />
                 </div>
 
                 <div class="form-group row">
@@ -111,9 +121,9 @@
                 <table class="table-sm table-bordered table-hover" id="vacationTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th width="20%">구분</th>
-                            <th width="45%">신청기간</th>
-                            <th width="20%">결재현황</th>
+                            <th width="25%">구분</th>
+                            <th width="45%">신청일</th>
+                            <th width="15%">결재현황</th>
                             <th width="15%">결과</th>
                         </tr>
                     </thead>
@@ -129,15 +139,22 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
-                                    @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
+                                    @if (item.Gubun1.Equals("증명서"))
                                     {
-                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
-
+                                        <td>@item.Gubun1 (@item.Gubun2)<input class="vseq" type="hidden" value="@item.SEQID"></td>
                                     }
                                     else
                                     {
-                                        <td><span class="linePerWord">@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal)</span></td>
+                                        <td>@item.Gubun1 <input class="vseq" type="hidden" value="@item.SEQID"></td>
+                                    }
+
+                                    @if (item.Gubun1.Equals("휴직"))
+                                    {
+                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal) </td>
+                                    }
+                                    else
+                                    {
+                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) </td>
                                     }
 
                                     <td class="status">
@@ -246,6 +263,10 @@
             language: 'ko',
             autoclose: true
         });
+        $("#Enal").datepicker({
+            language: 'ko',
+            autoclose: true
+        });
         $("#ProCDeep").change(function () {
             let optionValue = $("#ProCDeep option:selected").val();
             //	   alert(optionValue);
@@ -272,41 +293,103 @@
             }
 
         });
+        $("#vacationTable tr").click(function () {
+            var status = $(this).find(".status").text().substring(0, 2).trim();
+            //alert(status);
+            if (status == '0') {
+                $(".vacation_deleteBtn").show();
+            } else {
+                $(".vacation_deleteBtn").hide();
+            }
+
+            var SeqID = $(this).find("input").val();
+            alert(SeqID)
+            if (SeqID == null || SeqID == "") return;
+            $("#ApproveDetail").modal('show');
+            $.ajax({
+                type: 'GET',
+                url: '/Apply/Sub21_2/ETC/' + SeqID,
+                dataType: "JSON",
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    var sjson = JSON.parse(result);
+                    //alert("succ");
+                    var s = '<table id="VPTable" class="table-sm table-bordered col-sm-12">';
+                    s += "<thead><tr><th align='center' width='15%' >결재</th><th align='center' width='15%'>이름</th><th align='center' width='20%'>부서</th><th align='center'>반려사유</th></tr></thead>"
+                    if (sjson.length == 0) {
+                        s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
+                    } else {
+                        for (var i = 0; i < sjson.length; i++) {
+                            var f_color = '';
+                            if (sjson[i].AResult == 'N' && sjson[i].processPoint == 'N') f_color = "gray";
+                            if (sjson[i].AResult == 'Y' && sjson[i].processPoint == 'N') f_color = "blue";
+                            if (sjson[i].AResult == 'F' && sjson[i].processPoint == 'N') {
+                                f_color = "red";
+                                var DeepNumChk = Number(sjson[i].DeepNum);
+                            }
+                            if (DeepNumChk < Number(sjson[i].DeepNum)) f_color = "gray";
+                            s += "<tr>";
+                            s += "<td style='color:" + f_color + "' width=>" + sjson[i].DeepNum + "<input type='hidden' value='" + SeqID + "'></td>"
+                            s += "<td style='color:" + f_color + "'>" + sjson[i].approveName + "</td>"
+                            s += "<td style='color:" + f_color + "'>" + sjson[i].Buseo + "</td>"
+                            s += "<td style='color:" + f_color + "'>" + sjson[i].RereaSon + "</td>"
+                            s += "</tr>"
+                            //alert(sjson[i].Buseo);
+                        }
+                        s += "</table>"
+                    }
+                    $("#vicReason").text(sjson[0].EtcReason);
+                    $("#result2").html(s);
+                },
+                error: function () {
+                    alert("err");
+                }
+            })
+        });
+        $(".vacation_deleteBtn").on('click', function () {
+            let seqid = $(this).parent().parent().find("input").val();
+            if (confirm("선택한 휴가신청을 취소하시겠습니까?")) {
+                $.ajax({
+                    url: "/Apply/Sub21_5/vacation/" + seqid,
+                    type: "GET",
+                    dataType: "text",
+                    contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                    charset: "utf-8",
+                    success: function (result) {
+                        if (result == 'success') {
+                            alert("선택한 휴가신청이 취소되었습니다.");
+                        } else {
+                            alert("휴가신청 취소가 실패하였습니다. 다시시도해주세요.");
+                        }
+                        location.href = "Sub21";
+                    },
+                    error: function () {
+                        alert("err");
+                    }
+                });
+            } else {
+                return;
+            }
+        });
     });
 
-    function checkInput() {
-        alert($("#Vicname").val());
-        if ($("#Vicname").val() == null) {
-            alert("신청 구분을 선택해주세요");
-            $("#Vicname").focus();
-            return;
+    function showGubun2() {
+        if ($("#Vicname").val() == "증명서") {
+            $("#CertificateLabel").show();
+            $("#Certificate").show();
+            $("#Certificate").focus();
+        } else {
+            $("#CertificateLabel").hide();
+            $("#Certificate").hide();
         }
-        if ($("#Snal").val() == "") {
-            alert("신청일을 선택해주세요");
+        if ($("#Vicname").val() == "휴직") {
+            $("#EnalLabel").show();
+            $("#Enal").show();
             $("#Snal").focus();
-            return;
+        } else {
+            $("#EnalLabel").hide();
+            $("#Enal").hide();
         }
-        
-        if ($("#VicReason").val() == "") {
-            alert("사유를 입력해 주세요");
-            $("#UseTime").focus();
-            return;
-        }
-
-        var optionValue = $("#ProCDeep option:selected").val();
-        for (var i = 1; i <= 5; i++) {
-            if (i <= optionValue) {
-                if ($("#sign" + i).val() == "") {
-                    alert(i + "단계 결재자를 입력해 주세요")
-                    $("#sign" + i).focus();
-                    return;
-                }
-            } else {
-                $(".inputCls" + i).hide();
-            }
-        }
-
-        submitVacation();
     }
 
     function enterkey() {
@@ -345,7 +428,7 @@
         }
 
         $.ajax({
-            url: '/Home/Sub10_1/' + searchWord + "/" + step_num + "/" + staffList,
+            url: '/Apply/Sub21_1/' + searchWord + "/" + step_num + "/" + staffList,
             type: 'GET',
             dataType: "json",
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -379,5 +462,157 @@
         $("#stepModal").html(id);
         $("#findApproverModal").modal('show'); // 입력 및 수정 폼 모달 창 열기
     }
+    function checkInput() {
+        //let ProCDeep = $("#ProCDeep ").val();
+        if ($("#Vicname").val() == null) {
+            alert("구분을 선택해주세요");
+            $("#Vicname").focus();
+            return;
+        }
+        if ($("#Vicname").val() == "휴직") {
+            if ($("#Enal").val() == "" || $("#Enal").val() == null) {
+                alert("종료일을 선택해주세요");
+                $("#Enal").focus();
+                return;
+            }
+            if ($("#Snal").val().trim() > $("#Enal").val().trim()) {
+                alert("종료일이 시작일보다 빠릅니다.");
+                $("#Enal").focus();
+                return;
+            }
+        }
+        if ($("#Vicname").val() == "증명서") {
+            if ($("#Certificate").val() == "선택" || $("#Certificate").val() == null) {
+                alert("종류를 선택해주세요");
+                $("#Certificate").focus();
+                return;
+            }
+        }
+        if ($("#Snal").val() == "") {
+            alert("희망일을 선택해주세요");
+            $("#Snal").focus();
+            return;
+        }
 
+        if ($("#VicReason").val() == "") {
+            alert("사유를 입력해 주세요");
+            $("#UseTime").focus();
+            return;
+        }
+
+        var optionValue = $("#ProCDeep option:selected").val();
+        for (var i = 1; i <= 5; i++) {
+            if (i <= optionValue) {
+                if ($("#sign" + i).val() == "") {
+                    alert(i + "단계 결재자를 입력해 주세요");
+                    $("#sign" + i).focus();
+                    return;
+                }
+            } else {
+                $(".inputCls" + i).hide();
+            }
+        }
+
+        submitVacation();
+    }
+    function submitVacation() {
+        let Gubun1 = $("#Vicname").val();
+        let Gubun2 = $("#Certificate").val();
+        let Snal = $("#Snal").val();
+        let Enal = $("#Enal").val();
+        let ProCDeep = $("#ProCDeep ").val();
+        let EtcReason = $("#VicReason").val();
+
+        alert(Enal);
+        if (Gubun2 == "") Gubun2 = "";
+        if (ProCDeep == "") ProCDeep = 0;
+        if (Enal == "" || Enal == null) Enal = "2222-12-12";
+        alert(Snal + "/" + Enal);
+        if (ProCDeep > 0) {
+            // 휴가정보 등록(Vacation_List)
+            $.ajax({
+                url: "/Apply/Sub22_1",
+                type: "GET",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: "text",
+                data: {
+                    "Gubun1": Gubun1,
+                    "Gubun2": Gubun2,
+                    "Snal": Snal,
+                    "Enal": Enal,
+                    "ProCDeep": ProCDeep,
+                    "EtcReason": EtcReason
+                },
+                success: function (result) {
+                    if (result == "success") {
+
+                        insertApprover();
+
+                        $("#Vicname").val("선택");
+                        $("#Certificate").val("선택");
+                        $("#Snal").val("");
+                        $("#Enal").val("");
+                        $("#VicReason").val("");
+                        $("#ProCDeep ").val(1);
+                        $("#sign1").val("");
+                        $("#sign2").val("");
+                        $("#sign3").val("");
+                        $("#sign4").val("");
+                        $("#sign5").val("");
+
+                    } else {
+                        alert("신청 실패")
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+    function insertApprover() {
+        let ProCDeep = $("#ProCDeep ").val();
+        let StaffID1 = $("#StaffID1").val();
+        let StaffID2 = $("#StaffID2").val();
+        let StaffID3 = $("#StaffID3").val();
+        let StaffID4 = $("#StaffID4").val();
+        let StaffID5 = $("#StaffID5").val();
+        let sign1 = $("#sign1").val();
+        let sign2 = $("#sign2").val();
+        let sign3 = $("#sign3").val();
+        let sign4 = $("#sign4").val();
+        let sign5 = $("#sign5").val();
+
+        $.ajax({
+            url: "/Apply/Sub21_4",
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            data: {
+                "Type": "ETC",
+                "ProCDeep": ProCDeep,
+                "StaffID1": StaffID1,
+                "StaffID2": StaffID2,
+                "StaffID3": StaffID3,
+                "StaffID4": StaffID4,
+                "StaffID5": StaffID5,
+                "Sign1": sign1,
+                "Sign2": sign2,
+                "Sign3": sign3,
+                "Sign4": sign4,
+                "Sign5": sign5
+            },
+            success: function (result) {
+                if (result == "success") {
+                    alert("신청 완료");
+                    location.href = "Sub22";
+                } else {
+                    alert("신청 실패");
+                }
+            },
+            error: function () {
+                alert("통신실패");
+            }
+        });
+    }
 </script>

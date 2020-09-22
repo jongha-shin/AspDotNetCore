@@ -275,42 +275,45 @@ namespace HanbizaMVC.Controllers
             return new JsonResult(jsonString);
         }
 
-        // 기타결재
+        // 기타신청
         [Authorize]
         public IActionResult Sub22()
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
+            
+            // ETC 신청내역
+            List<Etc_List> ETClist = null;
+            _db.LoadStoredProc("dbo.apply_getApplication").AddParam("Type", "ETC")
+                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                .Exec(r => ETClist = r.ToList<Etc_List>());
 
             ViewBag.menulist = menulist;
+
+            if (ETClist.Count > 0) return View(ETClist);
+            
             return View();
         }
+
+        // 22-1 기타 신청
         [Authorize]
-        [Route("/Apply/Sub22_1/{SearchWord}/{Step_num}/{StaffList}")]
-        public IActionResult Sub22_1(string SearchWord, string Step_num, string StaffList)
+        public string Sub22_1(Etc_List etc)
         {
             Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
-            ViewBag.menulist = menulist;
-
-            var jsonString = "";
-
-            if (SearchWord != null)
+            string rsString;
+            
+            var rs = _db.LoadStoredProc("dbo.apply_insert_ETC")
+                        .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
+                        .AddParam("Gubun1", etc.Gubun1).AddParam("Gubun2", etc.Gubun2).AddParam("Snal", etc.Snal).AddParam("Enal", etc.Enal).AddParam("EtcReason", etc.EtcReason).AddParam("ProCDeep", etc.ProCDeep)
+                        .ExecNonQuery();
+            if (rs > 0)
             {
-                if (!SearchWord.Equals(""))
-                {
-                    List<Approver> Datatable = null;
-                    _db.LoadStoredProc("vacation_getApprover").AddParam("Type", "vacation")
-                       .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
-                       .AddParam("SearchWord", SearchWord).AddParam("Step_num", Step_num).AddParam("StaffList", StaffList)
-                       .Exec(r => Datatable = r.ToList<Approver>());
-
-                    jsonString = JsonConvert.SerializeObject(Datatable);
-                }
+                rsString = "success";
+                return rsString;
             }
-            return new JsonResult(jsonString);
+            rsString = "fail";
+            return rsString;
         }
-
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
