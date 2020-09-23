@@ -259,6 +259,8 @@
         $("#result").html("");
     });
     $(function () {
+        set_preApprover();
+
         $("#Snal").datepicker({
             language: 'ko',
             autoclose: true
@@ -615,5 +617,36 @@
                 alert("통신실패");
             }
         });
+    }
+    function set_preApprover() {
+        $.ajax({
+            url: "/Apply/Sub21_6/ETC",
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var preApprover = JSON.parse(result);
+                //alert("success: " + preApprover.length + " /" + preApprover[0].StaffName);
+                $("#ProCDeep").val(preApprover.length);
+
+                if (preApprover.length == 0) { $("#ProCDeep").val(1); return };
+
+                for (var i = 1; i <= 5; i++) {
+                    if (i <= preApprover.length) {
+                        $("#StaffID" + i).val(preApprover[i - 1].StaffID);
+                        $("#sign" + i).val(preApprover[i - 1].StaffName);
+                        $(".inputCls" + i).show();
+                    } else {
+                        $("#StaffID" + i).val("");
+                        $("#sign" + i).val("");
+                        $(".inputCls" + i).hide();
+                    }
+                }
+
+            },
+            error: function () {
+                alert("err");
+            }
+        })
     }
 </script>
