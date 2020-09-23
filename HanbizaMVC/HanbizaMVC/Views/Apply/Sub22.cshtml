@@ -42,126 +42,126 @@
         </li>
     </ul>
     @* tap1 *@
-    <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-            <div class="table-responsive col-12">
-                <div class="form-group row mb-3 mt-3">
-                    <label class="col-md-2 col-form-label">구분</label>
-                    <select class="form-control form-control-sm col-md-4" id="Vicname" onchange="showGubun2()">
-                        <option value="선택" selected disabled>신청 종류를 선택하세요</option>
-                        <option value="사직">사직</option>
-                        <option value="휴직">휴직</option>
-                        <option value="증명서">증명서</option>
-                    </select>
-                    <label class="col-md-2 col-form-label" id="CertificateLabel" style="display:none">종류</label>
-                    <select class="form-control form-control-sm col-md-4" id="Certificate" style="display:none">
-                        <option value="선택" selected disabled>원하는 종류를 선택하세요</option>
-                        <option value="재직">재직증명서</option>
-                        <option value="재직">재직증명서</option>
-                    </select>
-                </div>
-                <div class="form-group row">
-                    <label class="col-md-2 col-form-label">희망일</label>
-                    <input id="Snal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="희망일을 선택하세요" />
-                    <label class="col-md-2 col-form-label" id="EnalLabel" style="display:none">종료일</label>
-                    <input id="Enal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="종료일을 선택하세요" style="display:none" />
-                </div>
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="table-responsive col-12">
+            <div class="form-group row mb-3 mt-3">
+                <label class="col-md-2 col-form-label">구분</label>
+                <select class="form-control form-control-sm col-md-4" id="Vicname" onchange="showGubun2()">
+                    <option value="선택" selected disabled>신청 종류를 선택하세요</option>
+                    <option value="사직">사직</option>
+                    <option value="휴직">휴직</option>
+                    <option value="증명서">증명서</option>
+                </select>
+                <label class="col-md-2 col-form-label" id="CertificateLabel" style="display:none">종류</label>
+                <select class="form-control form-control-sm col-md-4" id="Certificate" style="display:none">
+                    <option value="선택" selected disabled>원하는 종류를 선택하세요</option>
+                    <option value="재직">재직증명서</option>
+                    <option value="재직">재직증명서</option>
+                </select>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">희망일</label>
+                <input id="Snal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="희망일을 선택하세요" />
+                <label class="col-md-2 col-form-label" id="EnalLabel" style="display:none">종료일</label>
+                <input id="Enal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="종료일을 선택하세요" style="display:none" />
+            </div>
 
-                <div class="form-group row">
-                    <label class="col-md-2 col-form-label">사유</label>
-                    <textarea class="form-control form-control-sm col-md-10" id="VicReason" rows="5" placeholder="사유를 입력하세요(최대 500글자)" maxlength="500"></textarea>
-                </div>
-                <div class="form-group row">
-                    <label class="col-md-2 col-form-label">결재단계</label>
-                    <select class="form-control form-control-sm col-md-4" id="ProCDeep">
-                        @{ int a; }
-                        @for (a = 1; a < 6; a++)
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">사유</label>
+                <textarea class="form-control form-control-sm col-md-10" id="VicReason" rows="5" placeholder="사유를 입력하세요(최대 300글자)" maxlength="300"></textarea>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">결재단계</label>
+                <select class="form-control form-control-sm col-md-4" id="ProCDeep">
+                    @{ int a; }
+                    @for (a = 1; a < 6; a++)
                         {
-                            <option value="@a">@a 단계</option>
+                    <option value="@a">@a 단계</option>
                         }
-                    </select>
+                </select>
 
-                    <label class="col-md-2 col-form-label">결재자</label>
-                    <div id="" class="inputCls1 col-md-4 p-0 pt-2 pb-md-2" style="text-align:left">
-                        <input type="hidden" id="StaffID1">
-                        <input class="approval_input" type="text" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');" value="">
-                    </div>
-
-                    <div id="" class="inputCls2 col-md-4 offset-md-8 mt-2 mt-md-0 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
-                        <input type="hidden" id="StaffID2">
-                        <input class="approval_input" type="text" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
-                    </div>
-
-                    <div id="" class="inputCls3 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
-                        <input type="hidden" id="StaffID3">
-                        <input class="approval_input" type="text" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
-                    </div>
-
-                    <div id="" class="inputCls4 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
-                        <input type="hidden" id="StaffID4">
-                        <input class="approval_input" type="text" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
-                    </div>
-
-                    <div id="" class="inputCls5 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
-                        <input type="hidden" id="StaffID5">
-                        <input class="approval_input" type="text" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
-                    </div>
+                <label class="col-md-2 col-form-label">결재자</label>
+                <div id="" class="inputCls1 col-md-4 p-0 pt-2 pb-md-2" style="text-align:left">
+                    <input type="hidden" id="StaffID1">
+                    <input class="approval_input" type="text" id="sign1" readonly required placeholder="1 단계 결재자 찾기" onclick="layer_open('1');" value="">
                 </div>
 
-                <div class="form-group row col-4 offset-4">
-                    <button class="btn btn-sm btn-primary btn-user btn-block" onclick="checkInput()">신청하기</button>
+                <div id="" class="inputCls2 col-md-4 offset-md-8 mt-2 mt-md-0 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                    <input type="hidden" id="StaffID2">
+                    <input class="approval_input" type="text" id="sign2" readonly required placeholder="2 단계 결재자 찾기" onclick="layer_open('2');">
+                </div>
+
+                <div id="" class="inputCls3 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                    <input type="hidden" id="StaffID3">
+                    <input class="approval_input" type="text" id="sign3" readonly required placeholder="3 단계 결재자 찾기" onclick="layer_open('3');">
+                </div>
+
+                <div id="" class="inputCls4 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                    <input type="hidden" id="StaffID4">
+                    <input class="approval_input" type="text" id="sign4" readonly required placeholder="4 단계 결재자 찾기" onclick="layer_open('4');">
+                </div>
+
+                <div id="" class="inputCls5 col-md-4 offset-md-8 p-0 pt-2" style="display:none; text-align:left; margin-bottom:7px;">
+                    <input type="hidden" id="StaffID5">
+                    <input class="approval_input" type="text" id="sign5" readonly required placeholder="5 단계 결재자 찾기" onclick="layer_open('5');">
                 </div>
             </div>
-        </div>
 
-        @* tap2 *@
-        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-            <div class="table-responsive">
-                <p style="text-align:right; margin:0px; font:small">* 결재단계가 진행 되기 전에 선택하여 삭제할 수 있습니다</p>
-                <table class="table-sm table-bordered table-hover" id="vacationTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th width="25%">구분</th>
-                            <th width="45%">신청일</th>
-                            <th width="15%">결재현황</th>
-                            <th width="15%">결과</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model == null || Model.Count == 0)
+            <div class="form-group row col-4 offset-4">
+                <button class="btn btn-sm btn-primary btn-user btn-block" onclick="checkInput()">신청하기</button>
+            </div>
+        </div>
+    </div>
+    
+    @* tap2 *@
+    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="table-responsive">
+            <p style="text-align:right; margin:0px; font:small">* 결재단계가 진행 되기 전에 선택하여 삭제할 수 있습니다</p>
+            <table class="table-sm table-bordered table-hover" id="vacationTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="25%">구분</th>
+                        <th width="45%">신청일</th>
+                        <th width="15%">결재현황</th>
+                        <th width="15%">결과</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || Model.Count == 0)
                         {
-                            <tr style="cursor:default; background-color:#fff">
-                                <td colspan="4">데이터가 없습니다</td>
-                            </tr>
+                    <tr style="cursor:default; background-color:#fff">
+                        <td colspan="4">데이터가 없습니다</td>
+                    </tr>
                         }
                         else
                         {
-                            @foreach (var item in Model)
+                    @foreach (var item in Model)
                             {
-                                <tr>
-                                    @if (item.Gubun1.Equals("증명서"))
+                    <tr>
+                        @if (item.Gubun1.Equals("증명서"))
                                     {
-                                        <td>@item.Gubun1 (@item.Gubun2)<input class="vseq" type="hidden" value="@item.SEQID"></td>
+                        <td>@item.Gubun1 (@item.Gubun2)<input class="vseq" type="hidden" value="@item.SEQID"></td>
                                     }
                                     else
                                     {
-                                        <td>@item.Gubun1 <input class="vseq" type="hidden" value="@item.SEQID"></td>
+                        <td>@item.Gubun1 <input class="vseq" type="hidden" value="@item.SEQID"></td>
                                     }
 
-                                    @if (item.Gubun1.Equals("휴직"))
+                        @if (item.Gubun1.Equals("휴직"))
                                     {
-                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal) </td>
+                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) ~ @string.Format("{0:yyyy-MM-dd}", item.Enal) </td>
                                     }
                                     else
                                     {
-                                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) </td>
+                        <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) </td>
                                     }
 
-                                    <td class="status">
-                                        @if (item.AllProCess.Equals("N"))
+                        <td class="status">
+                            @if (item.AllProCess.Equals("N"))
                                         {
                                             item.DeepNum = item.DeepNum - 1;
-                                            @item.DeepNum
+                            @item.DeepNum
                                         }
                                         else
                                         {@item.DeepNum}  / @item.ProCDeep
@@ -169,31 +169,31 @@
 
                                     @if (@item.AllProCess.Equals("F"))
                                     {
-                                        <td style="color:red">반려</td>
+                                    <td style="color:red">반려</td>
                                     }
                                     else if (@item.AllProCess.Equals("S"))
                                     {
-                                        <td style="color:blue">승인</td>
+                                    <td style="color:blue">승인</td>
                                     }
                                     else
                                     {
-                                        <td style="color:grey">대기</td>
+                                    <td style="color:grey">대기</td>
                                     }
                                 </tr>
                             }
                         }
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
     @* layer2 *@
     <!-- ApproveDetail modal block -->
     <div id="ApproveDetail" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <p class="modal-title" id="exampleModalLongTitle">각종신청 세부내역 @*<br />신청 사유 : <span id="vicReason"></span>*@</p>
+                    <p class="modal-title" id="exampleModalLongTitle">기타신청 세부내역 @*<br />신청 사유 : <span id="vicReason"></span>*@</p>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -303,7 +303,7 @@
             }
 
             var SeqID = $(this).find("input").val();
-            alert(SeqID)
+            //alert(SeqID)
             if (SeqID == null || SeqID == "") return;
             $("#ApproveDetail").modal('show');
             $.ajax({
@@ -338,7 +338,7 @@
                         }
                         s += "</table>"
                     }
-                    $("#vicReason").text(sjson[0].EtcReason);
+                    $("#vicReason").text(sjson[0].VicReason);
                     $("#result2").html(s);
                 },
                 error: function () {
@@ -348,20 +348,20 @@
         });
         $(".vacation_deleteBtn").on('click', function () {
             let seqid = $(this).parent().parent().find("input").val();
-            if (confirm("선택한 휴가신청을 취소하시겠습니까?")) {
+            if (confirm("선택한 신청을 취소하시겠습니까?")) {
                 $.ajax({
-                    url: "/Apply/Sub21_5/vacation/" + seqid,
+                    url: "/Apply/Sub21_5/ETC/" + seqid,
                     type: "GET",
                     dataType: "text",
                     contentType: "application/x-www-form-urlencoded;charset=utf-8",
                     charset: "utf-8",
                     success: function (result) {
                         if (result == 'success') {
-                            alert("선택한 휴가신청이 취소되었습니다.");
+                            alert("선택한 신청이 취소되었습니다");
                         } else {
-                            alert("휴가신청 취소가 실패하였습니다. 다시시도해주세요.");
+                            alert("신청 취소가 실패하였습니다. 다시시도해주세요");
                         }
-                        location.href = "Sub21";
+                        location.href = "Sub22";
                     },
                     error: function () {
                         alert("err");
@@ -523,17 +523,18 @@
         let ProCDeep = $("#ProCDeep ").val();
         let EtcReason = $("#VicReason").val();
 
-        alert(Enal);
+        //alert(Enal);
         if (Gubun2 == "") Gubun2 = "";
         if (ProCDeep == "") ProCDeep = 0;
         if (Enal == "" || Enal == null) Enal = "2222-12-12";
-        alert(Snal + "/" + Enal);
+        alert(EtcReason.length + EtcReason);
+
         if (ProCDeep > 0) {
             // 휴가정보 등록(Vacation_List)
             $.ajax({
                 url: "/Apply/Sub22_1",
-                type: "GET",
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                type: "POST",
+                //contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 dataType: "text",
                 data: {
                     "Gubun1": Gubun1,

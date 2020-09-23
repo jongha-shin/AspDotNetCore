@@ -66,6 +66,16 @@
                             </div>
                         </div>
                     }
+                    @if (item.내용.Contains("기타"))
+                    {
+                        <div class="card border-primary col-md-5 p-0 m-2 float-left vacation" onclick="location.href='/Approve/Sub33'" style="cursor:pointer;">
+                            <div class="card-header p-2">@item.내용</div>
+                            <div class="card-body text-primary p-1 pt-2">
+                                <p class="card-title" style="font-weight:bold">@item.제목</p>
+                                <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                            </div>
+                        </div>
+                    }
                     @if (item.VacId == 0)
                     { //mb-3 mt-3 mr-md-3
                         <div class="card border-primary col-md-5 p-0 m-2 float-left">

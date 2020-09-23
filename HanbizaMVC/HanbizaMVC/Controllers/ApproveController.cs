@@ -53,7 +53,6 @@ namespace HanbizaMVC.Controllers
         }
         // 30 OT결재
         [Authorize]
-        
         public IActionResult Sub30()
         {
             Boolean checkLogin = CheckLogin();
@@ -64,8 +63,9 @@ namespace HanbizaMVC.Controllers
             //_logger.LogInformation("sub30(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
 
             List<ApproveList> Alist = null;
-            _db.LoadStoredProc("dbo.OT_approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-               .AddParam("Dname", LoginUser.Dname).Exec(r => Alist = r.ToList<ApproveList>());
+            _db.LoadStoredProc("dbo.approvalList").AddParam("Type", "OT")
+               .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+               .Exec(r => Alist = r.ToList<ApproveList>());
             //Console.WriteLine("sub4 list count: " + Alist.Count());
             if (Alist != null)
             {
@@ -86,8 +86,9 @@ namespace HanbizaMVC.Controllers
             //_logger.LogInformation("sub30(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
 
             List<ApproveList> Alist = null; ;
-            _db.LoadStoredProc("dbo.approvalList").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-               .AddParam("Dname", LoginUser.Dname).Exec(r => Alist = r.ToList<ApproveList>());
+            _db.LoadStoredProc("dbo.approvalList").AddParam("Type", "vacation")
+               .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+               .Exec(r => Alist = r.ToList<ApproveList>());
             //Console.WriteLine("sub4 list count: " + Alist.Count());
             if (Alist != null)
             {
@@ -96,8 +97,32 @@ namespace HanbizaMVC.Controllers
 
             return View();
         }
-        
-        // (공용)31-1 휴가 승인 프로세스
+        // 33 기타결재
+        [Authorize]
+        public IActionResult Sub33()
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+
+            ViewBag.menulist = menulist;
+            //GetLoginUser();
+            //_logger.LogInformation("sub30(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
+
+            List<ApproveList> Alist = null; ;
+            _db.LoadStoredProc("dbo.approvalList").AddParam("Type", "ETC")
+               .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+               .Exec(r => Alist = r.ToList<ApproveList>());
+            //Console.WriteLine("sub4 list count: " + Alist.Count());
+            if (Alist != null)
+            {
+                return View(Alist);
+            }
+
+            return View();
+        }
+
+
+        // (공용)31-1 결재 승인 프로세스
         [Route("/Approve/Sub31_1/{type}/{checkedVacId}")]
         public string Sub31_1(string type, string checkedVacId)
         {
@@ -123,7 +148,7 @@ namespace HanbizaMVC.Controllers
                 return result;
             }
         }
-        // (공용)31-2 휴가 반려 프로세스
+        // (공용)31-2 결재 반려 프로세스
         [Route("/Approve/Sub31_2/{type}/{VacID}/{RereaSon}")]
         public string Sub31_2(string type, string VacID, string RereaSon)
         {
@@ -140,7 +165,7 @@ namespace HanbizaMVC.Controllers
             result = "fail";
             return result;
         }
-        // (공용)31-3 결재결과 가져오기
+        // (공용)31-3 결재 결과 가져오기
         [Route("/Approve/Sub31_3/{Type}/{Snal}/{Enal}")]
         public string Sub31_3(string type, string Snal, string Enal)
         {

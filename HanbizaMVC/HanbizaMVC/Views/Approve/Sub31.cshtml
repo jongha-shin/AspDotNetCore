@@ -212,6 +212,9 @@
     </div>
 </div>
 <script type="text/javascript">
+
+    var approveType = "vacation";
+
     $(function () {
         
         $("#Snal").datepicker({
@@ -259,7 +262,7 @@
                 //alert(VacID + "/" + RereaSon);
 
                 $.ajax({
-                    url: "/Approve/Sub31_2/vacation/" + VacID + "/" + RereaSon,
+                    url: "/Approve/Sub31_2/" + approveType + "/" + VacID + "/" + RereaSon,
                     type: "GET",
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
                     dataType: "text",
@@ -295,7 +298,7 @@
                 return;
             }
             $.ajax({
-                url: "/Approve/Sub31_1/vacation/" + checkedVacId,
+                url: "/Approve/Sub31_1/" + approveType + "/" + checkedVacId,
                 type: "GET",
                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 dataType: "text",
@@ -338,7 +341,7 @@
         let Enal = $("#Enal").val();
         //alert(Snal + "/" + Enal);
         $.ajax({
-            url: "/Approve/Sub31_3/vacation/" + Snal+"/"+Enal,
+            url: "/Approve/Sub31_3/" + approveType + "/" + Snal + "/" + Enal,
             type: "GET",
             contentType: "application/x-www-form-urlencoded; charset=utf-8",
             dataType: "text",

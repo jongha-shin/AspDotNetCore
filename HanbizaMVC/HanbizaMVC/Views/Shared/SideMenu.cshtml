@@ -100,24 +100,31 @@
             <div class="bg-white collapse-inner rounded">
                 @if (ViewBag.menulist[0].OT결재.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Approve/Sub30">
-                    <i class="fas fa-fw fa-pen-fancy"></i>&nbsp;
-                    <span> &nbsp;OT결재&nbsp;</span>
-                </a>
+                    <a class="collapse-item text-left" href="/Approve/Sub30">
+                        <i class="fas fa-fw fa-pen-fancy"></i>&nbsp;
+                        <span> &nbsp;OT결재&nbsp;</span>
+                    </a>
                 }
                 @if (ViewBag.menulist[0].휴가결재.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Approve/Sub31">
-                    <i class="fas fa-fw fa-pen"></i>&nbsp;
-                    <span> &nbsp;휴가결재&nbsp;</span>
-                </a>
+                    <a class="collapse-item text-left" href="/Approve/Sub31">
+                        <i class="fas fa-fw fa-pen"></i>&nbsp;
+                        <span> &nbsp;휴가결재&nbsp;</span>
+                    </a>
+                }
+                @if (ViewBag.menulist[0].기타결재.Equals("1"))
+                {
+                    <a class="collapse-item text-left" href="/Approve/Sub33">
+                        <i class="fas fa-fw fa-pencil-alt"></i>&nbsp;
+                        <span> &nbsp;기타결재&nbsp;</span>
+                    </a>
                 }
                 @if (ViewBag.menulist[0].인사평가.Equals("1"))
                 {
-                <a class="collapse-item text-left" style="" href="/Approve/Sub32">
-                    <i class="fas fa-fw fa-user-edit"></i>&nbsp;
-                    <span>&nbsp;인사평가&nbsp;</span>
-                </a>
+                    <a class="collapse-item text-left" style="" href="/Approve/Sub32">
+                        <i class="fas fa-fw fa-user-edit"></i>&nbsp;
+                        <span>&nbsp;인사평가&nbsp;</span>
+                    </a>
                 }
             </div>
         </div>

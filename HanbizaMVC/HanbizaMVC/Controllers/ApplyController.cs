@@ -133,7 +133,7 @@ namespace HanbizaMVC.Controllers
             ViewBag.menulist = menulist;
             //GetLoginUser();
             //_logger.LogInformation("sub21(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
-            
+
             List<Vacation_List> Vlist = null;
             _db.LoadStoredProc("dbo.apply_getApplication").AddParam("Type", "vacation")
                 .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
@@ -250,8 +250,8 @@ namespace HanbizaMVC.Controllers
             string rsString = "fail";
 
             var rs = _db.LoadStoredProc("dbo.apply_cancel").AddParam("SEQID", seqid).AddParam("Type", type).ExecNonQuery();
-            
-            if (rs > 0 )
+
+            if (rs > 0)
             {
                 rsString = "success";
                 return rsString;
@@ -265,7 +265,7 @@ namespace HanbizaMVC.Controllers
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
             ViewBag.menulist = menulist;
-            
+
             var jsonString = "";
             List<Approver> Alist = null;
             _db.LoadStoredProc("dbo.apply_getPreApprover").AddParam("Type", type)
@@ -281,7 +281,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
-            
+
             // ETC 신청내역
             List<Etc_List> ETClist = null;
             _db.LoadStoredProc("dbo.apply_getApplication").AddParam("Type", "ETC")
@@ -291,17 +291,18 @@ namespace HanbizaMVC.Controllers
             ViewBag.menulist = menulist;
 
             if (ETClist.Count > 0) return View(ETClist);
-            
+
             return View();
         }
 
         // 22-1 기타 신청
+        [HttpPost]
         [Authorize]
         public string Sub22_1(Etc_List etc)
         {
             Boolean checkLogin = CheckLogin();
             string rsString;
-            
+            Console.WriteLine("사유길이 : "+etc.EtcReason.Length);
             var rs = _db.LoadStoredProc("dbo.apply_insert_ETC")
                         .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
                         .AddParam("Gubun1", etc.Gubun1).AddParam("Gubun2", etc.Gubun2).AddParam("Snal", etc.Snal).AddParam("Enal", etc.Enal).AddParam("EtcReason", etc.EtcReason).AddParam("ProCDeep", etc.ProCDeep)
