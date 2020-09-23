@@ -272,6 +272,9 @@
 </div>
 
 <script type="text/javascript">
+
+    var applyType = "OT";
+
     // 동적 테이블(결재자 찾기) 생성 후 (row)클릭 이벤트
     $(document).on("click", "#approverTable tr", function () {
         //alert("");
@@ -352,7 +355,7 @@
             $("#ApproveDetail").modal('show');
             $.ajax({
                 type: 'GET',
-                url: '/Apply/Sub21_2/OT/' + SeqID,
+                url: '/Apply/Sub21_2/' + applyType + '/' + SeqID,
                 dataType: "JSON",
                 contentType: 'application/json; charset=utf-8',
                 success: function (result) {
@@ -394,7 +397,7 @@
             let seqid = $(this).parent().parent().find("input").val();
             if (confirm("선택한 OT신청을 취소하시겠습니까?")) {
                 $.ajax({
-                    url: "/Apply/Sub21_5/OT/" + seqid,
+                    url: "/Apply/Sub21_5/" + applyType + "/" + seqid,
                     type: "GET",
                     dataType: "text",
                     contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -557,7 +560,7 @@
             contentType: "application/x-www-form-urlencoded; charset=utf-8",
             dataType: "text",
             data: {
-                "Type": "OT",
+                "Type": applyType,
                 "ProCDeep": ProCDeep,
                 "StaffID1": StaffID1,
                 "StaffID2": StaffID2,
@@ -611,7 +614,7 @@
     }
     function set_preApprover() {
         $.ajax({
-            url: "/Apply/Sub21_6/OT",
+            url: "/Apply/Sub21_6/"+applyType,
             type: "GET",
             contentType: "application/x-www-form-urlencoded; charset=utf-8",
             dataType: "json",

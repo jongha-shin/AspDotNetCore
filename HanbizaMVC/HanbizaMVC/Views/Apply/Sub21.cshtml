@@ -249,6 +249,9 @@
 </div>
 
 <script>
+
+    var applyType = "vacation";
+
     function enterkey() {
         //var searchKey = $("#searchKey").val();
         var searchWord = $("#searchWord").val().trim();
@@ -411,7 +414,7 @@
             $("#ApproveDetail").modal('show');
             $.ajax({
                 type: 'GET',
-                url: '/Apply/Sub21_2/vacation/' + SeqID,
+                url: '/Apply/Sub21_2/' + applyType + '/' + SeqID,
                 dataType: "JSON",
                 contentType: 'application/json; charset=utf-8',
                 success: function (result) {
@@ -453,7 +456,7 @@
             let seqid = $(this).parent().parent().find("input").val();
             if (confirm("선택한 휴가신청을 취소하시겠습니까?")) {
                 $.ajax({
-                    url: "/Apply/Sub21_5/vacation/" + seqid,
+                    url: "/Apply/Sub21_5/" + applyType + "/" + seqid,
                     type: "GET",
                     dataType: "text",
                     contentType: "application/x-www-form-urlencoded;charset=utf-8",
@@ -513,7 +516,7 @@
 
    function set_preApprover() {
        $.ajax({
-           url: "/Apply/Sub21_6/vacation",
+           url: "/Apply/Sub21_6/" + applyType,
            type: "GET",
            contentType: "application/x-www-form-urlencoded; charset=utf-8",
            dataType: "json",
@@ -618,7 +621,7 @@
             contentType: "application/x-www-form-urlencoded; charset=utf-8",
             dataType: "text",
             data: {
-                "Type": "vacation",
+                "Type": applyType,
                 "ProCDeep": ProCDeep,
                 "StaffID1": StaffID1,
                 "StaffID2": StaffID2,
