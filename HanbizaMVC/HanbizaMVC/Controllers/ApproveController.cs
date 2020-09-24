@@ -190,24 +190,52 @@ namespace HanbizaMVC.Controllers
         [Authorize]
         [Route("/Approve/Sub32")]
         [Route("/Approve/Sub32/{HRsubmit}")]
-        public IActionResult Sub32(string HRsubmit)
+        //[Route("/Approve/Sub32/{dateYear}")]
+        [Route("/Approve/Sub32/{HRsubmit}/{dateYear}")]
+        public IActionResult Sub32(string HRsubmit, string dateYear)
         {
+            Console.WriteLine("dateY:" + dateYear);
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
             //dynamic mymodel = new ExpandoObject();
+            ViewBag.menulist = menulist;
+            _logger.LogInformation("sub32(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
+
             if (HRsubmit == null) HRsubmit = "";
 
-            ViewBag.menulist = menulist;
-            //_logger.LogInformation("sub32(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
-
-            List<인사평가> HRlist = null; ;
+            List<인사평가> Years = null;
+            if (dateYear == null)
+            {
+                _db.LoadStoredProc("dbo.lastYear")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Years = r.ToList<인사평가>());
+                if (Years.Count() == 0)
+                {
+                    dateYear = DateTime.Now.ToString("yyyy");
+                }
+                else
+                {
+                    dateYear = Years[0].년;
+                }
+                ViewBag.선택년 = dateYear;
+                ViewBag.Years = Years;
+            }
+            else
+            {
+                _db.LoadStoredProc("dbo.lastYear")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Years = r.ToList<인사평가>());
+                ViewBag.선택년 = dateYear;
+                ViewBag.Years = Years;
+            }
+            Console.WriteLine("dateY:"+dateYear);
+            List<인사평가> HRlist = null;
             _db.LoadStoredProc("dbo.HR_Assessee_list")
-               .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+               .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname).AddParam("dateYear", dateYear)
                .Exec(r => HRlist = r.ToList<인사평가>());
-
-            //mymodel.HRlist = HRlist;
-            //mymodel.HRDone = HRDone;   
+            
             ViewBag.HRsubmit = HRsubmit;
+            Console.WriteLine(Years.Count);
             if (HRlist != null) return View(HRlist);
 
             return View();

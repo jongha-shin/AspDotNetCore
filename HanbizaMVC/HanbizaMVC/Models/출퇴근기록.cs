@@ -32,6 +32,7 @@ namespace HanbizaMVC.Models
         public DateTime? Regdate { get; set; }
 
         public string 요일 { get; set; }
+        public string 년 { get; set; }
         public string 월 { get; set; }
     }
 }

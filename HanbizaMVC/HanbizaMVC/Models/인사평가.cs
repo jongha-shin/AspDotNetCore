@@ -31,6 +31,6 @@ namespace HanbizaMVC.Models
         public double 배점목록 { get; set; }
         public long colspan { get; set; }
 
-
+        public string 년 { get; set; }
     }
 }

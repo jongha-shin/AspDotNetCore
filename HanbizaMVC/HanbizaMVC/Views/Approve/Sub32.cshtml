@@ -18,11 +18,16 @@
     <input id="HRsubmit" type="hidden" value="@ViewBag.HRsubmit"/>
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">평가요청</a>
+            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true" onclick="showSelectY('N')">평가요청</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">평가완료내역</a>
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false" onclick="showSelectY('Y')">평가완료내역</a>
         </li>
+        <ul class="nav justify-content-end" id="SelectY" style="font-size:small; position:absolute; right:0px; top: 11px; display:none;">
+            <a href="#" id="prevBtn" onclick="changeYear('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+            <span style="margin:5px">@ViewBag.선택년 년</span>
+            <a href="#" id="nextBtn" onclick="changeYear('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        </ul>
     </ul>
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -31,7 +36,7 @@
                     <thead>
                         <tr style="background-color: #3763ab; color:white">
                             <th>피평가자</th>
-                            <th>평가지</th>
+                            <th width="55%">평가지</th>
                             <th>평가</th>
                         </tr>
                     </thead>
@@ -79,7 +84,7 @@
                     <thead>
                         <tr style="background-color: #3763ab; color:white">
                             <th>피평가자</th>
-                            <th>평가지</th>
+                            <th width="55%">평가지</th>
                             <th>평가</th>
                         </tr>
                     </thead>
@@ -124,6 +129,7 @@
     var HRsubmit = $("#HRsubmit").val();
     if (HRsubmit == 'HRsubmit') {
         $("#pills-profile-tab").tab('show');
+        $("#SelectY").show();
     } else {
         $("#pills-home-tab").tab('show');
     }
@@ -164,7 +170,7 @@
             if (BigSubject.indexOf('/') != -1) {
                 BigSubject = BigSubject.replace(/\//gi, '-');
             }
-            
+
             $.ajax({
                 url: '/Approve/Sub32_4/' + AssesseeID + "/" + BigSubject,
                 type: 'GET',
@@ -183,7 +189,12 @@
             });
         });
     });
-    
+
+    function showSelectY(sign) {
+        if (sign == 'Y') $("#SelectY").show();
+        else $("#SelectY").hide();
+    }
+
     function submitHR(AssesseeID, BigSubject) {
         $.ajax({
             url: '/Approve/Sub32_3/' + AssesseeID + "/" + BigSubject,
@@ -201,7 +212,7 @@
             },
         });
     }
-    
+
     function genRowspan(className) {
         $("." + className).each(function () {
             let rows = $("." + className + ":contains('" + $(this).text() + "')");
@@ -210,6 +221,42 @@
                 rows.not(":eq(0)").remove();
             }
         });
+    }
+
+    function changeYear(sign) {
+        let yearList = [];
+        let today = new Date()
+        let year = today.getFullYear;
+
+        @if(Model == null)
+        {
+            @:yearList.push(year)
+        }
+        else
+        {
+            @foreach (var item in ViewBag.Years)
+            {
+                @:yearList.push('@item.년');
+            }
+        }
+        let current_num = yearList.indexOf('@ViewBag.선택년');
+        //alert("현재index: " + current_num + " / 배열길이: " + yearList.length)
+        if (sign == '+') { // 배열 index 감소
+            if (current_num - 1 < 0) {
+                alert("데이터가 없습니다.")
+            }
+            else {
+                location.href = "/Approve/Sub32/HRsubmit/" + yearList[current_num - 1];
+            }
+        } else {    // '-' 배열 index 증가
+            if (current_num + 1 > yearList.length -1) {
+                alert("데이터가 없습니다.")
+            }
+            else {
+                //alert(monthList[current_num + 1])
+                location.href = "/Approve/Sub32/HRsubmit/" + yearList[current_num + 1];
+            }
+        }
     }
 </script>
 

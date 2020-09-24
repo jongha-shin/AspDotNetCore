@@ -86,8 +86,9 @@ namespace HanbizaMVC.Controllers
             if (dateMonth == null)
             {
                 dateMonth = "";
-                _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
+                _db.LoadStoredProc("dbo.lastMonth")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Months = r.ToList<출퇴근기록>());
                 if (Months.Count() == 0)
                 {
                     dateMonth = DateTime.Now.ToString("yyyy-MM");
@@ -100,8 +101,9 @@ namespace HanbizaMVC.Controllers
             }
             else
             {
-                _db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                    .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
+                _db.LoadStoredProc("dbo.lastMonth")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Months = r.ToList<출퇴근기록>());
                 ViewBag.선택월 = dateMonth;
             }
             //Console.WriteLine("1 선택월: " + dateMonth);

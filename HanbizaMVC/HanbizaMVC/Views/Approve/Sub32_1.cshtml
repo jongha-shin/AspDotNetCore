@@ -108,9 +108,10 @@
 <script>
     var flag = "@ViewBag.flag";
     var MaxPage = "@T_number";
+    var selectYear = "@Model[0].Regdate".substring(0, 4);
 
     $(document).ready(function (e) {
-
+        
         $(".scoreBtn").on("click", function () {
 
             if (flag == "start") {
@@ -158,7 +159,7 @@
             if (now < 1) {
                 if ("@ViewBag.flag" == "start") location.href = "/approve/Sub32";
                 else {
-                    location.href = "/approve/Sub32/HRsubmit";
+                    location.href = "/Approve/Sub32/HRsubmit/" + selectYear;
                 }
             }
         }
