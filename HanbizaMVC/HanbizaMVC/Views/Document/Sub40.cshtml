@@ -3,7 +3,7 @@
 }
 @model 문서함
 <div class="container">
-    <div class="card" style="width:300px; margin: 0 auto">
+    <div class="card" style="width:302px; margin: 0 auto">
         <input type="hidden" id="SEQID" value="@ViewBag.SEQID" />
         <div class="card-body p-0">
             <div class="text-center">
@@ -58,7 +58,7 @@
             ctx.fillStyle = '#fff';  /// set white fill style
             ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
             var isDraw = false;
-            var width = "4";
+            var width = "2";
             var color = "#000";
             var pDraw = $('#drawCanvas').offset();
             var currP = null;
