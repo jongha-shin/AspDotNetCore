@@ -26,8 +26,8 @@
         color: grey;
     }
 
-    .table-hover{
-        cursor:pointer;
+    .table-hover {
+        cursor: pointer;
     }
 </style>
 
@@ -60,51 +60,48 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                    @foreach (var item in Model)
+                    {
+                        if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
                         {
-                            if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
-                            {
-                                <tr>
-                                    <td><input type="checkbox" class="checkBox_body" value="@item.VacID" /><input type="hidden" class="submit_result" value=""></td>
-
-                                    @if (item.잔여일수 > 0)
-                                    {
-                                        <td>@item.Staffname</td>
-
-                                    }
-                                    else
-                                    {
-                                        <td style="color:red;">@item.Staffname</td>
-
-                                    }
-                                    <td>
-                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
-                                        {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
-                                        }
-                                        else
-                                        {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
-                                        }
-                                        <br />
-                                        <span style="color:black">사유: @item.VicReaSon</span><br />
-                                        <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
-                                            <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
-                                            <div class="input-group-append">
-                                                <button class="btn btn-danger rejectBtn">반려</button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                a++;
+                        <tr>
+                            <td><input type="checkbox" class="checkBox_body" value="@item.VacID" /><input type="hidden" class="submit_result" value=""></td>
+                            @if (item.잔여일수 > 0)
+                                {
+                            <td>@item.Staffname</td>
                             }
+                            else
+                            {
+                            <td style="color:red;">@item.Staffname</td>
+                            }
+                            <td>
+                            @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
+                            {
+                                <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
+                            }
+                                <br />
+                                <span style="color:black">사유: @item.VicReaSon</span><br />
+                                <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
+                                    <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-danger rejectBtn">반려</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                            a++;
                         }
-                        @if (a == 0)
-                        {
-                            <tr>
-                                <td colspan="3">데이터가 없습니다</td>
-                            </tr>
-                        }
+                    }
+                    @if (a == 0)
+                    {
+                        <tr>
+                            <td colspan="3">데이터가 없습니다</td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
@@ -129,83 +126,83 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
-                        {
-                            if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F"))
-                            {
-                                <tr>
-                                    <td>@item.Staffname</td>
-                                    <td>
-                                        @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
-                                        {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
-                                        }
-                                        else
-                                        {
-                                            <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
-                                        }
-                                        <br />
-                                        <span style="color:black">@item.VicReaSon</span><br />
-                                    </td>
-                                </tr>
-                            b++;
-                            }
-                        }
-                        @if (b == 0)
-                        {
-                            <tr>
-                                <td colspan="3">데이터가 없습니다</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        @* 반려 *@
-    <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
-        
-        <div class="table-responsive">
-            <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th width="15%">신청자</th>
-                        <th>기간 및 사유</th>
-                    </tr>
-                </thead>
-                <tbody>
                     @foreach (var item in Model)
                     {
-                        if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
+                        if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F"))
                         {
-                            <tr onclick="CancleReject('@item.VacID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
-                                <td>@item.Staffname</td>
-                                <td>
-                                    @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
-                                    {
-                                        <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
-                                    }
-                                    else
-                                    {
-                                        <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
-                                    }
-                                    <br />
-                                    <span style="color:black">@item.VicReaSon</span><br />
-                                    <span style="color:red">@item.RereaSon</span>
-                                </td>
-                            </tr>
-                            c++;
+                        <tr>
+                            <td>@item.Staffname</td>
+                            <td>
+                            @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
+                            {
+                                <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
+                            }
+                                <br />
+                                <span style="color:black">@item.VicReaSon</span><br />
+                            </td>
+                        </tr>
+                            b++;
                         }
                     }
-                    @if (c == 0)
+                    @if (b == 0)
                     {
                         <tr>
                             <td colspan="3">데이터가 없습니다</td>
                         </tr>
                     }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+        @* 반려 *@
+        <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를<span style="color:red;">취소</span>할 수 있습니다</p>
+            <div class="table-responsive">
+                <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="15%">신청자</th>
+                            <th>기간 및 사유</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
+                        {
+                        <tr onclick="CancleReject('@item.VacID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
+                            <td>@item.Staffname</td>
+                            <td>
+                            @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
+                            {
+                                <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0:yyyy-MM-dd}", item.ENal)</span>
+                            }
+                                <br />
+                                <span style="color:black">@item.VicReaSon</span><br />
+                                <span style="color:red">@item.RereaSon</span>
+                            </td>
+                        </tr>
+                            c++;
+                        }
+                    }
+                        @if (c == 0)
+                    {
+                        <tr>
+                            <td colspan="3">데이터가 없습니다</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
         @* 결재결과 *@
         <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="form-group row ml-1">
@@ -213,9 +210,9 @@
                 <input id="Enal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" />
             </div>
             <div class="table-responsive">
-                
+
                 <span id="result"></span>
-                
+
             </div>
         </div>
     </div>
@@ -225,19 +222,19 @@
     var approveType = "vacation";
 
     $(function () {
-        
+
         $("#Snal").datepicker({
             language: 'ko',
             autoclose: true,
-            
+
         });
-        
+
         $("#Enal").datepicker({
             language: 'ko',
             autoclose: true
         });
-        
-        $("#Snal").datepicker("setDate", "-15D"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후) 
+
+        $("#Snal").datepicker("setDate", "-15D"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
         $("#Enal").datepicker("setDate", "+15D");
 
         $("#checkBox_head").change(function () {
@@ -358,9 +355,9 @@
                 //console.log(result);
                 //location.href = "/Approve/Sub31";
                 var sjson = JSON.parse(result);
-             
+
                 var s = '<table id="ApproveHistoryTable" class="table-sm table-bordered col-sm-12">';
-                s += "<thead><tr><th align='center' width='15%'>신청자</th><th align='center' width='55%'>신청휴가</th>" 
+                s += "<thead><tr><th align='center' width='15%'>신청자</th><th align='center' width='55%'>신청휴가</th>"
                 s += "<th align='center' width='15%'> 결재자</th><th align='center' width='15%'>결과</th></tr ></thead>"
                 if (sjson.length == 0) {
                     s += '<tr><td colspan="4" align="center">데이터가 없습니다</td></tr>';
@@ -369,12 +366,12 @@
                         s += "<tr>";
                         s += "<td>" + sjson[i].StaffName + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
                         if (sjson[i].Vicname == '연차휴가(반차)' || sjson[i].Vicname == '반차휴가' || sjson[i].Vicname == '반차') {
-                            s += "<td>" + sjson[i].Vicname + " : " + sjson[i].SNal.substring(0, 10) + "(" + sjson[i].UseTime +"시간)</td>"
+                            s += "<td>" + sjson[i].Vicname + " : " + sjson[i].SNal.substring(0, 10) + "(" + sjson[i].UseTime + "시간)</td>"
                         }
                         else {
                             s += "<td>" + sjson[i].Vicname + " : " + sjson[i].SNal.substring(0, 10) + " ~ " + sjson[i].Enal.substring(0, 10) + "</td>"
                         }
-                        
+
                         s += "<td>" + sjson[i].approveName + "</td>"
 
                         if (sjson[i].AResult == 'F') {

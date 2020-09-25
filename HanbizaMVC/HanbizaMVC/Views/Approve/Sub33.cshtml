@@ -26,6 +26,7 @@
     .nav-tabs .nav-link {
         color: grey;
     }
+
     .table-hover {
         cursor: pointer;
     }
@@ -59,46 +60,45 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                    @foreach (var item in Model)
+                    {
+                        if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
                         {
-                            if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
+                        <tr>
+                            <td><input type="checkbox" class="checkBox_body" value="@item.EtcID" /><input type="hidden" class="submit_result" value=""></td>
+                            <td>@item.Staffname</td>
+                            <td>
+                            @if (item.Gubun1.Equals("휴직"))
                             {
-                                <tr>
-                                    <td><input type="checkbox" class="checkBox_body" value="@item.EtcID" /><input type="hidden" class="submit_result" value=""></td>
-                                    <td>@item.Staffname</td>
-                                    <td>
-                                        @if (item.Gubun1.Equals("휴직"))
-                                        {
-                                            <span>휴직: @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0: yyyy-MM-dd}", item.ENal)</span>
-                                        }
-                                        else if (item.Gubun1.Equals("증명서"))
-                                        {
-                                            <span>증명서(@item.Gubun2): @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
-                                        }
-                                        else
-                                        {
-                                            <span>@item.Gubun1: @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
-                                        }
-                                        <br />
-                                        <span style="color:black">사유: @item.EtcReason</span><br />
-                                        <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
-                                            <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
-                                            <div class="input-group-append">
-                                                <button class="btn btn-danger rejectBtn">반려</button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                a++;
+                                <span>휴직: @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0: yyyy-MM-dd}", item.ENal)</span>
                             }
-
+                            else if (item.Gubun1.Equals("증명서"))
+                            {
+                                <span>증명서(@item.Gubun2): @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Gubun1: @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
+                            }
+                                <br />
+                                <span style="color:black">사유: @item.EtcReason</span><br />
+                                <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
+                                    <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-danger rejectBtn">반려</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                            a++;
                         }
-                        @if (a == 0)
-                        {
-                            <tr>
-                                <td colspan="3">데이터가 없습니다</td>
-                            </tr>
-                        }
+                    }
+                    @if (a == 0)
+                    {
+                        <tr>
+                            <td colspan="3">데이터가 없습니다</td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
@@ -123,44 +123,45 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                    @foreach (var item in Model)
+                    {
+                        if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F"))
                         {
-                            if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F"))
+                        <tr>
+                            <td>@item.Staffname</td>
+                            <td>
+                            @if (item.Gubun1.Equals("휴직"))
                             {
-                                <tr>
-                                    <td>@item.Staffname</td>
-                                    <td>
-                                        @if (item.Gubun1.Equals("휴직"))
-                                        {
-                                            <span>휴직: @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0: yyyy-MM-dd}", item.ENal)</span>
-                                        }
-                                        else if (item.Gubun1.Equals("증명서"))
-                                        {
-                                            <span>증명서(@item.Gubun2): @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
-                                        }
-                                        else
-                                        {
-                                            <span>@item.Gubun1: @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
-                                        }
-                                        <br />
-                                        <span style="color:black">사유: @item.EtcReason</span><br />
-                                    </td>
-                                </tr>
-                            b++;
+                                <span>휴직: @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0: yyyy-MM-dd}", item.ENal)</span>
                             }
+                            else if (item.Gubun1.Equals("증명서"))
+                            {
+                                <span>증명서(@item.Gubun2): @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Gubun1: @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
+                            }
+                                <br />
+                                <span style="color:black">사유: @item.EtcReason</span><br />
+                            </td>
+                        </tr>
+                        b++;
                         }
-                        @if (b == 0)
-                        {
-                            <tr>
-                                <td colspan="3">데이터가 없습니다</td>
-                            </tr>
-                        }
+                    }
+                    @if (b == 0)
+                    {
+                        <tr>
+                            <td colspan="3">데이터가 없습니다</td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
         </div>
         @* 반려 *@
         <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를<span style="color:red;">취소</span>할 수 있습니다</p>
             <div class="table-responsive">
                 <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -170,40 +171,40 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                    @foreach (var item in Model)
+                    {
+                        if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
                         {
-                            if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
+                        <tr onclick="CancleReject('@item.EtcID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
+                            <td>@item.Staffname</td>
+                            <td>
+                            @if (item.Gubun1.Equals("휴직"))
                             {
-                                <tr onclick="CancleReject('@item.EtcID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
-                                    <td>@item.Staffname</td>
-                                    <td>
-                                        @if (item.Gubun1.Equals("휴직"))
-                                        {
-                                            <span>휴직: @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0: yyyy-MM-dd}", item.ENal)</span>
-                                        }
-                                        else if (item.Gubun1.Equals("증명서"))
-                                        {
-                                            <span>증명서(@item.Gubun2): @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
-                                        }
-                                        else
-                                        {
-                                            <span>@item.Gubun1: @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
-                                        }
-                                        <br />
-                                        <span style="color:black">사유: @item.EtcReason</span><br />
-                                        <span style="color:red">@item.RereaSon</span>
-
-                                    </td>
-                                </tr>
-                                c++;
+                                <span>휴직: @string.Format("{0:yyyy-MM-dd}", item.SNal) ~ @string.Format("{0: yyyy-MM-dd}", item.ENal)</span>
                             }
+                            else if (item.Gubun1.Equals("증명서"))
+                            {
+                                <span>증명서(@item.Gubun2): @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Gubun1: @string.Format("{0:yyyy-MM-dd}", item.SNal)</span>
+                            }
+                                <br />
+                                <span style="color:black">사유: @item.EtcReason</span><br />
+                                <span style="color:red">@item.RereaSon</span>
+
+                            </td>
+                        </tr>
+                            c++;
                         }
-                        @if (c == 0)
-                        {
-                            <tr>
-                                <td colspan="3">데이터가 없습니다</td>
-                            </tr>
-                        }
+                    }
+                    @if (c == 0)
+                    {
+                        <tr>
+                            <td colspan="3">데이터가 없습니다</td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
@@ -238,7 +239,7 @@
             autoclose: true
         });
 
-        $("#Snal").datepicker("setDate", "-15D"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후) 
+        $("#Snal").datepicker("setDate", "-15D"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
         $("#Enal").datepicker("setDate", "+15D");
 
         $("#checkBox_head").change(function () {
@@ -272,7 +273,7 @@
                 //alert(VacID + "/" + RereaSon);
 
                 $.ajax({
-                    url: "/Approve/Sub31_2/" + approveType+"/" + VacID + "/" + RereaSon,
+                    url: "/Approve/Sub31_2/" + approveType + "/" + VacID + "/" + RereaSon,
                     type: "GET",
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
                     dataType: "text",
@@ -307,7 +308,7 @@
                 return;
             }
             $.ajax({
-                url: "/Approve/Sub31_1/" + approveType+"/" + checkedVacId,
+                url: "/Approve/Sub31_1/" + approveType + "/" + checkedVacId,
                 type: "GET",
                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 dataType: "text",
