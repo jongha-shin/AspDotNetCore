@@ -26,6 +26,9 @@
     .nav-tabs .nav-link {
         color: grey;
     }
+    .table-hover {
+        cursor: pointer;
+    }
 </style>
 
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
@@ -44,6 +47,7 @@
         </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
+        @* 대기 *@
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -108,6 +112,7 @@
                 </div>
             </div>
         </div>
+        @* 승인 *@
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -154,9 +159,10 @@
                 </table>
             </div>
         </div>
+        @* 반려 *@
         <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="table-responsive">
-                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th width="15%">신청자</th>
@@ -168,7 +174,7 @@
                         {
                             if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
                             {
-                                <tr>
+                                <tr onclick="CancleReject('@item.EtcID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
                                     <td>@item.Staffname</td>
                                     <td>
                                         @if (item.Gubun1.Equals("휴직"))
@@ -202,6 +208,7 @@
                 </table>
             </div>
         </div>
+        @* 결재결과 *@
         <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="form-group row ml-1">
                 <input id="Snal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" /> &nbsp;~&nbsp;
@@ -386,5 +393,38 @@
                 alert("err");
             }
         });
+    }
+    function CancleReject(seqid, snal) {
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        let day = date.getDate();
+        let today = new Date(year, month, day);
+
+        let yyyy = snal.substr(0, 4);
+        let mm = snal.substr(5, 2);
+        let dd = snal.substr(8, 2);
+        let targetDate = new Date(yyyy, mm - 1, dd);
+
+        if (targetDate < today) {
+            alert("지난 결과는 취소할 수 없습니다");
+            return;
+        }
+
+        if (confirm("취소??")) {
+            $.ajax({
+                url: "/Approve/Sub31_2_1/" + approveType + "/" + seqid,
+                type: "GET",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: "text",
+                success: function () {
+                    alert("선택한 반려 정보가 취소되었습니다.");
+                    location.href = "/Approve/Sub33";
+                },
+                error: function () {
+                    alert("err");
+                }
+            });
+        }
     }
 </script>

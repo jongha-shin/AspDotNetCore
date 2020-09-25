@@ -165,6 +165,25 @@ namespace HanbizaMVC.Controllers
             result = "fail";
             return result;
         }
+        // (공용)31-2-1 결재 반려 취소 프로세스
+        [Route("/Approve/Sub31_2_1/{type}/{VacID}")]
+        public string Sub31_2_1(string type, string VacID)
+        {
+            Boolean checkLogin = CheckLogin();
+            string result;
+            _logger.LogInformation("sub31_2_1(): " + VacID);
+            var rs = _db.LoadStoredProc("apply_process_reject_Cancel").AddParam("Type", type)
+                        .AddParam("StaffID", LoginUser.StaffId).AddParam("VacID", VacID).ExecNonQuery();
+            if (rs > 0)
+            {
+                result = "success";
+                return result;
+            }
+            result = "fail";
+            return result;
+        }
+
+
         // (공용)31-3 결재 결과 가져오기
         [Route("/Approve/Sub31_3/{Type}/{Snal}/{Enal}")]
         public string Sub31_3(string type, string Snal, string Enal)
@@ -186,6 +205,8 @@ namespace HanbizaMVC.Controllers
             return jsonString;
         }
 
+
+
         // 32 인사평가
         [Authorize]
         [Route("/Approve/Sub32")]
@@ -199,7 +220,7 @@ namespace HanbizaMVC.Controllers
             if (!checkLogin) return RedirectToAction("Login", "Account");
             //dynamic mymodel = new ExpandoObject();
             ViewBag.menulist = menulist;
-            _logger.LogInformation("sub32(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
+            //_logger.LogInformation("sub32(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
 
             if (HRsubmit == null) HRsubmit = "";
 
@@ -228,14 +249,14 @@ namespace HanbizaMVC.Controllers
                 ViewBag.선택년 = dateYear;
                 ViewBag.Years = Years;
             }
-            Console.WriteLine("dateY:"+dateYear);
+            //Console.WriteLine("dateY:"+dateYear);
             List<인사평가> HRlist = null;
             _db.LoadStoredProc("dbo.HR_Assessee_list")
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname).AddParam("dateYear", dateYear)
                .Exec(r => HRlist = r.ToList<인사평가>());
             
             ViewBag.HRsubmit = HRsubmit;
-            Console.WriteLine(Years.Count);
+            //Console.WriteLine(Years.Count);
             if (HRlist != null) return View(HRlist);
 
             return View();
