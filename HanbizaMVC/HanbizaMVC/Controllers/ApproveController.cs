@@ -385,6 +385,7 @@ namespace HanbizaMVC.Controllers
 
             List<인사평가> status = null;
             var checkString = "";
+            if (BigSubject.Contains("-")) BigSubject = BigSubject.Replace("-", "/");
             _db.LoadStoredProc("dbo.HR_CheckAnswer")
                        .AddParam("AssesseeID", AssesseeID).AddParam("BigSubject", BigSubject)
                        .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)

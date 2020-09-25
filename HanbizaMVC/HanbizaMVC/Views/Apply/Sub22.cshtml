@@ -62,9 +62,9 @@
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">희망일</label>
-                <input id="Snal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="희망일을 선택하세요" />
+                <input id="Snal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="희망일을 선택하세요" readonly/>
                 <label class="col-md-2 col-form-label" id="EnalLabel" style="display:none">종료일</label>
-                <input id="Enal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="종료일을 선택하세요" style="display:none" />
+                <input id="Enal" class="form-control form-control-sm col-md-4" autocomplete="off" placeholder="종료일을 선택하세요" readonly style="display:none" />
             </div>
 
             <div class="form-group row">
@@ -266,11 +266,13 @@
 
         $("#Snal").datepicker({
             language: 'ko',
-            autoclose: true
+            autoclose: true,
+            ignoreReadonly: true
         });
         $("#Enal").datepicker({
             language: 'ko',
-            autoclose: true
+            autoclose: true,
+            ignoreReadonly: true
         });
         $("#ProCDeep").change(function () {
             let optionValue = $("#ProCDeep option:selected").val();
@@ -532,7 +534,7 @@
         if (Gubun2 == "") Gubun2 = "";
         if (ProCDeep == "") ProCDeep = 0;
         if (Enal == "" || Enal == null) Enal = "2222-12-12";
-        alert(EtcReason.length + EtcReason);
+        //alert(EtcReason.length + EtcReason);
 
         if (ProCDeep > 0) {
             // 휴가정보 등록(Vacation_List)

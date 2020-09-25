@@ -16,6 +16,7 @@
         table > thead > tr > th {
             background-color: #3763ab;
             color: white;
+            cursor: default;
         }
 
     .nav-tabs .nav-link.active {
@@ -27,8 +28,9 @@
         color: grey;
     }
 
-    .table-hover {
+    .tr-hover:hover {
         cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.075);
     }
 </style>
 
@@ -156,9 +158,9 @@
 
         @* 반려 *@
         <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
-            <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를<span style="color:red;">취소</span>할 수 있습니다</p>
+            <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를 <span style="color:red;">취소</span>할 수 있습니다</p>
             <div class="table-responsive">
-                <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th width="15%">신청자</th>
@@ -170,7 +172,7 @@
                     {
                         if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
                         {
-                        <tr onclick="CancleReject('@item.OtID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
+                        <tr class="tr-hover" onclick="CancleReject('@item.OtID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
                             <td>@item.Staffname <input type="hidden" value="@item.OtID"></td>
                             <td>
                             @if (item.Gubun.Equals("C"))
@@ -192,7 +194,7 @@
                     }
                     @if (c == 0)
                     {
-                        <tr>
+                        <tr style="cursor:default; background-color:white;">
                             <td colspan="3">데이터가 없습니다</td>
                         </tr>
                     }

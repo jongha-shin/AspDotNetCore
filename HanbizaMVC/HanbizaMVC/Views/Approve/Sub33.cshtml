@@ -16,6 +16,7 @@
         table > thead > tr > th {
             background-color: #3763ab;
             color: white;
+            cursor:default;
         }
 
     .nav-tabs .nav-link.active {
@@ -27,8 +28,9 @@
         color: grey;
     }
 
-    .table-hover {
+    .tr-hover:hover {
         cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.075);
     }
 </style>
 
@@ -161,9 +163,9 @@
         </div>
         @* 반려 *@
         <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
-            <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를<span style="color:red;">취소</span>할 수 있습니다</p>
+            <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를 <span style="color:red;">취소</span>할 수 있습니다</p>
             <div class="table-responsive">
-                <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <table class="table-sm table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th width="15%">신청자</th>
@@ -175,7 +177,7 @@
                     {
                         if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
                         {
-                        <tr onclick="CancleReject('@item.EtcID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
+                        <tr class="tr-hover" onclick="CancleReject('@item.EtcID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
                             <td>@item.Staffname</td>
                             <td>
                             @if (item.Gubun1.Equals("휴직"))
@@ -412,7 +414,7 @@
             return;
         }
 
-        if (confirm("취소??")) {
+        if (confirm("선택한 반려를 취소하시겠습니까?")) {
             $.ajax({
                 url: "/Approve/Sub31_2_1/" + approveType + "/" + seqid,
                 type: "GET",
