@@ -107,7 +107,8 @@
 
 <script>
     var flag = "@ViewBag.flag";
-    var MaxPage = "@T_number";
+    var Max = "@T_number";
+    var MaxPage = Max - 1;
     var selectYear = "@Model[0].Regdate".substring(0, 4);
 
     $(document).ready(function (e) {
@@ -127,28 +128,7 @@
 
         //$(".submitHR").click(function () {
         //    alert("제출하기");
-        //    var assesseeID = $("#AssesseeID").val();
-        //    var BigSubject = $("#BigSubject").val();
-        //    //console.log(assesseeID + "/" + BigSubject);
-        //    if (BigSubject.indexOf('/') != -1) {
-        //        BigSubject = BigSubject.replace(/\//gi, '-');
-        //    }
-
-        //    //$.ajax({
-        //    //    url: '/Approve/Sub32_3/' + assesseeID + "/" + BigSubject,
-        //    //    type: 'GET',
-        //    //    contentType: "application/x-www-form-urlencoded;charset=utf-8",
-        //    //    charset: "utf-8",
-        //    //    success: function (result) {
-        //    //        if (result == "success") {
-        //    //            alert("제출완료");
-        //    //            location.href = "/Approve/Sub32";
-        //    //        }
-        //    //    },
-        //    //    error: function () {
-        //    //        alert("err");
-        //    //    },
-        //    //});
+      
         //});
     });
 
@@ -157,7 +137,7 @@
             now -= 1;
 
             if (now < 1) {
-                if ("@ViewBag.flag" == "start") location.href = "/approve/Sub32";
+                if ("@ViewBag.flag" == "start") location.href = "/Approve/Sub32";
                 else {
                     location.href = "/Approve/Sub32/HRsubmit/" + selectYear;
                 }
@@ -187,17 +167,21 @@
     }
 
     function checkValue(page, s) {
-        let Qlist = $("td.title_" + page+" > input.evalueSEQID");
+        let Qlist = $("td.title_" + page + " > input.evalueSEQID");
         let Alist = $("tr.title_" + page + " > td.selectScore").children("input.answerSEQID");
         if (s == '-') {
+            if (page == 1) location.href = "/Approve/Sub32";
+
             //alert(Qlist.length + "/" + Alist.length);
             if (flag == "start") saveAnswer(Qlist, Alist, page);
+            
             return showPage(page, s);
         } 
 
         if (Qlist.length == Alist.length) {
-            //alert(Qlist.length + "/" + Alist.length);
+            //alert(page + "/" + MaxPage);
             if (flag == "start") saveAnswer(Qlist, Alist, page);
+            
             showPage(page, s);
         } else {
             //alert(Qlist.length + "/" + Alist.length);
@@ -208,12 +192,13 @@
     function saveAnswer(Qlist, Alist, page) {
         let QseqIDs = [];
         let AseqIDs = [];
+        
         for (var i = 0; i < Qlist.length; i++) {
-            //console.log(Qlist[i].value + " / " + Alist[i].value);
-            QseqIDs.push(Qlist[i].value);
-            AseqIDs.push(Alist[i].value);
+            //console.log(Qlist[i] + " / " + Alist[i]);
+            QseqIDs.push((Qlist[i] != null) ? Qlist[i].value : "");
+            AseqIDs.push((Alist[i] != null) ? Alist[i].value : " ");
         }
-
+        
         $.ajax({
             url: '/Approve/Sub32_2/' + QseqIDs + "/" + AseqIDs,
             type: 'GET',
@@ -224,25 +209,48 @@
                     //alert("저장완료");
                     //location.href = "/Approve/Sub32";
                     if (page == MaxPage) {
-                        alert("제출완료");
-                        location.href = "/Approve/Sub32";
+                        SetY();
                     }
+                }
+            },
+            error: function () {
+                //alert("err");
+            },
+        });
+        
+    }
+
+    function changelastBtn() {
+        if (flag == 'show') $(".nextBtn_" + MaxPage).hide();
+        else {
+            $(".nextBtn_" + MaxPage).text("제출하기");
+            
+        }
+        //console.log(".nextBtn_" + Max);
+    }
+
+    function SetY() {
+        var assesseeID = $("#AssesseeID").val();
+        var BigSubject = $("#BigSubject").val();
+        //console.log(assesseeID + "/" + BigSubject);
+        if (BigSubject.indexOf('/') != -1) {
+            BigSubject = BigSubject.replace(/\//gi, '-');
+        }
+
+        $.ajax({
+            url: '/Approve/Sub32_3/' + assesseeID + "/" + BigSubject,
+            type: 'GET',
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            charset: "utf-8",
+            success: function (result) {
+                if (result == "success") {
+                    alert("제출완료");
+                    location.href = "/Approve/Sub32";
                 }
             },
             error: function () {
                 alert("err");
             },
         });
-    }
-
-    function changelastBtn() {
-        var Max = MaxPage - 1;
-        if (flag == 'show') $(".nextBtn_" + Max).hide();
-        else {
-            $(".nextBtn_" + Max).text("제출하기");
-            //$(".nextBtn_" + Max).addClass("submitHR");
-            //$(".nextBtn_" + Max).removeAttr("onclick");
-        }
-        //console.log(".nextBtn_" + Max);
     }
 </script>

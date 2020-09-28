@@ -215,7 +215,7 @@ namespace HanbizaMVC.Controllers
         [Route("/Approve/Sub32/{HRsubmit}/{dateYear}")]
         public IActionResult Sub32(string HRsubmit, string dateYear)
         {
-            Console.WriteLine("dateY:" + dateYear);
+            //Console.WriteLine("dateY:" + dateYear);
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
             //dynamic mymodel = new ExpandoObject();
