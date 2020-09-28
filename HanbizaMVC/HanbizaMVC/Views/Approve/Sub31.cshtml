@@ -412,7 +412,7 @@
             return;
         }
 
-        if (confirm("취소??")) {
+        if (confirm("선택한 신청의 반려를 취소하시겠습니까?")) {
             $.ajax({
                 url: "/Approve/Sub31_2_1/" + approveType + "/" + seqid,
                 type: "GET",
