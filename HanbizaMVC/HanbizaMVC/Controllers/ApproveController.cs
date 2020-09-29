@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Newtonsoft.Json;
-using System.Dynamic;
 
 namespace HanbizaMVC.Controllers
 {
@@ -402,7 +401,24 @@ namespace HanbizaMVC.Controllers
             return rs;
         }
 
-            [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        // 32_5 인사평가 한줄 평 저장
+        [Authorize]
+        public string Sub32_5(인사평가 HRcomment)
+        {
+            Boolean checkLogin = CheckLogin();
+            ViewBag.menulist = menulist;
+            int rsNum = _db.LoadStoredProc("dbo.HR_Comment")
+                        .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                        .AddParam("평가지", HRcomment.평가지).AddParam("피평가자ID", HRcomment.피평가자ID).AddParam("평가의견", HRcomment.평가의견)
+                        .ExecNonQuery();
+
+            var rs = "fail";
+            if (rsNum > 0) rs = "success";
+
+            return rs;
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

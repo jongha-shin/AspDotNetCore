@@ -12,6 +12,10 @@
     .nav-tabs .nav-link {
         color: grey;
     }
+    .tr_hover:hover {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.075);
+    }
 </style>
 @model List<인사평가>
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
@@ -79,6 +83,7 @@
         </div>
 
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <p style="text-align:right; margin:0px; font:small">* 클릭하여 피평가자에대한 한줄 평을 작성할 수 있습니다</p>
             <div class="table-responsive">
                 <table class="table-sm table-bordered" style="width:100%">
                     <thead>
@@ -102,11 +107,12 @@
                                 @if (item.마감.Equals("Y"))
                                 {
                                     b++;
-                                    <tr>
+                                    <tr class="tr_hover">
                                         <td class="AssessNameY">@item.피평가자</td>
                                         <td class="second_tdY">
                                             @item.평가지
                                             <input class="StaffID" type="hidden" value="@item.피평가자ID" />
+                                            <input class="_Comment" type="hidden" value="@item.평가의견" />
                                         </td>
                                         <td class="thrid_tdY"><button class="btn btn-sm btn-primary showHR" value="show">평가완료</button></td>
                                     </tr>
@@ -121,6 +127,29 @@
                         }
                     </tbody>
                 </table>
+            </div>
+            @* layer1 *@
+            <!-- CommentModal modal block -->
+            <div id="CommentModal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-primary modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <p class="modal-title">한줄평 작성</p>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="AssesseeID"/>
+                            <p>대상 : <span id="AssesseeName"></span></p>
+                            <p>평가지 : <span id="BigSubject"></span></p>
+                            <textarea id="Comment" rows="3" cols="50"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveComment()">저장</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -161,7 +190,7 @@
                 BigSubject = BigSubject.replace(/\//gi, '-');
             }
             location.href = "/Approve/Sub32_1/" + flag + "/" + BigSubject + "/" + AssesseeID;
-
+            event.stopPropagation();
         });
 
         $(".submitHR").click(function () {
@@ -188,6 +217,28 @@
                 },
             });
         });
+
+        $(".tr_hover").on("click", function () {
+            $("#Comment").attr("readonly", false);
+            $("#Comment").val("");
+            let BigSubject = $(this).find("td.second_tdY").text().trim();
+            let AssesseeID = $(this).find("td.second_tdY").find("input.StaffID").val();
+            let AssesseeName = $(this).find("td.AssessNameY").text().trim();
+            let Comment = $(this).find("td.second_tdY").find("input._Comment").val();
+            $("#AssesseeID").val(AssesseeID);
+            $("#AssesseeName").text(AssesseeName);
+            $("#BigSubject").text(BigSubject);
+            $("#Comment").text(Comment);
+            //if (Comment != "") $("#Comment").attr("readonly", true);
+
+            //alert(BigSubject + "/" + AssesseeID + " / " + AssesseeName);
+            if (BigSubject.indexOf('/') != -1) {
+                BigSubject = BigSubject.replace(/\//gi, '-');
+            }
+            $("#CommentModal").modal('show');
+        })
+
+
     });
 
     function showSelectY(sign) {
@@ -257,5 +308,37 @@
                 location.href = "/Approve/Sub32/HRsubmit/" + yearList[current_num + 1];
             }
         }
+    }
+
+    function saveComment() {
+
+        let AssesseeID = $("#AssesseeID").val();
+        let BigSubject = $("#BigSubject").text();
+        let Comment = $("#Comment").val();
+        alert(AssesseeID + "/" + BigSubject + "/" + Comment)
+
+        $.ajax({
+            url: "/Approve/Sub32_5",
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            data: {
+                "피평가자ID": AssesseeID,
+                "평가지": BigSubject,
+                "평가의견": Comment
+            },
+            success: function (result) {
+                if (result == "success") {
+                    alert("등록 완료")
+                } else {
+                    alert("등록 실패")
+                }
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+
+
     }
 </script>
