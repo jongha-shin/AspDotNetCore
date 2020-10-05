@@ -141,7 +141,7 @@ namespace HanbizaMVC.Controllers
         public byte[] Sub41_2(int Seqid)
         {
             Boolean checkLogin = CheckLogin();
-            _logger.LogInformation("sub41_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+            //_logger.LogInformation("sub41_2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
             List<문서함> fileInfo = null;
             _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
 
@@ -156,7 +156,7 @@ namespace HanbizaMVC.Controllers
         public string Sub41_3(int Seqid)
         {
             Boolean checkLogin = CheckLogin();
-            _logger.LogInformation("sub41_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
+            //_logger.LogInformation("sub41_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + Seqid);
             List<문서함> fileInfo = null;
             _db.LoadStoredProc("file_data").AddParam("SeqID", Seqid).Exec(r => fileInfo = r.ToList<문서함>());
 
@@ -167,60 +167,60 @@ namespace HanbizaMVC.Controllers
             return result;
         }
 
-        // 9 비밀번호변경
-        [Authorize]
-        public IActionResult Sub9()
-        {
-            Boolean checkLogin = CheckLogin();
-            if (!checkLogin) return RedirectToAction("Login", "Account");
+        //// 9 비밀번호변경
+        //[Authorize]
+        //public IActionResult Sub9()
+        //{
+        //    Boolean checkLogin = CheckLogin();
+        //    if (!checkLogin) return RedirectToAction("Login", "Account");
 
-            //_logger.LogInformation("sub9(): ");
-            ViewBag.menulist = menulist;
-            return View();
-        }
-        // 9 비밀번호 변경
-        [Route("/MyInfo/Sub9_1/{pwd}")]
-        public string Sub9_1(string pwd)
-        {
-            Boolean checkLogin = CheckLogin();
-            string rsString = "";
-            //_logger.LogInformation("sub9_1(pwd): " + pwd); // 신청x
-            List<LoginInfor> loginInfor = null;
-            _db.LoadStoredProc("dbo.PWD_check").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname)
-                .AddParam("checkPWD", pwd).Exec(r => loginInfor = r.ToList<LoginInfor>());
+        //    //_logger.LogInformation("sub9(): ");
+        //    ViewBag.menulist = menulist;
+        //    return View();
+        //}
+        //// 9 비밀번호 변경
+        //[Route("/MyInfo/Sub9_1/{pwd}")]
+        //public string Sub9_1(string pwd)
+        //{
+        //    Boolean checkLogin = CheckLogin();
+        //    string rsString = "";
+        //    //_logger.LogInformation("sub9_1(pwd): " + pwd); // 신청x
+        //    List<LoginInfor> loginInfor = null;
+        //    _db.LoadStoredProc("dbo.PWD_check").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname)
+        //        .AddParam("checkPWD", pwd).Exec(r => loginInfor = r.ToList<LoginInfor>());
             
-            //Console.WriteLine("Sub9_1 rs: " + loginInfor.Count);
+        //    //Console.WriteLine("Sub9_1 rs: " + loginInfor.Count);
 
-            if (loginInfor.Count > 0)
-            {
-                rsString = "success";
-                return rsString;
-            }
+        //    if (loginInfor.Count > 0)
+        //    {
+        //        rsString = "success";
+        //        return rsString;
+        //    }
 
-            rsString = "fail";
-            return rsString;
-        }
-        [Route("/MyInfo/Sub9_2/{pwd}")]
-        public string Sub9_2(string pwd)
-        {
-            Boolean checkLogin = CheckLogin();
-            string rsString;
-            //_logger.LogInformation("sub9_2(pwd): " + pwd); // 신청x
-            int rs = _db.LoadStoredProc("dbo.PWD_change").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum)
-                        .AddParam("Dname", LoginUser.Dname).AddParam("changePWD", pwd.ToLower())
-                        .ExecNonQuery();
+        //    rsString = "fail";
+        //    return rsString;
+        //}
+        //[Route("/MyInfo/Sub9_2/{pwd}")]
+        //public string Sub9_2(string pwd)
+        //{
+        //    Boolean checkLogin = CheckLogin();
+        //    string rsString;
+        //    //_logger.LogInformation("sub9_2(pwd): " + pwd); // 신청x
+        //    int rs = _db.LoadStoredProc("dbo.PWD_change").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum)
+        //                .AddParam("Dname", LoginUser.Dname).AddParam("changePWD", pwd.ToLower())
+        //                .ExecNonQuery();
 
-            //Console.WriteLine("Sub9_2 rs: " + rs);
+        //    //Console.WriteLine("Sub9_2 rs: " + rs);
 
-            if (rs > 0)
-            {
-                rsString = "success";
-                return rsString;
-            }
+        //    if (rs > 0)
+        //    {
+        //        rsString = "success";
+        //        return rsString;
+        //    }
 
-            rsString = "fail";
-            return rsString;
-        }
+        //    rsString = "fail";
+        //    return rsString;
+        //}
 
         
 
