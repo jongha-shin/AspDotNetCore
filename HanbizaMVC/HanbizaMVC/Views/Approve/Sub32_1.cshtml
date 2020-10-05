@@ -96,6 +96,7 @@
                         <button class="btn btn-danger col-4 prevBtn_@T_number" type="button" onclick="checkValue(@T_number, '-')">이전</button>
 
                         <button class="btn btn-primary offset-4 col-4 nextBtn_@T_number" type="button" onclick="checkValue(@T_number,'+')">다음</button>
+                        <button class="btn btn-primary offset-4 col-4 golist_@T_number" type="button" onclick="location.href='/Approve/Sub32/HRsubmit'" style="display:none">목록으로</button>
 
                     </div>
                     @{ T_number++; }
@@ -214,8 +215,13 @@
     }
 
     function changelastBtn() {
-        if (flag == 'show') $(".nextBtn_" + MaxPage).hide();
-        else {
+        if (flag == 'show')
+        {
+            $(".nextBtn_" + MaxPage).hide();
+            $(".golist_" + MaxPage).show();
+        } 
+        else
+        {
             $(".nextBtn_" + MaxPage).text("제출하기");
         }
     }

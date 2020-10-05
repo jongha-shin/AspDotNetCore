@@ -22,12 +22,12 @@
     <input id="HRsubmit" type="hidden" value="@ViewBag.HRsubmit"/>
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true" onclick="showSelectY('N')">평가요청</a>
+            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true" onclick="showSelectYear('N')">평가요청</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false" onclick="showSelectY('Y')">평가완료내역</a>
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false" onclick="showSelectYear('Y')">평가완료내역</a>
         </li>
-        <ul class="nav justify-content-end" id="SelectY" style="font-size:small; position:absolute; right:0px; top: 11px; display:none;">
+        <ul class="nav justify-content-end" id="SelectYear" style="font-size:small; position:absolute; right:0px; top: 11px; display:none;">
             <a href="#" id="prevBtn" onclick="changeYear('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
             <span style="margin:5px">@ViewBag.선택년 년</span>
             <a href="#" id="nextBtn" onclick="changeYear('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
@@ -140,13 +140,14 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <input type="hidden" id="AssesseeID"/>
+                            <input type="hidden" id="AssesseeID" />
                             <p>대상 : <span id="AssesseeName"></span></p>
                             <p>평가지 : <span id="BigSubject"></span></p>
-                            <textarea id="Comment" rows="3" cols="50"></textarea>
+                            <textarea class="form-control form-control-sm" id="Comment"></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="comment_saveBtn" class="btn btn-primary" data-dismiss="modal" onclick="saveComment()">저장</button>
+                            <button type="button" id="comment_saveBtn" class="btn btn-primary" data-dismiss="modal" onclick="saveComment()">제출</button>
+                            <button type="button" id="comment_closeBtn" class="btn btn-secondary" data-dismiss="modal" style="display:none">닫기</button>
                         </div>
                     </div>
                 </div>
@@ -158,10 +159,11 @@
     var HRsubmit = $("#HRsubmit").val();
     if (HRsubmit == 'HRsubmit') {
         $("#pills-profile-tab").tab('show');
-        $("#SelectY").show();
+        $("#SelectYear").show();
     } else {
         $("#pills-home-tab").tab('show');
     }
+
     $(document).ready(function (e) {
         genRowspan("AssessName");
         genRowspan("second_td");
@@ -229,10 +231,14 @@
             $("#AssesseeName").text(AssesseeName);
             $("#BigSubject").text(BigSubject);
             $("#Comment").val(Comment);
-            if (Comment != "")
-            {
+            if (Comment != "") {
                 $("#Comment").attr("readonly", true);
-                $("#comment_saveBtn").val("닫기");
+                $("#comment_closeBtn").show();
+                $("#comment_saveBtn").hide();
+            } else {
+                $("#Comment").attr("readonly", false);
+                $("#comment_closeBtn").hide();
+                $("#comment_saveBtn").show();
             }
 
             //alert(BigSubject + "/" + AssesseeID + " / " + AssesseeName);
@@ -245,9 +251,9 @@
 
     });
 
-    function showSelectY(sign) {
-        if (sign == 'Y') $("#SelectY").show();
-        else $("#SelectY").hide();
+    function showSelectYear(sign) {
+        if (sign == 'Y') $("#SelectYear").show();
+        else $("#SelectYear").hide();
     }
 
     function submitHR(AssesseeID, BigSubject) {
@@ -319,29 +325,33 @@
         let AssesseeID = $("#AssesseeID").val();
         let BigSubject = $("#BigSubject").text();
         let Comment = $("#Comment").val();
-        alert(AssesseeID + "/" + BigSubject + "/" + Comment)
+        //alert(AssesseeID + "/" + BigSubject + "/" + Comment)
 
-        $.ajax({
-            url: "/Approve/Sub32_5",
-            type: "GET",
-            contentType: "application/x-www-form-urlencoded; charset=utf-8",
-            dataType: "text",
-            data: {
-                "피평가자ID": AssesseeID,
-                "평가지": BigSubject,
-                "평가의견": Comment
-            },
-            success: function (result) {
-                if (result == "success") {
-                    alert("등록 완료")
-                } else {
-                    alert("등록 실패")
+        if (confirm("제출 시 수정할수 없습니다.\n제출하시겠습니까?")) {
+            $.ajax({
+                url: "/Approve/Sub32_5",
+                type: "GET",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: "text",
+                data: {
+                    "피평가자ID": AssesseeID,
+                    "평가지": BigSubject,
+                    "평가의견": Comment
+                },
+                success: function (result) {
+                    if (result == "success") {
+                        alert("등록 완료");
+                        location.href = "/Approve/Sub32/HRsubmit";
+
+                    } else {
+                        alert("등록 실패")
+                    }
+                },
+                error: function () {
+                    alert("error");
                 }
-            },
-            error: function () {
-                alert("error");
-            }
-        });
+            });
+        }
 
 
     }
