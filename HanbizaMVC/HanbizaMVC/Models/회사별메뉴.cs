@@ -22,6 +22,6 @@ namespace HanbizaMVC.Models
         //public string 기타신청 { get; set; }
         public string 신청 { get; set; }
         public string 인사평가 { get; set; }
-
+        public string 파일업로드 { get; set; }
     }
 }
