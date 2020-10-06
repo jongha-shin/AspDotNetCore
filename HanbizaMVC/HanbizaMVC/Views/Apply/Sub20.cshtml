@@ -42,16 +42,22 @@
 </style>
 
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
+    <input id="checkTab" type="hidden" value="@ViewBag.secondTab" />
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">OT신청</a>
+            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true" onclick="showSelectYear('N')">OT신청</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">OT신청내역</a>
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false" onclick="showSelectYear('Y')">OT신청내역</a>
         </li>
+        <ul class="nav justify-content-end" id="SelectYear" style="font-size:small; position:absolute; right:0px; top: 11px; display:none;">
+            <a href="#" id="prevBtn" onclick="changeYear('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+            <span style="margin:5px">@ViewBag.선택년 년</span>
+            <a href="#" id="nextBtn" onclick="changeYear('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        </ul>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="tab-pane fade" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive col-12">
                 <div class="form-group row mt-3">
                     <label class="col-sm-2 col-form-label">구분</label>
@@ -275,6 +281,14 @@
 
     var applyType = "OT";
 
+    var checkTab = $("#checkTab").val();
+    if (checkTab == 'secondTab') {
+        $("#pills-profile-tab").tab('show');
+        $("#SelectYear").show();
+    } else {
+        $("#pills-home-tab").tab('show');
+    }
+
     // 동적 테이블(결재자 찾기) 생성 후 (row)클릭 이벤트
     $(document).on("click", "#approverTable tr", function () {
         //alert("");
@@ -290,7 +304,7 @@
     });
     $(function () {
         set_preApprover();
-        
+
         $("#Snal").datepicker({
             language: 'ko',
             autoclose: true
@@ -423,7 +437,7 @@
         //alert(id);
         $("#searchWord").val("");
         $("#stepModal").html(id);
-        $("#findApproverModal").modal('show'); 
+        $("#findApproverModal").modal('show');
     }
 
     function enterkey() {
@@ -642,5 +656,44 @@
                 alert("err");
             }
         })
+    }
+    function showSelectYear(sign) {
+        if (sign == 'Y') $("#SelectYear").show();
+        else $("#SelectYear").hide();
+    }
+    function changeYear(sign) {
+        let yearList = [];
+        let today = new Date()
+        let year = today.getFullYear;
+
+        @if(Model == null)
+        {
+            @:yearList.push(year)
+        }
+        else
+        {
+            @foreach (var item in ViewBag.Years)
+            {
+                @:yearList.push('@item.년');
+            }
+        }
+        let current_num = yearList.indexOf('@ViewBag.선택년');
+        //alert("현재index: " + current_num + " / 배열길이: " + yearList.length)
+        if (sign == '+') { // 배열 index 감소
+            if (current_num - 1 < 0) {
+                alert("데이터가 없습니다.")
+            }
+            else {
+                location.href = "/Apply/Sub20/secondTab/" + yearList[current_num - 1];
+            }
+        } else {    // '-' 배열 index 증가
+            if (current_num + 1 > yearList.length -1) {
+                alert("데이터가 없습니다.")
+            }
+            else {
+                //alert(monthList[current_num + 1])
+                location.href = "/Apply/Sub20/secondTab/" + yearList[current_num + 1];
+            }
+        }
     }
 </script>

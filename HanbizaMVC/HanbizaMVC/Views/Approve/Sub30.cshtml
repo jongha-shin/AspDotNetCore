@@ -37,7 +37,7 @@
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style="font-size:small">
         <li class="nav-item">
-            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">대기</a>
+            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">대기</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">승인</a>
@@ -51,7 +51,7 @@
     </ul>
     <div class="tab-content" id="pills-tabContent">
         @* 대기 *@
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="tab-pane" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -62,42 +62,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model)
-                    {
-                        if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
+                        @foreach (var item in Model)
                         {
-                        <tr>
-                            <td><input type="checkbox" class="checkBox_body" value="@item.OtID" /><input type="hidden" class="submit_result" value=""></td>
-                            <td>@item.Staffname</td>
-                            <td>
-                            @if (item.Gubun.Equals("C"))
+                            if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
                             {
-                                <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                <tr>
+                                    <td><input type="checkbox" class="checkBox_body" value="@item.OtID" /><input type="hidden" class="submit_result" value=""></td>
+                                    <td>@item.Staffname</td>
+                                    <td>
+                                        @if (item.Gubun.Equals("C"))
+                                        {
+                                            <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                        }
+                                        @if (item.Gubun.Equals("R"))
+                                        {
+                                            <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                        }
+                                        <br />
+                                        <span style="color:black">사유: @item.Reason</span><br />
+                                        <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
+                                            <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
+                                            <div class="input-group-append">
+                                                <button class="btn btn-danger rejectBtn">반려</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                a++;
                             }
-                            @if (item.Gubun.Equals("R"))
-                            {
-                                <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
-                            }
-                                <br />
-                                <span style="color:black">사유: @item.Reason</span><br />
-                                <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
-                                    <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
-                                    <div class="input-group-append">
-                                        <button class="btn btn-danger rejectBtn">반려</button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                            a++;
-                        }
 
-                    }
-                    @if (a == 0)
-                    {
-                        <tr>
-                            <td colspan="3">데이터가 없습니다</td>
-                        </tr>
-                    }
+                        }
+                        @if (a == 0)
+                        {
+                            <tr>
+                                <td colspan="3">데이터가 없습니다</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -113,7 +113,7 @@
         </div>
 
         @* 승인 *@
-        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -123,41 +123,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model)
-                    {
-                        if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F"))
+                        @foreach (var item in Model)
                         {
-                        <tr>
-                            <td>@item.Staffname</td>
-                            <td>
-                            @if (item.Gubun.Equals("C"))
+                            if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F"))
                             {
-                                <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                <tr>
+                                    <td>@item.Staffname</td>
+                                    <td>
+                                        @if (item.Gubun.Equals("C"))
+                                        {
+                                            <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                        }
+                                        @if (item.Gubun.Equals("R"))
+                                        {
+                                            <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                        }
+                                        <br />
+                                        <span style="color:black">사유: @item.Reason</span><br />
+                                    </td>
+                                </tr>
+                                b++;
                             }
-                            @if (item.Gubun.Equals("R"))
-                            {
-                                <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
-                            }
-                                <br />
-                                <span style="color:black">사유: @item.Reason</span><br />
-                            </td>
-                        </tr>
-                            b++;
                         }
-                    }
-                    @if (b == 0)
-                    {
-                        <tr>
-                            <td colspan="3">데이터가 없습니다</td>
-                        </tr>
-                    }
+                        @if (b == 0)
+                        {
+                            <tr>
+                                <td colspan="3">데이터가 없습니다</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
         </div>
 
         @* 반려 *@
-        <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="tab-pane" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
             <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를 <span style="color:red;">취소</span>할 수 있습니다</p>
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -168,43 +168,43 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model)
-                    {
-                        if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
+                        @foreach (var item in Model)
                         {
-                        <tr class="tr-hover" onclick="CancleReject('@item.OtID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
-                            <td>@item.Staffname <input type="hidden" value="@item.OtID"></td>
-                            <td>
-                            @if (item.Gubun.Equals("C"))
+                            if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
                             {
-                                <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
-                            }
-                            @if (item.Gubun.Equals("R"))
-                            {
-                                <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
-                            }
-                                <br />
-                                <span style="color:black">사유: @item.Reason</span><br />
-                                <span style="color:red">@item.RereaSon</span>
+                                <tr class="tr-hover" onclick="CancleReject('@item.OtID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
+                                    <td>@item.Staffname <input type="hidden" value="@item.OtID"></td>
+                                    <td>
+                                        @if (item.Gubun.Equals("C"))
+                                        {
+                                            <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                        }
+                                        @if (item.Gubun.Equals("R"))
+                                        {
+                                            <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                        }
+                                        <br />
+                                        <span style="color:black">사유: @item.Reason</span><br />
+                                        <span style="color:red">@item.RereaSon</span>
 
-                            </td>
-                        </tr>
-                            c++;
+                                    </td>
+                                </tr>
+                                c++;
+                            }
                         }
-                    }
-                    @if (c == 0)
-                    {
-                        <tr style="cursor:default; background-color:white;">
-                            <td colspan="3">데이터가 없습니다</td>
-                        </tr>
-                    }
+                        @if (c == 0)
+                        {
+                            <tr style="cursor:default; background-color:white;">
+                                <td colspan="3">데이터가 없습니다</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
         </div>
 
         @* 결재결과 *@
-        <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="tab-pane" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
             <div class="form-group row ml-1">
                 <input id="Snal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" /> &nbsp;~&nbsp;
                 <input id="Enal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" />
@@ -218,7 +218,7 @@
     </div>
 </div>
 <script type="text/javascript">
-
+    $("#pills-home-tab").tab('show');
     var approveType = "OT";
 
     $(function () {

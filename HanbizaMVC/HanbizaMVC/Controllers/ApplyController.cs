@@ -52,7 +52,9 @@ namespace HanbizaMVC.Controllers
         }
         // 20 OT 신청
         [Authorize]
-        public IActionResult Sub20()
+        [Route("/Apply/Sub20")]
+        [Route("/Apply/Sub20/{secondTab}/{dateYear}")]
+        public IActionResult Sub20(string secondTab,string dateYear)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
@@ -60,12 +62,42 @@ namespace HanbizaMVC.Controllers
             ViewBag.menulist = menulist;
             //_logger.LogInformation("sub2(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
+            if (secondTab == null) secondTab = "";
+
+            List<AddTimeList> Years = null;
+            if (dateYear == null)
+            {
+                _db.LoadStoredProc("dbo.last_Year").AddParam("Type", "OT")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Years = r.ToList<AddTimeList>());
+                if (Years.Count() == 0)
+                {
+                    dateYear = DateTime.Now.ToString("yyyy");
+                }
+                else
+                {
+                    dateYear = Years[0].년;
+                }
+                ViewBag.선택년 = dateYear;
+                ViewBag.Years = Years;
+            }
+            else
+            {
+                _db.LoadStoredProc("dbo.last_Year").AddParam("Type", "OT")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Years = r.ToList<AddTimeList>());
+                ViewBag.선택년 = dateYear;
+                ViewBag.Years = Years;
+            }
+
+            //var yearParam = new DateTime(int.Parse(dateYear), 01, 01);
             // OT 신청내역
             List<AddTimeList> OTlist = null;
-            _db.LoadStoredProc("dbo.apply_getApplication").AddParam("Type", "OT")
+            _db.LoadStoredProc("dbo.apply_getApplication_Year").AddParam("Type", "OT").AddParam("Year", dateYear)
                 .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                 .Exec(r => OTlist = r.ToList<AddTimeList>());
 
+            ViewBag.secondTab = secondTab;
             if (OTlist.Count > 0)
             {
                 return View(OTlist);
@@ -93,39 +125,12 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
-        // 20-2 OT 결재 전 삭제
-        //[Route("/Apply/Sub20_2/{seqid}")]
-        //public string Sub20_2(int seqid)
-        //{
-        //    //var OTSeq = new AddTimeList { Seqid = seqid };
-        //    //_db.Entry(OTSeq).State = EntityState.Deleted;
-        //    //int rs = _db.SaveChanges();
-
-        //    //var commandText = "DELETE FROM AddTimeList WHERE SEQID = @seqid";
-        //    //var seq = new SqlParameter("@seqid", seqid);
-        //    //int rs = _db.Database.ExecuteSqlCommand(commandText, seq);
-
-        //    Boolean checkLogin = CheckLogin();
-        //    var rs = _db.LoadStoredProc("dbo.apply_cancel").AddParam("SEQID", seqid).AddParam("Type", "OT")
-        //                .ExecNonQuery();
-
-        //    string rsString="error";
-        //    if( rs == -1)
-        //    {
-        //        rsString = "done";
-        //        return rsString;
-        //    }
-        //    if (rs > 0)
-        //    {
-        //        rsString = "success";
-        //        return rsString;
-        //    }
-        //    return rsString;
-        //}
-
+        
         // 21. 휴가신청
         [Authorize]
-        public IActionResult Sub21()
+        [Route("/Apply/Sub21")]
+        [Route("/Apply/Sub21/{secondTab}/{dateYear}")]
+        public IActionResult Sub21(string secondTab, string dateYear)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
@@ -134,11 +139,40 @@ namespace HanbizaMVC.Controllers
             //GetLoginUser();
             //_logger.LogInformation("sub21(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
+            if (secondTab == null) secondTab = "";
+
+            List<Vacation_List> Years = null;
+            if (dateYear == null)
+            {
+                _db.LoadStoredProc("dbo.last_Year").AddParam("Type", "vacation")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Years = r.ToList<Vacation_List>());
+                if (Years.Count() == 0)
+                {
+                    dateYear = DateTime.Now.ToString("yyyy");
+                }
+                else
+                {
+                    dateYear = Years[0].년;
+                }
+                ViewBag.선택년 = dateYear;
+                ViewBag.Years = Years;
+            }
+            else
+            {
+                _db.LoadStoredProc("dbo.last_Year").AddParam("Type", "vacation")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Years = r.ToList<Vacation_List>());
+                ViewBag.선택년 = dateYear;
+                ViewBag.Years = Years;
+            }
+
             List<Vacation_List> Vlist = null;
-            _db.LoadStoredProc("dbo.apply_getApplication").AddParam("Type", "vacation")
+            _db.LoadStoredProc("dbo.apply_getApplication_Year").AddParam("Type", "vacation").AddParam("Year", dateYear)
                 .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                 .Exec(r => Vlist = r.ToList<Vacation_List>());
 
+            ViewBag.secondTab = secondTab;
             if (Vlist != null)
             {
                 return View(Vlist);
@@ -241,7 +275,7 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
-        // 21-5 휴가결재 진행 전 취소, 등록된 휴가seq 삭제
+        // 21-5 (공용)휴가결재 진행 전 취소, 등록된 휴가seq 삭제
         [Route("/Apply/Sub21_5/{type}/{seqid}")]
         public string Sub21_5(string type, string seqid)
         {
@@ -277,19 +311,49 @@ namespace HanbizaMVC.Controllers
 
         // 기타신청
         [Authorize]
-        public IActionResult Sub22()
+        [Route("/Apply/Sub22")]
+        [Route("/Apply/Sub22/{secondTab}/{dateYear}")]
+        public IActionResult Sub22(string secondTab, string dateYear)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
 
+            if (secondTab == null) secondTab = "";
+
+            List<Etc_List> Years = null;
+            if (dateYear == null)
+            {
+                _db.LoadStoredProc("dbo.last_Year").AddParam("Type", "ETC")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Years = r.ToList<Etc_List>());
+                if (Years.Count() == 0)
+                {
+                    dateYear = DateTime.Now.ToString("yyyy");
+                }
+                else
+                {
+                    dateYear = Years[0].년;
+                }
+                ViewBag.선택년 = dateYear;
+                ViewBag.Years = Years;
+            }
+            else
+            {
+                _db.LoadStoredProc("dbo.last_Year").AddParam("Type", "ETC")
+                   .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                   .Exec(r => Years = r.ToList<Etc_List>());
+                ViewBag.선택년 = dateYear;
+                ViewBag.Years = Years;
+            }
+
             // ETC 신청내역
             List<Etc_List> ETClist = null;
-            _db.LoadStoredProc("dbo.apply_getApplication").AddParam("Type", "ETC")
+            _db.LoadStoredProc("dbo.apply_getApplication_Year").AddParam("Type", "ETC").AddParam("Year", dateYear)
                 .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                 .Exec(r => ETClist = r.ToList<Etc_List>());
 
             ViewBag.menulist = menulist;
-
+            ViewBag.secondTab = secondTab;
             if (ETClist.Count > 0) return View(ETClist);
 
             return View();

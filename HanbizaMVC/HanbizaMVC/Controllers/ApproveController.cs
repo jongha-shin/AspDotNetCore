@@ -182,7 +182,6 @@ namespace HanbizaMVC.Controllers
             return result;
         }
 
-
         // (공용)31-3 결재 결과 가져오기
         [Route("/Approve/Sub31_3/{Type}/{Snal}/{Enal}")]
         public string Sub31_3(string type, string Snal, string Enal)
@@ -205,12 +204,10 @@ namespace HanbizaMVC.Controllers
         }
 
 
-
         // 32 인사평가
         [Authorize]
         [Route("/Approve/Sub32")]
         [Route("/Approve/Sub32/{HRsubmit}")]
-        //[Route("/Approve/Sub32/{dateYear}")]
         [Route("/Approve/Sub32/{HRsubmit}/{dateYear}")]
         public IActionResult Sub32(string HRsubmit, string dateYear)
         {
