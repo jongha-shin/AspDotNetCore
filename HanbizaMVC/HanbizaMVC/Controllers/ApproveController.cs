@@ -52,20 +52,37 @@ namespace HanbizaMVC.Controllers
         }
         // 30 OT결재
         [Authorize]
-        public IActionResult Sub30()
+        [Route("/Approve/Sub30")]
+        [Route("/Approve/Sub30/{secondTab}/{Snal}/{Enal}")]
+        public IActionResult Sub30(string secondTab, string Snal, string Enal)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
-            //GetLoginUser();
             //_logger.LogInformation("sub30(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
 
+            if (secondTab == null) secondTab = "";
+            ViewBag.secondTab = secondTab;
+
+            if (Snal == null && Enal == null)
+            {
+                Snal = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                Enal = DateTime.Now.AddMonths(+1).ToString("yyyy-MM-dd");
+                ViewBag.Snal = Snal;
+                ViewBag.Enal = Enal;
+            }
+            else
+            {
+                ViewBag.Snal = Snal;
+                ViewBag.Enal = Enal;
+            }
+            //Console.WriteLine("sub30(): " + Snal);
+           
             List<ApproveList> Alist = null;
-            _db.LoadStoredProc("dbo.approvalList").AddParam("Type", "OT")
+            _db.LoadStoredProc("dbo.approvalList_yyyyMM").AddParam("Type", "OT").AddParam("Snal", Snal).AddParam("Enal", Enal)
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => Alist = r.ToList<ApproveList>());
-            //Console.WriteLine("sub4 list count: " + Alist.Count());
             if (Alist != null)
             {
                 return View(Alist);
@@ -74,8 +91,9 @@ namespace HanbizaMVC.Controllers
             return View();
         }
         // 31 휴가결재
-        [Authorize]
-        public IActionResult Sub31()
+        [Route("/Approve/Sub31")]
+        [Route("/Approve/Sub31/{secondTab}/{Snal}/{Enal}")]
+        public IActionResult Sub31(string secondTab, string Snal, string Enal)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
@@ -84,8 +102,24 @@ namespace HanbizaMVC.Controllers
             //GetLoginUser();
             //_logger.LogInformation("sub30(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
 
+            if (secondTab == null) secondTab = "";
+            ViewBag.secondTab = secondTab;
+
+            if (Snal == null && Enal == null)
+            {
+                Snal = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                Enal = DateTime.Now.AddMonths(+1).ToString("yyyy-MM-dd");
+                ViewBag.Snal = Snal;
+                ViewBag.Enal = Enal;
+            }
+            else
+            {
+                ViewBag.Snal = Snal;
+                ViewBag.Enal = Enal;
+            }
+
             List<ApproveList> Alist = null; ;
-            _db.LoadStoredProc("dbo.approvalList").AddParam("Type", "vacation")
+            _db.LoadStoredProc("dbo.approvalList_yyyyMM").AddParam("Type", "vacation").AddParam("Snal", Snal).AddParam("Enal", Enal)
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => Alist = r.ToList<ApproveList>());
             //Console.WriteLine("sub4 list count: " + Alist.Count());
@@ -97,8 +131,9 @@ namespace HanbizaMVC.Controllers
             return View();
         }
         // 33 기타결재
-        [Authorize]
-        public IActionResult Sub33()
+        [Route("/Approve/Sub33")]
+        [Route("/Approve/Sub33/{secondTab}/{Snal}/{Enal}")]
+        public IActionResult Sub33(string secondTab, string Snal, string Enal)
         {
             Boolean checkLogin = CheckLogin();
             if (!checkLogin) return RedirectToAction("Login", "Account");
@@ -107,8 +142,24 @@ namespace HanbizaMVC.Controllers
             //GetLoginUser();
             //_logger.LogInformation("sub30(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + LoginUser.Dname);
 
+            if (secondTab == null) secondTab = "";
+            ViewBag.secondTab = secondTab;
+
+            if (Snal == null && Enal == null)
+            {
+                Snal = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                Enal = DateTime.Now.AddMonths(+1).ToString("yyyy-MM-dd");
+                ViewBag.Snal = Snal;
+                ViewBag.Enal = Enal;
+            }
+            else
+            {
+                ViewBag.Snal = Snal;
+                ViewBag.Enal = Enal;
+            }
+
             List<ApproveList> Alist = null; ;
-            _db.LoadStoredProc("dbo.approvalList").AddParam("Type", "ETC")
+            _db.LoadStoredProc("dbo.approvalList_yyyyMM").AddParam("Type", "ETC").AddParam("Snal", Snal).AddParam("Enal", Enal)
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => Alist = r.ToList<ApproveList>());
             //Console.WriteLine("sub4 list count: " + Alist.Count());
