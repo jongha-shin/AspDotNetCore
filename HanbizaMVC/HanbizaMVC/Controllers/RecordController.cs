@@ -227,8 +227,7 @@ namespace HanbizaMVC.Controllers
                 if (i.연차구분.Equals("N")) 
                 {
                     // 입사일 기준
-                    if (i.잔여일수 > 0) ViewBag.사용연차 = i.발생연차 + i.이월조정추가 - i.잔여일수; 
-                    else ViewBag.사용연차 = i.발생연차 + i.이월조정추가 + i.잔여일수;
+                    ViewBag.사용연차 = i.발생연차 + i.이월조정추가 - i.잔여일수;
                 }
                 else
                 {
