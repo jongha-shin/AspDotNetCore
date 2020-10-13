@@ -39,6 +39,7 @@
         width: inherit;
         padding: 0px
     }
+   
 </style>
 
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
@@ -75,7 +76,7 @@
                         <select id="Snal_h" class="form-control form-control-sm col-5" style="float:left">
                             @for (int i = 0; i < 24; i++)
                             {
-                                <option value="@i.ToString("D2")">@i.ToString("D2") 시</option>
+                            <option value="@i.ToString("D2")">@i.ToString("D2") 시</option>
                             }
                         </select>
                         &nbsp;: &nbsp;
@@ -91,7 +92,7 @@
                         <select id="Enal_h" class="form-control form-control-sm col-5" style="float:left">
                             @for (int i = 0; i < 24; i++)
                             {
-                                <option value="@i.ToString("D2")">@i.ToString("D2") 시</option>
+                            <option value="@i.ToString("D2")">@i.ToString("D2") 시</option>
                             }
                         </select>
                         &nbsp;: &nbsp;
@@ -113,7 +114,7 @@
                         @{ int a; }
                         @for (a = 1; a < 6; a++)
                         {
-                            <option value="@a">@a 단계</option>
+                        <option value="@a">@a 단계</option>
                         }
                     </select>
 
@@ -162,9 +163,9 @@
                     <div class="modal-body">
                         <div class="p-3 row input-group">
                             @*<select class="form-control form-control-sm col-2" id="searchKey">
-                                <option value="부서" selected>부서</option>
-                                <option value="이름">이름</option>
-                            </select>*@
+                                    <option value="부서" selected>부서</option>
+                                    <option value="이름">이름</option>
+                                </select>*@
                             <input class="form-control col-8 offset-2" type="text" placeholder="부서명 또는 이름을 입력하세요" id="searchWord" onkeyup="enterkey()" />
                             <div class="input-group-append">
                                 <button class="btn btn-primary" id="searchBtn">
@@ -184,6 +185,7 @@
         </div>
         <!-- /findApproverModal modal block -->
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <button type="button" onclick="excelDonw()">엑셀다운</button>
             <p style="text-align:right; margin:0px; font:small">* 결재단계가 진행 되기 전에 선택하여 취소할 수 있습니다</p>
             <div class="table-responsive">
                 <table class="table-sm table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
@@ -206,7 +208,7 @@
                         {
                             @foreach (var item in Model)
                             {
-                                
+
                                 <tr class="OT_row">
                                     @if (item.Snal.DayOfWeek.ToString("d").Equals("0"))
                                     {
@@ -220,15 +222,17 @@
                                     {
                                         <th>@string.Format("{0:yyyy-MM-dd}", item.Snal) @item.요일</th>
                                     }
-                                    <td>@item.Snals ~ @item.Enals <input type="hidden" value="@item.Seqid"></td>
-                                    <td class="status">
-                                        @if (item.AllProCess.Equals("N"))
-                                        {
-                                            item.DeepNum = item.DeepNum - 1;
-                                            @item.DeepNum
-                                        }
-                                        else
-                                        {@item.DeepNum}  / @item.ProCDeep
+                                    <td>@item.Snals ~ @item.Enals </td>
+                                    <td class="status tableexport-string">
+                                        
+                                            @if (item.AllProCess.Equals("N"))
+                                            {
+                                                item.DeepNum = item.DeepNum - 1;
+                                                @item.DeepNum
+                                            }
+                                            else
+                                            {@item.DeepNum}  / @item.ProCDeep
+                                        
                                     </td>
 
                                     @if (@item.AllProCess.Equals("F"))
@@ -243,7 +247,9 @@
                                     {
                                         <td style="color:grey">대기</td>
                                     }
-
+                                    <td style="display:none" class="noExl">
+                                        <input type="hidden" class="" value="@item.Seqid">
+                                    </td>
                                 </tr>
                             }
                         }
@@ -304,7 +310,21 @@
     });
     $(function () {
         set_preApprover();
-
+        $("#dataTable").tableExport({
+            headers: true,                      // (Boolean), display table headers (th or td elements) in the <thead>, (default: true)
+            footers: false,                      // (Boolean), display table footers (th or td elements) in the <tfoot>, (default: false)
+            formats: ["xlsx", "csv", "txt"],    // (String[]), filetype(s) for the export, (default: ['xlsx', 'csv', 'txt'])
+            filename: "id",                     // (id, String), filename for the downloaded file, (default: 'id')
+            bootstrap: false,                   // (Boolean), style buttons using bootstrap, (default: true)
+            exportButtons: true,                // (Boolean), automatically generate the built-in export buttons for each of the specified formats (default: true)
+            position: "bottom",                 // (top, bottom), position of the caption element relative to table, (default: 'bottom')
+            ignoreRows: null,                   // (Number, Number[]), row indices to exclude from the exported file(s) (default: null)
+            ignoreCols: null,                   // (Number, Number[]), column indices to exclude from the exported file(s) (default: null)
+            trimWhitespace: true,               // (Boolean), remove all leading/trailing newlines, spaces, and tabs from cell text in the exported file(s) (default: false)
+            RTL: false,                         // (Boolean), set direction of the worksheet to right-to-left (default: false)
+            sheetname: "id"                     // (id, String), sheet name for the exported spreadsheet, (default: 'id')
+        });
+        $("td.status").attr("data-tableexport-msonumberformat", "\\@@");
         $("#Snal").datepicker({
             language: 'ko',
             autoclose: true
@@ -432,6 +452,8 @@
                 return;
             }
         });
+
+
     });
     function layer_open(id) {
         //alert(id);
@@ -506,6 +528,18 @@
             }
         })
     }
+    function excelDonw() {
+        // table2excel.js
+        $("#dataTable").table2excel({
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "OT신청내역"+".xls", // do include extension
+            fileext: ".xls", // file extension
+            preserveColors: true // set to true if you want background colors and font colors preserved
+        });
+
+    }
+
 
     function OTsubmit() {
         //alert("asdf");
