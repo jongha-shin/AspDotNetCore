@@ -231,7 +231,7 @@ namespace HanbizaMVC.Controllers
                 }
                 else
                 {
-                    // 회기년 기준
+                    // 회계년 기준
                     ViewBag.사용연차 = i.발생연차 - i.잔여일수;
                     //ViewBag.발생연차 = i.발생연차 + i.조정추가;
                 }

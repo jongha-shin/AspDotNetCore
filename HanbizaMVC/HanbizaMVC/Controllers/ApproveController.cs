@@ -68,7 +68,7 @@ namespace HanbizaMVC.Controllers
             if (Snal == null && Enal == null)
             {
                 Snal = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
-                Enal = DateTime.Now.AddMonths(+1).ToString("yyyy-MM-dd");
+                Enal = DateTime.Now.AddMonths(+2).ToString("yyyy-MM-dd");
                 ViewBag.Snal = Snal;
                 ViewBag.Enal = Enal;
             }
@@ -108,7 +108,7 @@ namespace HanbizaMVC.Controllers
             if (Snal == null && Enal == null)
             {
                 Snal = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
-                Enal = DateTime.Now.AddMonths(+1).ToString("yyyy-MM-dd");
+                Enal = DateTime.Now.AddMonths(+2).ToString("yyyy-MM-dd");
                 ViewBag.Snal = Snal;
                 ViewBag.Enal = Enal;
             }
@@ -148,7 +148,7 @@ namespace HanbizaMVC.Controllers
             if (Snal == null && Enal == null)
             {
                 Snal = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
-                Enal = DateTime.Now.AddMonths(+1).ToString("yyyy-MM-dd");
+                Enal = DateTime.Now.AddMonths(+2).ToString("yyyy-MM-dd");
                 ViewBag.Snal = Snal;
                 ViewBag.Enal = Enal;
             }
