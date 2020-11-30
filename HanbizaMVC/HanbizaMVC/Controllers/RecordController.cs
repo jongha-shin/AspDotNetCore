@@ -137,7 +137,7 @@ namespace HanbizaMVC.Controllers
                     ViewBag.결근일 = i.결근일;
                     ViewBag.휴무일 = i.휴무일;
                     ViewBag.주휴일 = i.주휴일;
-                    ViewBag.유급휴일 = i.유급휴가휴일 + i.유급휴일;
+                    ViewBag.유급휴일 = i.유급휴가휴일; //+ i.유급휴일;
                     ViewBag.무급휴가휴일 = i.무급휴가휴일;
                     ViewBag.유급주휴일 = i.유급주휴일;
                 }
