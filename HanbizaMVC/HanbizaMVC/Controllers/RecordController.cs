@@ -211,7 +211,7 @@ namespace HanbizaMVC.Controllers
 
             ViewBag.menulist = menulist;
             //GetLoginUser();
-            _logger.LogInformation("sub11(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
+            //_logger.LogInformation("sub11(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             List<연차대장> vacationRecord = null;
             _db.LoadStoredProc("dbo.countVacation").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)

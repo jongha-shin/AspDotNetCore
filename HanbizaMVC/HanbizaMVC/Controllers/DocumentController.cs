@@ -166,7 +166,14 @@ namespace HanbizaMVC.Controllers
 
             return result;
         }
-
+        [Authorize]
+        public IActionResult Sub42()
+        {
+            Boolean checkLogin = CheckLogin();
+            ViewBag.menulist = menulist;
+            //_logger.LogInformation("sub42(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / ");
+            return View();
+        }
         //// 9 비밀번호변경
         //[Authorize]
         //public IActionResult Sub9()
@@ -188,7 +195,7 @@ namespace HanbizaMVC.Controllers
         //    List<LoginInfor> loginInfor = null;
         //    _db.LoadStoredProc("dbo.PWD_check").AddParam("StaffID", LoginUser.StaffId).AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname)
         //        .AddParam("checkPWD", pwd).Exec(r => loginInfor = r.ToList<LoginInfor>());
-            
+
         //    //Console.WriteLine("Sub9_1 rs: " + loginInfor.Count);
 
         //    if (loginInfor.Count > 0)
@@ -222,7 +229,7 @@ namespace HanbizaMVC.Controllers
         //    return rsString;
         //}
 
-        
+
 
 
 
