@@ -50,9 +50,14 @@
     </ul>
     <div class="tab-content" id="pills-tabContent">
         @* 대기 *@
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="tab-pane show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="form-group row ml-1" style="float:left;">
+                <span style="padding:5px">휴가 시작일 :</span>
+                <input id="Snal_Waiting" class="form-control form-control-sm col-4 col-sm-3 Snal" autocomplete="off" /> &nbsp;~&nbsp;
+                <input id="Enal_Waiting" class="form-control form-control-sm col-4 col-sm-3 Enal" autocomplete="off" />
+            </div>
+            <p style="text-align:right; margin:0px; font:small">* 신청자의 휴가 잔여일수가 없으면 <span style="color:red;">빨간</span>글씨로 표시됩니다</p>
             <div class="table-responsive">
-                <p style="text-align:right; margin:0px; font:small">* 신청자의 휴가 잔여일수가 없으면 <span style="color:red;">빨간</span>글씨로 표시됩니다</p>
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -118,7 +123,12 @@
             </div>
         </div>
         @* 승인 *@
-        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="form-group row ml-1" style="float:left">
+                <span style="padding:5px">휴가 시작일 :</span>
+                <input id="Snal_Approve" class="form-control form-control-sm col-4 col-sm-3 Snal" autocomplete="off" /> &nbsp;~&nbsp;
+                <input id="Enal_Approve" class="form-control form-control-sm col-4 col-sm-3 Enal" autocomplete="off" />
+            </div>
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -161,7 +171,12 @@
             </div>
         </div>
         @* 반려 *@
-        <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="tab-pane" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="form-group row ml-1" style="float:left">
+                <span style="padding:5px">휴가 시작일 :</span>
+                <input id="Snal_Reject" class="form-control form-control-sm col-4 col-sm-3 Snal" autocomplete="off" /> &nbsp;~&nbsp;
+                <input id="Enal_Reject" class="form-control form-control-sm col-4 col-sm-3 Enal" autocomplete="off" />
+            </div>
             <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를 <span style="color:red;">취소</span>할 수 있습니다</p>
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -206,10 +221,11 @@
             </div>
         </div>
         @* 결재결과 *@
-        <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
-            <div class="form-group row ml-1">
-                <input id="Snal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" /> &nbsp;~&nbsp;
-                <input id="Enal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" />
+        <div class="tab-pane" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="form-group row ml-1" style="float:left">
+                <span style="padding:5px">휴가 시작일 :</span>
+                <input id="Snal_History" class="form-control form-control-sm col-4 col-sm-3 Snal" autocomplete="off" /> &nbsp;~&nbsp;
+                <input id="Enal_History" class="form-control form-control-sm col-4 col-sm-3 Enal" autocomplete="off" />
             </div>
             <div class="table-responsive">
 
@@ -222,22 +238,32 @@
 <script type="text/javascript">
 
     var approveType = "vacation";
+    var secondTab = "@ViewBag.secondTab";
+    if (secondTab == 'Approve') {
+        $("#pills-profile-tab").tab('show');
+    } else if (secondTab == 'Reject') {
+        $("#pills-profile2-tab").tab('show');
+    } else {
+        $("#pills-home-tab").tab('show');
+    }
 
     $(function () {
 
-        $("#Snal").datepicker({
+        $(".Snal").datepicker({
             language: 'ko',
             autoclose: true,
 
         });
 
-        $("#Enal").datepicker({
+        $(".Enal").datepicker({
             language: 'ko',
             autoclose: true
         });
 
-        $("#Snal").datepicker("setDate", "-15D"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-        $("#Enal").datepicker("setDate", "+15D");
+        //$("#Snal").datepicker("setDate", "-15D"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
+        //$("#Enal").datepicker("setDate", "+15D");
+        $(".Snal").datepicker("setDate", "@ViewBag.Snal");
+        $(".Enal").datepicker("setDate", "@ViewBag.Enal");
 
         $("#checkBox_head").change(function () {
             if ($("#checkBox_head").is(":checked")) {
@@ -284,10 +310,17 @@
                 });
             }
         });
-        $("#Snal").on("change", function () {
-            getHistory();
+
+        $("#Snal_Waiting, #Enal_Waiting").on("change", function () {
+            getVacationlist('Waiting');
         });
-        $("#Enal").on("change", function () {
+        $("#Snal_Approve, #Enal_Approve").on("change", function () {
+            getVacationlist('Approve');
+        });
+        $("#Snal_Reject, #Enal_Reject").on("change", function () {
+            getVacationlist('Reject');
+        });
+        $("#Snal_History, #Enal_History").on("change", function () {
             getHistory();
         });
 
@@ -344,9 +377,28 @@
         $(".reason_Div").hide();
     }
 
+    function getVacationlist(secondTab) {
+        let Snal = '';
+        let Enal = '';
+
+        if (secondTab == "Approve") {
+            Snal = $("#Snal_Approve").val();
+            Enal = $("#Enal_Approve").val();
+        }
+        if (secondTab == "Reject") {
+            Snal = $("#Snal_Reject").val();
+            Enal = $("#Enal_Reject").val();
+        }
+        if (secondTab == "Waiting") {
+            Snal = $("#Snal_Waiting").val();
+            Enal = $("#Enal_Waiting").val();
+        }
+
+        location.href = "/Approve/Sub31/" + secondTab + "/" + Snal + "/" + Enal;
+    }
     function getHistory() {
-        let Snal = $("#Snal").val();
-        let Enal = $("#Enal").val();
+        let Snal = $("#Snal_History").val();
+        let Enal = $("#Enal_History").val();
         //alert(Snal + "/" + Enal);
         $.ajax({
             url: "/Approve/Sub31_3/" + approveType + "/" + Snal + "/" + Enal,

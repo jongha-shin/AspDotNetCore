@@ -227,11 +227,11 @@ namespace HanbizaMVC.Controllers
                 if (i.연차구분.Equals("N")) 
                 {
                     // 입사일 기준
-                    ViewBag.사용연차 = i.발생연차 + i.이월조정추가 - i.잔여일수; 
+                    ViewBag.사용연차 = i.발생연차 + i.이월조정추가 - i.잔여일수;
                 }
                 else
                 {
-                    // 회기년 기준
+                    // 회계년 기준
                     ViewBag.사용연차 = i.발생연차 - i.잔여일수;
                     //ViewBag.발생연차 = i.발생연차 + i.조정추가;
                 }

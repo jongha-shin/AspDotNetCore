@@ -20,5 +20,6 @@ namespace HanbizaMVC.Models
         public DateTime Regdate { get; set; }
 
         public int DeepNum { get; set; }
+        public string 년 { get; set; }
     }
 }

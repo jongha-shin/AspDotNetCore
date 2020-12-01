@@ -24,6 +24,7 @@ namespace HanbizaMVC.Models
         public string Snals { get; set; }
         public string Enals { get; set; }
         public string 요일 { get; set; }
+        public string 년 { get; set; }
         public int DeepNum { get; set; }
     }
 }

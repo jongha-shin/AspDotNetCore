@@ -37,7 +37,7 @@
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style="font-size:small">
         <li class="nav-item">
-            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">대기</a>
+            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">대기</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">승인</a>
@@ -51,7 +51,12 @@
     </ul>
     <div class="tab-content" id="pills-tabContent">
         @* 대기 *@
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="tab-pane" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="form-group row ml-1" style="float:left">
+                <span style="padding:5px">OT 시작일 :</span>
+                <input id="Snal_Waiting" class="form-control form-control-sm col-4 col-sm-3 Snal" autocomplete="off" /> &nbsp;~&nbsp;
+                <input id="Enal_Waiting" class="form-control form-control-sm col-4 col-sm-3 Enal" autocomplete="off" />
+            </div>
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -62,42 +67,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model)
-                    {
-                        if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
+                        @foreach (var item in Model)
                         {
-                        <tr>
-                            <td><input type="checkbox" class="checkBox_body" value="@item.OtID" /><input type="hidden" class="submit_result" value=""></td>
-                            <td>@item.Staffname</td>
-                            <td>
-                            @if (item.Gubun.Equals("C"))
+                            if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
                             {
-                                <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                <tr>
+                                    <td><input type="checkbox" class="checkBox_body" value="@item.OtID" /><input type="hidden" class="submit_result" value=""></td>
+                                    <td>@item.Staffname</td>
+                                    <td>
+                                        @if (item.Gubun.Equals("C"))
+                                        {
+                                            <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                        }
+                                        @if (item.Gubun.Equals("R"))
+                                        {
+                                            <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                        }
+                                        <br />
+                                        <span style="color:black">사유: @item.Reason</span><br />
+                                        <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
+                                            <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
+                                            <div class="input-group-append">
+                                                <button class="btn btn-danger rejectBtn">반려</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                a++;
                             }
-                            @if (item.Gubun.Equals("R"))
-                            {
-                                <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
-                            }
-                                <br />
-                                <span style="color:black">사유: @item.Reason</span><br />
-                                <div class="input-group input-group-sm col-10 reason_Div" style="display: none; margin:0 auto">
-                                    <input class="form-control RereaSon" type="text" placeholder="반려사유를 입력해 주세요" />
-                                    <div class="input-group-append">
-                                        <button class="btn btn-danger rejectBtn">반려</button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                            a++;
-                        }
 
-                    }
-                    @if (a == 0)
-                    {
-                        <tr>
-                            <td colspan="3">데이터가 없습니다</td>
-                        </tr>
-                    }
+                        }
+                        @if (a == 0)
+                        {
+                            <tr>
+                                <td colspan="3">데이터가 없습니다</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -113,35 +118,40 @@
         </div>
 
         @* 승인 *@
-        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-            <div class="table-responsive">
-                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th width="15%">신청자</th>
-                            <th>기간 및 사유</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+    <div class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="form-group row ml-1" style="float:left">
+            <span style="padding:5px">OT 시작일 :</span>
+            <input id="Snal_Approve" class="form-control form-control-sm col-4 col-sm-3 Snal" autocomplete="off"/> &nbsp;~&nbsp;
+            <input id="Enal_Approve" class="form-control form-control-sm col-4 col-sm-3 Enal" autocomplete="off"/>
+        </div>
+        <div class="table-responsive">
+            <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="15%">신청자</th>
+                        <th>기간 및 사유</th>
+                    </tr>
+                </thead>
+                <tbody>
                     @foreach (var item in Model)
                     {
                         if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F"))
                         {
-                        <tr>
-                            <td>@item.Staffname</td>
-                            <td>
-                            @if (item.Gubun.Equals("C"))
-                            {
-                                <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
-                            }
-                            @if (item.Gubun.Equals("R"))
-                            {
-                                <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
-                            }
-                                <br />
-                                <span style="color:black">사유: @item.Reason</span><br />
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>@item.Staffname</td>
+                                <td>
+                                    @if (item.Gubun.Equals("C"))
+                                    {
+                                        <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                    }
+                                    @if (item.Gubun.Equals("R"))
+                                    {
+                                        <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                    }
+                                    <br />
+                                    <span style="color:black">사유: @item.Reason</span><br />
+                                </td>
+                            </tr>
                             b++;
                         }
                     }
@@ -151,44 +161,49 @@
                             <td colspan="3">데이터가 없습니다</td>
                         </tr>
                     }
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
+    </div>
 
         @* 반려 *@
-        <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
-            <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를 <span style="color:red;">취소</span>할 수 있습니다</p>
-            <div class="table-responsive">
-                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th width="15%">신청자</th>
-                            <th>기간 및 사유</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+    <div class="tab-pane" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="form-group row ml-1" style="float:left">
+            <span style="padding:5px">OT 시작일 :</span>
+            <input id="Snal_Reject" class="form-control form-control-sm col-4 col-sm-3 Snal" autocomplete="off" /> &nbsp;~&nbsp;
+            <input id="Enal_Reject" class="form-control form-control-sm col-4 col-sm-3 Enal" autocomplete="off" />
+        </div>
+        <p style="text-align:right; margin:0px; font:small">* 신청 시작일 전, 클릭하여 반려를 <span style="color:red;">취소</span>할 수 있습니다</p>
+        <div class="table-responsive">
+            <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="15%">신청자</th>
+                        <th>기간 및 사유</th>
+                    </tr>
+                </thead>
+                <tbody>
                     @foreach (var item in Model)
                     {
                         if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
                         {
-                        <tr class="tr-hover" onclick="CancleReject('@item.OtID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
-                            <td>@item.Staffname <input type="hidden" value="@item.OtID"></td>
-                            <td>
-                            @if (item.Gubun.Equals("C"))
-                            {
-                                <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
-                            }
-                            @if (item.Gubun.Equals("R"))
-                            {
-                                <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
-                            }
-                                <br />
-                                <span style="color:black">사유: @item.Reason</span><br />
-                                <span style="color:red">@item.RereaSon</span>
+                            <tr class="tr-hover" onclick="CancleReject('@item.OtID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
+                                <td>@item.Staffname <input type="hidden" value="@item.OtID"></td>
+                                <td>
+                                    @if (item.Gubun.Equals("C"))
+                                    {
+                                        <span>평일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                    }
+                                    @if (item.Gubun.Equals("R"))
+                                    {
+                                        <span>휴일근로 : @string.Format("{0:yyyy-MM-dd HH:mm}", item.SNal) ~ @string.Format("{0: HH:mm}", item.ENal)</span>
+                                    }
+                                    <br />
+                                    <span style="color:black">사유: @item.Reason</span><br />
+                                    <span style="color:red">@item.RereaSon</span>
 
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                             c++;
                         }
                     }
@@ -198,16 +213,17 @@
                             <td colspan="3">데이터가 없습니다</td>
                         </tr>
                     }
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
+    </div>
 
         @* 결재결과 *@
-        <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
-            <div class="form-group row ml-1">
-                <input id="Snal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" /> &nbsp;~&nbsp;
-                <input id="Enal" class="form-control form-control-sm col-4 col-sm-3" autocomplete="off" />
+        <div class="tab-pane" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="form-group row ml-1" style="float:left">
+                <span style="padding:5px">OT 시작일 :</span>
+                <input id="Snal_History" class="form-control form-control-sm col-4 col-sm-3 Snal" autocomplete="off" /> &nbsp;~&nbsp;
+                <input id="Enal_History" class="form-control form-control-sm col-4 col-sm-3 Enal" autocomplete="off" />
             </div>
             <div class="table-responsive">
 
@@ -218,23 +234,30 @@
     </div>
 </div>
 <script type="text/javascript">
-
     var approveType = "OT";
+    var secondTab = "@ViewBag.secondTab";
+    if (secondTab == 'Approve') {
+        $("#pills-profile-tab").tab('show');
+    } else if (secondTab == 'Reject') {
+        $("#pills-profile2-tab").tab('show');
+    } else {
+        $("#pills-home-tab").tab('show');
+    }
 
     $(function () {
-        $("#Snal").datepicker({
-            language: 'ko',
-            autoclose: true,
-
-        });
-
-        $("#Enal").datepicker({
+        $(".Snal").datepicker({
             language: 'ko',
             autoclose: true
         });
 
-        $("#Snal").datepicker("setDate", "-15D"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-        $("#Enal").datepicker("setDate", "+15D");
+        $(".Enal").datepicker({
+            language: 'ko',
+            autoclose: true
+        });
+        //$(".Snal").datepicker("setDate", "-1M"); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
+        //$(".Enal").datepicker("setDate", "+1M");
+        $(".Snal").datepicker("setDate", "@ViewBag.Snal");
+        $(".Enal").datepicker("setDate", "@ViewBag.Enal");
 
         $("#checkBox_head").change(function () {
             if ($("#checkBox_head").is(":checked")) {
@@ -258,7 +281,6 @@
                 $("#allowBtn").show();
             }
         });
-
         $(".rejectBtn").on("click", function () {
             if (confirm("선택한 OT신청을 반려하시겠습니까?")) {
 
@@ -282,12 +304,19 @@
             }
         });
 
-        $("#Snal").on("change", function () {
+        $("#Snal_Waiting, #Enal_Waiting").on("change", function () {
+            getOTlist('Waiting');
+        });
+        $("#Snal_Approve, #Enal_Approve").on("change", function () {
+            getOTlist('Approve');
+        });
+        $("#Snal_Reject, #Enal_Reject").on("change", function () {
+            getOTlist('Reject');
+        });
+        $("#Snal_History, #Enal_History").on("change", function () {
             getHistory();
         });
-        $("#Enal").on("change", function () {
-            getHistory();
-        });
+       
     });
     function allowVacation() {
         let checkedVacId = "";
@@ -340,9 +369,30 @@
         $("#afterReason").hide();
         $(".reason_Div").hide();
     }
+
+    function getOTlist(secondTab) {
+        let Snal = '';
+        let Enal = '';
+
+        if (secondTab == "Approve") {
+            Snal = $("#Snal_Approve").val();
+            Enal = $("#Enal_Approve").val();
+        }
+        if (secondTab == "Reject") {
+            Snal = $("#Snal_Reject").val();
+            Enal = $("#Enal_Reject").val();
+        }
+        if (secondTab == "Waiting") {
+            Snal = $("#Snal_Waiting").val();
+            Enal = $("#Enal_Waiting").val();
+        }
+
+        location.href = "/Approve/Sub30/" + secondTab + "/" + Snal + "/" + Enal;
+    }
+
     function getHistory() {
-        let Snal = $("#Snal").val();
-        let Enal = $("#Enal").val();
+        let Snal = $("#Snal_History").val();
+        let Enal = $("#Enal_History").val();
         //alert(Snal + "/" + Enal);
         $.ajax({
             url: "/Approve/Sub31_3/" + approveType + "/" + Snal + "/" + Enal,
@@ -355,7 +405,7 @@
                 var sjson = JSON.parse(result);
 
                 var s = '<table id="ApproveHistoryTable" class="table-sm table-bordered col-sm-12">';
-                s += "<thead><tr><th align='center' width='15%'>신청자</th><th align='center' width='55%'>신청휴가</th>"
+                s += "<thead><tr><th align='center' width='15%'>신청자</th><th align='center' width='55%'>신청OT</th>"
                 s += "<th align='center' width='15%'> 결재자</th><th align='center' width='15%'>결과</th></tr ></thead>"
                 if (sjson.length == 0) {
                     s += '<tr><td colspan="4" align="center">데이터가 없습니다</td></tr>';

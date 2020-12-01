@@ -167,21 +167,6 @@ namespace HanbizaMVC.Controllers
             return result;
         }
 
-        [Authorize]
-        public IActionResult Sub42()
-        {
-            Boolean checkLogin = CheckLogin();
-            ViewBag.menulist = menulist;
-
-            _logger.LogInformation("sub42(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / ");
-
-            return View();
-        }
-
-
-
-
-
         //// 9 비밀번호변경
         //[Authorize]
         //public IActionResult Sub9()
