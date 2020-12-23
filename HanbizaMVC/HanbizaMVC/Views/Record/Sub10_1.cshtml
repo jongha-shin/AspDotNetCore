@@ -62,7 +62,7 @@
 
                                     @if (attend.날짜.DayOfWeek.ToString("d").Equals("0"))
                                     {
-                                        <th style="color:red">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
+                                        <th class="Sunday" style="color:red">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
                                     }
                                     else if (attend.날짜.DayOfWeek.ToString("d").Equals("6"))
                                     {
@@ -75,8 +75,9 @@
 
                                     <td>@attend.출근</td>
                                     <td>@attend.퇴근</td>
-                                    <td>@attend.총근로</td>
+                                    <td class="DayOfTime">@attend.총근로</td>
                                 </tr>
+                                
                             }
                         }
                     </tbody>
