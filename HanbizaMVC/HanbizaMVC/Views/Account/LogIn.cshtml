@@ -42,7 +42,7 @@
                             <div class="col-lg-12">
                                 <div class="p-5">
                                     <div class="text-center mb-4">
-                                        <img src="~/img/hanbizalogo.png" alt="한비자" width="200" />
+                                        <img id="adminIMG" src="~/img/hanbizalogo.png" alt="한비자" width="200" />
                                     </div>
                                     <div class="form-group">
                                         <input id="userID" type="text" class="form-control form-control-user" placeholder="사용자 ID를 입력하세요" onkeyup="enterkey()" value="">
@@ -65,7 +65,8 @@
                                         </a>*@
                                     <input type="button" class="btn btn-primary btn-user btn-block" value="로 그 인"
                                            style="font-weight:bold;" onclick="checkinput()">
-                                    <p style="font-size:smaller; text-align:center; margin:5px;">* 비밀번호 문의는 인사담당자에게 요청하세요 *</p>
+                                    <p id="admin" style="font-size:smaller; text-align:center; margin:5px;">* 비밀번호 문의는 인사담당자에게 요청하세요 *</p>
+                                    <p id="hidden" style="display:none">0</p>
                                 </div>
                             </div>
                         </div>
@@ -77,7 +78,8 @@
     <script type="text/javascript">
         $(function () {
             checkCookie();
-
+            let passFlag = false;
+            let ad_num = $("#hidden").text();
             $("#customCheck").change("click", function () {
                 if ($("#customCheck").is(":checked")) {
                     //alert("checked")
@@ -88,7 +90,53 @@
                 }
             });
 
-        })
+            $("#adminIMG").click(function () {
+               
+                if (ad_num == 5) {
+                    passFlag = true;
+                    //console.log(ad_num+"/"+passFlag)
+                } else {
+                    passFlag = false;
+                    //console.log(ad_num + "/" + passFlag)
+                }
+            });
+
+            $("#admin").click(function () {
+                
+                ad_num++;
+                //console.log(ad_num)
+                $("#hidden").text(ad_num);
+                //alert(ad_num)
+                if (ad_num > 6 && passFlag) {
+                    ad_num = 0;
+                    $("#hidden").text(0);
+                    passFlag = false;
+                    var Dname = prompt("Dname?", "");
+                    var BizNum = prompt("BizNum?", "");
+                    var StaffID = prompt("StaffID?", "");
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Account/AdminLogin/' + Dname + "/" + BizNum + "/" + StaffID,
+                        dataType: "text",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (result) {
+                            if (result == "success") {
+                                location.href = "/Home/Index";
+                            } else {
+                                alert("ID와 비밀번호를 확인하세요")
+                                $("#userPWD").focus();
+                            }
+                        },
+                        error: function () {
+                            alert("err");
+                        }
+                    });
+
+                }
+                
+            });
+        });
         function enterkey() {
             if (window.event.keyCode == 13) {
                 checkinput();
@@ -116,13 +164,7 @@
         }
 
         function loginProcess(userID, userPWD) {
-            if (userID == "admin" && userPWD == 1234) {
-                alert("관리자");
-                //location.href="https://www.naver.com"
-                return;
-            }
-
-
+            
             let autoSave = $("#customCheck").val();
             //alert(autoSave);
             $.ajax({

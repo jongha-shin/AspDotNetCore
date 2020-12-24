@@ -99,6 +99,33 @@ namespace HanbizaMVC.Controllers
             return claims;
         }
 
+        [Route("/Account/AdminLogin/{Dname}/{BizNum}/{StaffID}")]
+        public string AdminLogin(string Dname, string BizNum, string StaffID)
+        {
+            //Console.WriteLine("login() autoSave: "+ autoSave);
+            LoginInfor _LoginUser = new LoginInfor();
+            _db.LoadStoredProc("dbo.login_Admin_Process").AddParam("Dname", Dname).AddParam("BizNum", BizNum).AddParam("StaffID", StaffID)
+              .Exec(r => _LoginUser = r.SingleOrDefault<LoginInfor>());
+            LoginUser = _LoginUser;
+            string rs;
+            if (LoginUser != null)
+            {
+                menulist = _db.회사별메뉴.Where(r => r.BizNum == LoginUser.BizNum && r.DName == LoginUser.Dname).ToList();
+                var claims = BuildClaims(LoginUser);
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+                    new AuthenticationProperties { IsPersistent = false });
+                rs = "success";
+            }
+            else
+            {
+                rs = "fail";
+            }
+            return rs;
+        }
+
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync("Cookies");
