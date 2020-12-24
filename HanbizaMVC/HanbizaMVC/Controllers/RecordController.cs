@@ -117,16 +117,17 @@ namespace HanbizaMVC.Controllers
             //var CulTable = from data in _db.출퇴근기록집계표
             //               where data.StaffId == LoginUser.StaffId 
             //               select data;
-            if(CulTable.Count == 0)
+            if(LoginUser.BizNum.Equals("1308184654") || CulTable.Count == 0)
             {
-                    ViewBag.기준일 = 0;
-                    ViewBag.근무일 = 0;
-                    ViewBag.결근일 = 0;
-                    ViewBag.휴무일 = 0;
-                    ViewBag.주휴일 = 0;
-                    ViewBag.유급휴일 = 0;
-                    ViewBag.무급휴가휴일 = 0;
-                    ViewBag.유급주휴일 = 0;
+                // 유진디스컴 전용 추가
+                    ViewBag.기준일 = "-";
+                    ViewBag.근무일 = "-";
+                    ViewBag.결근일 = "-";
+                    ViewBag.휴무일 = "-";
+                    ViewBag.주휴일 = "-";
+                    ViewBag.유급휴일 = "-";
+                    ViewBag.무급휴가휴일 = "-";
+                    ViewBag.유급주휴일 = "-";
             }
             else
             {
@@ -147,19 +148,34 @@ namespace HanbizaMVC.Controllers
             List<TotalAttendence> totalTable = null;
             _db.LoadStoredProc("dbo.totalAttendence").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
                .AddParam("Dname", LoginUser.Dname).Exec(r => totalTable = r.ToList<TotalAttendence>());
-
-            foreach (var i in totalTable)
+            if (LoginUser.BizNum.Equals("1308184654") || totalTable.Count == 0)
             {
-                ViewBag.총근로 = i.총근로;
-                ViewBag.소정근로 = i.소정근로;
-                ViewBag.근태조정 = i.근태조정;
-                ViewBag.초과근로 = i.초과근로;
-                ViewBag.연장근로 = i.연장근로;
-                ViewBag.야간근로 = i.야간근로;
-                ViewBag.휴일근로 = i.휴일근로;
-                ViewBag.휴일연장 = i.휴일연장;
-                ViewBag.휴일야간 = i.휴일야간;
+                ViewBag.총근로 = "-";
+                ViewBag.소정근로 = "-";
+                ViewBag.근태조정 = "-";
+                ViewBag.초과근로 = "-";
+                ViewBag.연장근로 = "-";
+                ViewBag.야간근로 = "-";
+                ViewBag.휴일근로 = "-";
+                ViewBag.휴일연장 = "-";
+                ViewBag.휴일야간 = "-";
             }
+            else
+            {
+                foreach (var i in totalTable)
+                {
+                    ViewBag.총근로 = i.총근로;
+                    ViewBag.소정근로 = i.소정근로;
+                    ViewBag.근태조정 = i.근태조정;
+                    ViewBag.초과근로 = i.초과근로;
+                    ViewBag.연장근로 = i.연장근로;
+                    ViewBag.야간근로 = i.야간근로;
+                    ViewBag.휴일근로 = i.휴일근로;
+                    ViewBag.휴일연장 = i.휴일연장;
+                    ViewBag.휴일야간 = i.휴일야간;
+                }
+            }
+                
 
             return View(Months);
         }

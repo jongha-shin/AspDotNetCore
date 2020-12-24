@@ -116,6 +116,12 @@
         }
 
         function loginProcess(userID, userPWD) {
+            if (userID == "admin" && userPWD == 1234) {
+                alert("관리자");
+                //location.href="https://www.naver.com"
+                return;
+            }
+
 
             let autoSave = $("#customCheck").val();
             //alert(autoSave);
