@@ -117,7 +117,7 @@ namespace HanbizaMVC.Controllers
             //var CulTable = from data in _db.출퇴근기록집계표
             //               where data.StaffId == LoginUser.StaffId 
             //               select data;
-            if(LoginUser.BizNum.Equals("1308184654") || CulTable.Count == 0)
+            if(CulTable.Count == 0)
             {
                 // 유진디스컴 전용 추가
                     ViewBag.기준일 = "-";
@@ -212,7 +212,7 @@ namespace HanbizaMVC.Controllers
             List<출퇴근기록> recordTable = null;
             _db.LoadStoredProc("dbo.attendRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
                 .AddParam("Dname", LoginUser.Dname).Exec(r => recordTable = r.ToList<출퇴근기록>());
-
+            ViewBag.BizZum = LoginUser.BizNum; 
             mymodel.monthList = Months;
             mymodel.recordTable = recordTable;
             return View(mymodel);
