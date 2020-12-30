@@ -66,6 +66,7 @@
                         <option value="연차휴가">연차휴가</option>
                         <option value="연차휴가(반차)">연차휴가(반차)</option>
                         <option value="기타휴가(유)">기타휴가(유)</option>
+                        <option value="법정무급휴가(생리,산재,가족등)">법정무급휴가</option>
                     </select>
                     <label class="col-md-2 col-form-label" id="UseTimeLabel" style="display:none">시간</label>
                     <select class="form-control form-control-sm col-md-4" id="UseTime" style="display:none">
@@ -188,11 +189,17 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@item.Vicname <input class="vseq" type="hidden" value="@item.SEQID"></td>
+                                    <td>
+                                        @if(item.Vicname.Equals("법정무급휴가(생리,산재,가족등)")){
+                                            @:법정무급휴가
+                                        }else{
+                                            @item.Vicname
+                                        }
+                                        <input class="vseq" type="hidden" value="@item.SEQID">
+                                    </td>
                                     @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                                     {
                                         <td>@string.Format("{0:yyyy-MM-dd}", item.Snal) (@item.UseTime 시간)</td>
-
                                     }
                                     else
                                     {
