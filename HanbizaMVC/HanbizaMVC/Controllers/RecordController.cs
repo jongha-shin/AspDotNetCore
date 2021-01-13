@@ -217,7 +217,52 @@ namespace HanbizaMVC.Controllers
             mymodel.recordTable = recordTable;
             return View(mymodel);
         }
+        [Authorize]
+        [Route("/Record/Sub10_1_1")]
+        [Route("/Record/Sub10_1_1/{dateMonth}")]
+        public IActionResult Sub10_1_1(string dateMonth)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
 
+            ViewBag.menulist = menulist;
+            dynamic mymodel = new ExpandoObject();
+            // 최근 근태기록 월 구하기
+            List<출퇴근기록> Months = null;
+            if (dateMonth == null)
+            {
+                dateMonth = "";
+                //_db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                //   .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
+
+            }
+            else
+            {
+                //_db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                //   .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
+                //ViewBag.선택월 = dateMonth;
+            }
+
+            DateTime today = DateTime.Today;
+            string year = today.Year.ToString();
+            string month = today.Month.ToString();
+            int day = DateTime.DaysInMonth(today.Year, today.Month);
+            if (month.ToString().Length == 1) month = "0" + month;
+
+            dateMonth = year + "-" + month;
+            //Console.WriteLine(dateMonth);
+            ViewBag.선택월 = dateMonth;
+            ViewBag.선택일끝 = day;
+            //Console.WriteLine("1_1 선택월: " + dateMonth);
+            // 출퇴근기록
+            List<출퇴근기록> recordTable = null;
+            _db.LoadStoredProc("dbo.attendRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
+                .AddParam("Dname", LoginUser.Dname).Exec(r => recordTable = r.ToList<출퇴근기록>());
+            ViewBag.BizZum = LoginUser.BizNum;
+            mymodel.monthList = Months;
+            mymodel.recordTable = recordTable;
+            return View(mymodel);
+        }
         // 5. 연차보기
         [Authorize]
         public IActionResult Sub11()

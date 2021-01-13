@@ -22,7 +22,6 @@ namespace HanbizaMVC.Controllers
         public AccountController(HanbizaContext db)
         {
             _db = db;
-
         }
         public IActionResult Login()
         {

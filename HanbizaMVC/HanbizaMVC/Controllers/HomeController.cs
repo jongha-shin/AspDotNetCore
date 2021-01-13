@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace HanbizaMVC.Controllers
 {
@@ -122,6 +124,58 @@ namespace HanbizaMVC.Controllers
             rsString = "fail";
             return rsString;
         }
+
+        //출퇴근시간 저장
+        [Route("/Home/WorkTime_Save/{WorkType}/{NowDate}/{NowTime}")]
+        public string WorkTime_Save(string WorkType, string NowDate, string NowTime)
+        {
+            //Console.WriteLine(WorkType + "/ " + NowDate + " /" + NowTime);
+            Boolean checkLogin = CheckLogin();
+            IPAddress ip;
+            var headers = Request.Headers.ToList();
+            if (headers.Exists((kvp) => kvp.Key == "X-Forwarded-For"))
+            {
+                // when running behind a load balancer you can expect this header
+                var header = headers.First((kvp) => kvp.Key == "X-Forwarded-For").Value.ToString();
+                ip = IPAddress.Parse(header);
+            }
+            else
+            {
+                // this will always have a value (running locally in development won't have the header)
+                ip = Request.HttpContext.Connection.RemoteIpAddress;
+            }
+
+            int a = _db.LoadStoredProc("WorkTime_insert").AddParam("WorkType", WorkType).AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
+                      .AddParam("PkDay", NowDate).AddParam("StaffID", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
+                      .AddParam("NowTime", NowDate + " " + NowTime).AddParam("IpAddress", ip.ToString())
+                      .ExecNonQuery();
+            //Console.WriteLine("a: "+a);
+            if (a > 0)
+            {
+                return "Success";
+            }
+
+            return "";
+        }
+
+        //출퇴근체크 후 버튼활성화 여부
+        [Route("/Home/WorkTime_check/{NowDate}")]
+        public IActionResult WorkTime_check(string NowDate)
+        {
+            Boolean checkLogin = CheckLogin();
+            
+            List<WorkTime> workTime = null;
+            var jsonString = "";
+
+            _db.LoadStoredProc("WorkTime_check").AddParam("PkDay", NowDate)
+                .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId)
+                .Exec(r => workTime = r.ToList<WorkTime>());
+            jsonString = JsonConvert.SerializeObject(workTime);
+
+            return new JsonResult(jsonString);
+        }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

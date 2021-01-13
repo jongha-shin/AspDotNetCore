@@ -28,70 +28,108 @@
         padding-top: 5px;
         background-color: #3763ab;
         border-radius: 5px;
+        min-width: 200px;
+        margin-top: 10px;
     }
 
     .vacation:hover {
         background-color: rgba(0, 0, 0, 0.075);
     }
+
+    .CheckWorkTime {
+        background-color: #214085; color: white;
+        width: 100%;
+        padding: 0px 10px;
+        max-width: 650px;
+        border-radius: 5px;
+        position: relative;
+        margin: 0 auto;
+        margin-bottom: 20px;
+    }
+    .StartBtn, .EndBtn{
+        min-height: 62px;
+    }
+    .StartBtn:hover{
+        background-color:#5783c3;
+    }
+        .StartBtn:disabled {
+            background-color: #5783c3;
+        }
+
 </style>
-<div class="text-center col-10 offset-1" style="vertical-align:middle">
-    <h6 class="notice">공지사항</h6>
-    <div class="card-wrapper offset-md-1">
-        <div class="row">
-            @foreach (var item in Model)
-            {
-                if (Model.Count == 0)
-                {
-                    <span>데이터가 없습니다</span>
-                }
-                else
-                {
-                    @if (item.내용.Contains("OT"))
-                    {
-                        <div class="card border-primary col-md-5 p-0 m-2 float-left vacation" onclick="location.href='/Approve/Sub30'" style="cursor:pointer;">
-                            <div class="card-header p-2">@item.내용</div>
-                            <div class="card-body text-primary p-1 pt-2">
-                                <p class="card-title" style="font-weight:bold">@item.제목</p>
-                                <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
-                            </div>
-                        </div>
-                    }
-                    @if (item.내용.Contains("휴가"))
-                    {
-                        <div class="card border-primary col-md-5 p-0 m-2 float-left vacation" onclick="location.href='/Approve/Sub31'" style="cursor:pointer;">
-                            <div class="card-header p-2">@item.내용</div>
-                            <div class="card-body text-primary p-1 pt-2">
-                                <p class="card-title" style="font-weight:bold">@item.제목</p>
-                                <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
-                            </div>
-                        </div>
-                    }
-                    @if (item.내용.Contains("기타"))
-                    {
-                        <div class="card border-primary col-md-5 p-0 m-2 float-left vacation" onclick="location.href='/Approve/Sub33'" style="cursor:pointer;">
-                            <div class="card-header p-2">@item.내용</div>
-                            <div class="card-body text-primary p-1 pt-2">
-                                <p class="card-title" style="font-weight:bold">@item.제목</p>
-                                <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
-                            </div>
-                        </div>
-                    }
-                    @if (item.VacId == 0)
-                    { //mb-3 mt-3 mr-md-3
-                        <div class="card border-primary col-md-5 p-0 m-2 float-left">
-                            <div class="card-header p-2" style="background-color:#5783c3; color:white">@item.제목</div>
-                            <div class="card-body text-primary p-1 pt-2">
-                                <p class="card-title" style="font-weight:bold">@item.내용</p>
-                                <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
-                            </div>
-                        </div>
-                    }
-                }
-            }
+<div class="text-center col-10 offset-1" style="margin:auto;vertical-align: middle;padding: 0;min-width: 200px;">
+    @if (ViewBag.menulist[0].근태보기.Equals("2"))
+    {
+    <div class="row offset-md-1 CheckWorkTime" >
+        <div class="col-md-6 col-12" style="margin:20px auto;font-size:15px">
+            <span>근로 기준일 : </span><span id="today"></span>
+        </div>
+        <div class="col-md-6 col-12" style="padding: 0; margin:10px 0">
+            <button class="btn btn-primary col-4 col-md-3 StartBtn" onclick="saveWorkTime('Start')">출근</button>
+            <button class="btn btn-danger col-4 col-md-3 offset-1 EndBtn" onclick="saveWorkTime('End')">퇴근</button>
         </div>
     </div>
-</div>
+    }
+        <h6 class="notice">공지사항</h6>
+        <div class="card-wrapper offset-md-1">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    if (Model.Count == 0)
+                    {
+                        <span>데이터가 없습니다</span>
+                    }
+                    else
+                    {
+                        @if (item.내용.Contains("OT"))
+                        {
+                            <div class="card border-primary col-md-5 p-0 m-2 float-left vacation" onclick="location.href='/Approve/Sub30'" style="cursor:pointer;">
+                                <div class="card-header p-2">@item.내용</div>
+                                <div class="card-body text-primary p-1 pt-2">
+                                    <p class="card-title" style="font-weight:bold">@item.제목</p>
+                                    <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                                </div>
+                            </div>
+                        }
+                        @if (item.내용.Contains("휴가"))
+                        {
+                            <div class="card border-primary col-md-5 p-0 m-2 float-left vacation" onclick="location.href='/Approve/Sub31'" style="cursor:pointer;">
+                                <div class="card-header p-2">@item.내용</div>
+                                <div class="card-body text-primary p-1 pt-2">
+                                    <p class="card-title" style="font-weight:bold">@item.제목</p>
+                                    <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                                </div>
+                            </div>
+                        }
+                        @if (item.내용.Contains("기타"))
+                        {
+                            <div class="card border-primary col-md-5 p-0 m-2 float-left vacation" onclick="location.href='/Approve/Sub33'" style="cursor:pointer;">
+                                <div class="card-header p-2">@item.내용</div>
+                                <div class="card-body text-primary p-1 pt-2">
+                                    <p class="card-title" style="font-weight:bold">@item.제목</p>
+                                    <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                                </div>
+                            </div>
+                        }
+                        @if (item.VacId == 0)
+                        { //mb-3 mt-3 mr-md-3
+                            <div class="card border-primary col-md-5 p-0 m-2 float-left">
+                                <div class="card-header p-2" style="background-color:#5783c3; color:white">@item.제목</div>
+                                <div class="card-body text-primary p-1 pt-2">
+                                    <p class="card-title" style="font-weight:bold">@item.내용</p>
+                                    <p class="card-text">@string.Format("{0:yyyy-MM-dd}", item.Regdate)</p>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
 <script>
+    let TmpTime = new Date();
+    let NowDate = "";
+    NowDate = CheckWorkTime(TmpTime);
     $(function () {
         //alert("asdf");
         $("body").toggleClass("sidebar-toggled");
@@ -99,5 +137,104 @@
         if ($(".sidebar").hasClass("toggled")) {
             $('.sidebar .collapse').collapse('hide');
         };
+
+        $("#today").text(NowDate);
+        CheckWorkBtn();
+
+    
     })
+
+    function saveWorkTime(WorkType) {
+        let TmpTime = new Date();
+        let nowHours = TmpTime.getHours();
+        let nowMinutes = TmpTime.getMinutes();
+        nowMinutes = nowMinutes >= 10 ? nowMinutes : '0' + nowMinutes;
+        let NowTime = nowHours + ":" + nowMinutes;
+        if (WorkType == "Start") {
+            alert("출근시간: " + NowTime);
+            $(".StartBtn").attr("disabled", true);
+            $(".StartBtn").text("출근 " + NowTime);
+        } else {    //WorkType == End
+
+            alert("퇴근시간: " + NowTime);
+            $(".EndBtn").attr("disabled", true);
+            $(".EndBtn").text("퇴근 " + NowTime);
+        }
+
+        $.ajax({
+            url: "/Home/WorkTime_Save/" + WorkType + "/" + NowDate +"/"+ NowTime,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            success: function (result) {
+                if (result == "Success") {
+                    alert("시간저장")
+                } else {
+                    alert("저장실패")
+                }
+                
+            },
+            error: function () {
+                alert("ajax 실패")
+            }
+        });
+    }
+    function CheckWorkTime(date) {
+        //alert("check");
+        var year = date.getFullYear();              //yyyy
+        var month = (1 + date.getMonth());          //M
+        month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+        var day = date.getDate();                   //d
+        day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+        return year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+    }
+    function CheckWorkBtn() {
+        var startTime = ""
+        var endTime = ""
+
+        $.ajax({
+            url: "/Home/WorkTime_check/" + NowDate,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var sjson = JSON.parse(result);
+                console.log(sjson);
+                //startTime = sjson[0].StartWork.substring(sjson[0].StartWork.indexOf(" "), sjson[0].StartWork.length);
+                //endTime = sjson[0].EndWork.substring(sjson[0].EndWork.indexOf(" "), sjson[0].EndWork.length);
+
+                if (sjson.length == 0) {
+                    //기록 없음. 출근만 가능
+                    $(".EndBtn").attr("disabled", true);
+                    return
+                } else {
+                    //startTime = sjson[0].StartWork.substring(sjson[0].StartWork.indexOf(" "), sjson[0].StartWork.length);
+                    //endTime = sjson[0].EndWork.substring(sjson[0].EndWork.indexOf(" "), sjson[0].EndWork.length);
+                    if (sjson[0].StartWork != null && sjson[0].EndWork == null) {
+                        startTime = sjson[0].StartWork.substring(sjson[0].StartWork.indexOf(" "), sjson[0].StartWork.length);
+                        // 출근기록만 있음. 퇴근버튼 on
+                        $(".StartBtn").attr("disabled", true);
+                        $(".StartBtn").text("출근 " + startTime);
+                    } else if (sjson[0].StartWork == null && sjson[0].EndWork.length != 0) {
+
+                        // ?????
+                    } else {
+                        startTime = sjson[0].StartWork.substring(sjson[0].StartWork.indexOf(" "), sjson[0].StartWork.length);
+                        endTime = sjson[0].EndWork.substring(sjson[0].EndWork.indexOf(" "), sjson[0].EndWork.length);
+                        // 둘다 기록 있음 둘다 off
+                        //alert(sjson[0].StartWork + "/" + sjson[0].EndWork)
+                        $(".StartBtn").attr("disabled", true);
+                        $(".StartBtn").text("출근 " + startTime);
+                        $(".EndBtn").attr("disabled", true);
+                        $(".EndBtn").text("퇴근 " + endTime);
+                    }
+                }
+
+            },
+            error: function () {
+                alert("ajax 실패")
+            }
+        })
+    }
+
 </script>

@@ -1,0 +1,148 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "근태 보기";
+    string a = "";
+}
+<style>
+    table {
+        font-size: small;
+    }
+
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
+        }
+
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+        color: #214085
+    }
+    .nav-tabs .nav-link {
+        color: grey;
+    }
+</style>
+<div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
+    <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style="font-size:small;">
+        <li class="nav-item">
+            <a class="nav-link" href="/Record/Sub10/@ViewBag.선택월" aria-selected="true">월별근태내역</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link  active" href="/Record/Sub10_1_1/@ViewBag.선택월" aria-selected="false">출퇴근기록</a>
+        </li>
+        <ul class="nav justify-content-end" style="font-size:small; position:absolute; right:0px; top: 11px;">
+            <a href="#" id="prevBtn" onclick="changeMonth('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+            <span id="SelectedMonth" style="margin:5px">@ViewBag.선택월</span>
+            <a href="#" id="nextBtn" onclick="changeMonth('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        </ul>
+    </ul>
+    
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="table-responsive">
+                <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>날짜</th>
+                            <th>출근</th>
+                            <th>퇴근</th>
+                            <th>총근로</th>
+                        </tr>
+                    </thead>
+                    @*<tbody>
+                        @if (Model.recordTable.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="4">데이터가 없습니다</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var attend in Model.recordTable)
+                            {
+                    <tr>
+
+                        @if (attend.날짜.DayOfWeek.ToString("d").Equals("0"))
+                        {
+                            <th class="Sunday" style="color:red">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
+                        }
+                        else if (attend.날짜.DayOfWeek.ToString("d").Equals("6"))
+                        {
+                            <th style="color:blue">@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
+                        }
+                        else
+                        {
+                            <th>@string.Format("{0:yyyy-MM-dd}", attend.날짜) @attend.요일</th>
+                        }
+
+                        <td>@attend.출근</td>
+                        <td>@attend.퇴근</td>
+                        @if (ViewBag.BizZum.Equals("1308184654"))
+                        {
+                            <td class="DayOfTime">-</td>
+                        }
+                        else
+                        {
+                            <td class="DayOfTime">@attend.총근로</td>
+                        }
+
+                    </tr>
+                                
+                            }
+                        }
+                    </tbody>*@
+                    <tbody>
+                       @for (int i = 1; i <= ViewBag.선택일끝; i++)
+                       {
+                           if (i < 10) { a = "0" + i; }
+                           else { a = "" + i; }
+                        <tr>
+                            <td>@ViewBag.선택월-@a</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                       }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        let today = $("#SelectedMonth").text();
+        //console.log("1: " + today.substring(0, 4));
+        let month_end_day = new Date(today.substring(0, 4), today.substring(5, 7), 0);
+        //console.log("1: " + month_end_day.getDate());
+        let Eday = month_end_day.getDate()
+
+    });
+
+
+      @*function changeMonth(sign) {
+        let monthList = [];
+        @foreach (var item in Model.monthList)
+        {
+            @:monthList.push('@item.월');
+        }
+        let current_num = monthList.indexOf('@ViewBag.선택월');
+        //alert("현재index: " + current_num + " / 배열길이: " + monthList.length)
+        if (sign == '+') { // 배열 index 감소
+            if (current_num - 1 < 0) {
+                alert("데이터가 없습니다.")
+            }
+            else {
+                location.href = "/Record/Sub10_1_1/" + monthList[current_num - 1];
+            }
+        } else {    // '-' 배열 index 증가
+            if (current_num + 1 > monthList.length -1) {
+                alert("데이터가 없습니다.")
+            }
+            else {
+                //alert(monthList[current_num + 1])
+                location.href = "/Record/Sub10_1_1/" + monthList[current_num + 1];
+            }
+        }
+
+    }*@
+</script>
