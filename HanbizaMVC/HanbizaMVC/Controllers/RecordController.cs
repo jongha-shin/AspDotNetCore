@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Dynamic;
 using System.Security.Claims;
+using Newtonsoft.Json;
 
 namespace HanbizaMVC.Controllers
 {
@@ -226,43 +227,44 @@ namespace HanbizaMVC.Controllers
             if (!checkLogin) return RedirectToAction("Login", "Account");
 
             ViewBag.menulist = menulist;
-            dynamic mymodel = new ExpandoObject();
-            // 최근 근태기록 월 구하기
-            List<출퇴근기록> Months = null;
+            int day = 0;
             if (dateMonth == null)
             {
-                dateMonth = "";
-                //_db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                //   .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
+                DateTime today = DateTime.Today;
+                string year = today.Year.ToString();
+                string month = today.Month.ToString();
+                day = DateTime.DaysInMonth(today.Year, today.Month);
+                if (month.ToString().Length == 1) month = "0" + month;
+
+                dateMonth = year + "-" + month;
 
             }
             else
             {
-                //_db.LoadStoredProc("dbo.lastMonth").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
-                //   .AddParam("Dname", LoginUser.Dname).Exec(r => Months = r.ToList<출퇴근기록>());
-                //ViewBag.선택월 = dateMonth;
+                //Console.WriteLine("123: "+dateMonth);
+                day = DateTime.DaysInMonth(int.Parse(dateMonth.Substring(0, 4)), int.Parse(dateMonth.Substring(5, 2)));
             }
-
-            DateTime today = DateTime.Today;
-            string year = today.Year.ToString();
-            string month = today.Month.ToString();
-            int day = DateTime.DaysInMonth(today.Year, today.Month);
-            if (month.ToString().Length == 1) month = "0" + month;
-
-            dateMonth = year + "-" + month;
-            //Console.WriteLine(dateMonth);
             ViewBag.선택월 = dateMonth;
-            ViewBag.선택일끝 = day;
-            //Console.WriteLine("1_1 선택월: " + dateMonth);
-            // 출퇴근기록
-            List<출퇴근기록> recordTable = null;
-            _db.LoadStoredProc("dbo.attendRecord").AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("lastMonth", dateMonth)
-                .AddParam("Dname", LoginUser.Dname).Exec(r => recordTable = r.ToList<출퇴근기록>());
             ViewBag.BizZum = LoginUser.BizNum;
-            mymodel.monthList = Months;
-            mymodel.recordTable = recordTable;
-            return View(mymodel);
+            ViewBag.선택일끝 = day;
+            return View();
         }
+
+        [Route("/Record/GetWorkTime/{today}")]
+        public IActionResult GetWorkTime(string today)
+        {
+            Boolean checkLogin = CheckLogin();
+            List<WorkTime> WorkTime_ip = null;
+            var jsonString = "";
+            _db.LoadStoredProc("dbo.WorkTime_getList").AddParam("DateMonth", today)
+                .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                .Exec(r => WorkTime_ip = r.ToList<WorkTime>());
+            //Console.WriteLine(today + " / " + WorkTime_ip.Count);
+            jsonString = JsonConvert.SerializeObject(WorkTime_ip);
+
+            return new JsonResult(jsonString);
+        }
+
         // 5. 연차보기
         [Authorize]
         public IActionResult Sub11()

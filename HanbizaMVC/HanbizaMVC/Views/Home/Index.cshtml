@@ -61,7 +61,7 @@
     @if (ViewBag.menulist[0].근태보기.Equals("2"))
     {
     <div class="row offset-md-1 CheckWorkTime" >
-        <div class="col-md-6 col-12" style="margin:20px auto;font-size:15px">
+        <div class="col-md-6 col-12" style="margin: 20px auto;font-size: 15px;padding-top: 10px;">
             <span>근로 기준일 : </span><span id="today"></span>
         </div>
         <div class="col-md-6 col-12" style="padding: 0; margin:10px 0">
@@ -155,7 +155,6 @@
             $(".StartBtn").attr("disabled", true);
             $(".StartBtn").text("출근 " + NowTime);
         } else {    //WorkType == End
-
             alert("퇴근시간: " + NowTime);
             $(".EndBtn").attr("disabled", true);
             $(".EndBtn").text("퇴근 " + NowTime);
@@ -168,16 +167,19 @@
             dataType: "text",
             success: function (result) {
                 if (result == "Success") {
-                    alert("시간저장")
+                    //alert("시간저장")
+                    
+                    location.reload();
                 } else {
                     alert("저장실패")
                 }
                 
             },
             error: function () {
-                alert("ajax 실패")
+                alert("다시 시도해 주세요")
             }
         });
+        CheckWorkBtn();
     }
     function CheckWorkTime(date) {
         //alert("check");
@@ -199,29 +201,26 @@
             dataType: "json",
             success: function (result) {
                 var sjson = JSON.parse(result);
-                console.log(sjson);
-                //startTime = sjson[0].StartWork.substring(sjson[0].StartWork.indexOf(" "), sjson[0].StartWork.length);
-                //endTime = sjson[0].EndWork.substring(sjson[0].EndWork.indexOf(" "), sjson[0].EndWork.length);
-
+                //console.log(sjson);
+                
                 if (sjson.length == 0) {
                     //기록 없음. 출근만 가능
                     $(".EndBtn").attr("disabled", true);
                     return
                 } else {
-                    //startTime = sjson[0].StartWork.substring(sjson[0].StartWork.indexOf(" "), sjson[0].StartWork.length);
-                    //endTime = sjson[0].EndWork.substring(sjson[0].EndWork.indexOf(" "), sjson[0].EndWork.length);
                     if (sjson[0].StartWork != null && sjson[0].EndWork == null) {
                         startTime = sjson[0].StartWork.substring(sjson[0].StartWork.indexOf(" "), sjson[0].StartWork.length);
                         // 출근기록만 있음. 퇴근버튼 on
                         $(".StartBtn").attr("disabled", true);
+                        $(".EndBtn").attr("disabled", false);
                         $(".StartBtn").text("출근 " + startTime);
-                    } else if (sjson[0].StartWork == null && sjson[0].EndWork.length != 0) {
+                    } else if (sjson[0].StartWork == null && sjson[0].EndWork != null) {
 
                         // ?????
                     } else {
+                        // 둘다 기록 있음 둘다 off
                         startTime = sjson[0].StartWork.substring(sjson[0].StartWork.indexOf(" "), sjson[0].StartWork.length);
                         endTime = sjson[0].EndWork.substring(sjson[0].EndWork.indexOf(" "), sjson[0].EndWork.length);
-                        // 둘다 기록 있음 둘다 off
                         //alert(sjson[0].StartWork + "/" + sjson[0].EndWork)
                         $(".StartBtn").attr("disabled", true);
                         $(".StartBtn").text("출근 " + startTime);

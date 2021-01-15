@@ -126,6 +126,7 @@ namespace HanbizaMVC.Controllers
         }
 
         //출퇴근시간 저장
+        [Authorize]
         [Route("/Home/WorkTime_Save/{WorkType}/{NowDate}/{NowTime}")]
         public string WorkTime_Save(string WorkType, string NowDate, string NowTime)
         {

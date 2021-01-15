@@ -7,7 +7,7 @@ namespace HanbizaMVC.Models
         public int SEQID { get; set; }
         public string Dname { get; set; }
         public string BizNum { get; set; }
-        public int PkDay { get; set; }
+        public DateTime PkDay { get; set; }
         public int MatchNum { get; set; }
         public string Sabun { get; set; }
         public string BuSeo { get; set; }
@@ -18,5 +18,7 @@ namespace HanbizaMVC.Models
         public string HbzUp { get; set; }
         public string Bigo { get; set; }
         public DateTime Regdate { get; set; }
+        public string StartIP { get; set; }
+        public string EndIP { get; set; }
     }
 }

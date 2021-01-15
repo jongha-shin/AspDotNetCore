@@ -222,7 +222,7 @@ else
         $(".jpgUpload").prop("disabled", true);
         $(".jpgUpload").show();
         $(".nextPage").hide();
-
+    
         $.ajax({
             url: "/Document/Sub41_3/" + Seqid,
             type: "GET",
@@ -607,7 +607,7 @@ else
             var formData = new FormData();	// formData 생성
             formData.append("file", file);	// file data 추가
 
-            console.log("==****pdf.output() :" + pdf.output().length);
+            //console.log("==****pdf.output() :" + pdf.output().length);
             $.ajax({
                 url: "/File/SavePdfWithSign/" + Seqid,
                 type: "POST",
