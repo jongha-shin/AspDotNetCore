@@ -38,6 +38,7 @@
     
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <p style="text-align:right; margin:0px; font:small">* 익일 퇴근 시 <span style="color:blue;">파란</span>글씨로 표시됩니다</p>
             <div class="table-responsive">
                 <table class="table-sm table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -48,7 +49,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                       @for (int i = 1; i <= ViewBag.선택일끝; i++)
+                        @for (int i = 1; i <= ViewBag.선택일끝; i++)
                        {
                            if (i < 10) { a = "0" + i; }
                            else { a = "" + i; }
@@ -96,6 +97,9 @@
                         }
                         if (sjson[i].EndWork.length != 0) {
                             endTime = sjson[i].EndWork.substring(11, sjson[i].EndWork.length) + " (" + sjson[i].EndIP + ")"
+                            if (sjson[i].EndWork.substring(0, 10) != month) {
+                                $("." + month + " td:nth-child(3)").css('color', 'blue');
+                            }
                         }
                         $("." + month + " td:nth-child(2)").text(startTime);
                         $("." + month + " td:nth-child(3)").text(endTime);
