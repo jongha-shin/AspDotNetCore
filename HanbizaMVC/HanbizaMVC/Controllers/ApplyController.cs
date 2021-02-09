@@ -53,6 +53,7 @@ namespace HanbizaMVC.Controllers
         // 20 OT 신청
         [Authorize]
         [Route("/Apply/Sub20")]
+        [Route("/Apply/Sub20/{secondTab}")]
         [Route("/Apply/Sub20/{secondTab}/{dateYear}")]
         public IActionResult Sub20(string secondTab,string dateYear)
         {
@@ -129,6 +130,7 @@ namespace HanbizaMVC.Controllers
         // 21. 휴가신청
         [Authorize]
         [Route("/Apply/Sub21")]
+        [Route("/Apply/Sub21/{secondTab}")]
         [Route("/Apply/Sub21/{secondTab}/{dateYear}")]
         public IActionResult Sub21(string secondTab, string dateYear)
         {

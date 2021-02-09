@@ -262,7 +262,7 @@
 </div>
 
 <script>
-
+    
     var applyType = "vacation";
 
     var checkTab = $("#checkTab").val();
@@ -488,7 +488,7 @@
                         } else {
                             alert("휴가신청 취소가 실패하였습니다. 다시시도해주세요.");
                         }
-                        location.href = "Sub21";
+                        location.href = "/Apply/Sub21/secondTab/";
                     },
                     error: function () {
                         alert("err");
@@ -658,7 +658,7 @@
             success: function (result) {
                 if (result == "success") {
                     alert("신청 완료");
-                    location.href = "/Apply/Sub21";
+                    location.href = "Sub21";
                 } else {
                     alert("신청 실패");
                 }
@@ -730,7 +730,7 @@
         let yearList = [];
         let today = new Date()
         let year = today.getFullYear;
-
+        
         @if(Model == null)
         {
             @:yearList.push(year)
