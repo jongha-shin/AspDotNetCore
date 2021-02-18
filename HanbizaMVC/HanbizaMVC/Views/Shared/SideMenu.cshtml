@@ -98,21 +98,21 @@
         </a>
         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
             <div class="bg-white collapse-inner rounded">
-                @if (ViewBag.menulist[0].OT결재.Equals("1"))
+                @if (!ViewBag.menulist[0].OT결재.Equals("0"))
                 {
                     <a class="collapse-item text-left" href="/Approve/Sub30">
                         <i class="fas fa-fw fa-pen-fancy"></i>&nbsp;
                         <span> &nbsp;OT결재&nbsp;</span>
                     </a>
                 }
-                @if (ViewBag.menulist[0].휴가결재.Equals("1"))
+                @if (!ViewBag.menulist[0].휴가결재.Equals("0"))
                 {
                     <a class="collapse-item text-left" href="/Approve/Sub31">
                         <i class="fas fa-fw fa-pen"></i>&nbsp;
                         <span> &nbsp;휴가결재&nbsp;</span>
                     </a>
                 }
-                @if (ViewBag.menulist[0].기타결재.Equals("1"))
+                @if (!ViewBag.menulist[0].기타결재.Equals("0"))
                 {
                     <a class="collapse-item text-left" href="/Approve/Sub33">
                         <i class="fas fa-fw fa-pencil-alt"></i>&nbsp;

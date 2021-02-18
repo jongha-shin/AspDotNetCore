@@ -232,7 +232,6 @@ namespace HanbizaMVC.Controllers
             result = "fail";
             return result;
         }
-
         // (공용)31-3 결재 결과 가져오기
         [Route("/Approve/Sub31_3/{Type}/{Snal}/{Enal}")]
         public string Sub31_3(string type, string Snal, string Enal)
@@ -253,6 +252,15 @@ namespace HanbizaMVC.Controllers
             jsonString = "fail";
             return jsonString;
         }
+        
+        // (공용)31-4 SMS 설정 세팅
+        [Route("/Approve/Sub31_4/{type}")]
+        public string Sub31_4(string type)
+        {
+
+            return "";
+        }
+
 
 
         // 32 인사평가
