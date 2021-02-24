@@ -20,5 +20,7 @@ namespace HanbizaMVC.Models
         public string Bbuseo { get; set; }
         public string Mbuseo { get; set; }
         public string Buseo { get; set; }
+        public string SMSuse { get; set; }
+        public string SMStime { get; set; }
     }
 }

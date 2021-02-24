@@ -61,7 +61,7 @@
     @if (ViewBag.menulist[0].OT결재.Equals("2"))
     {
         <a class="SMS_Btn" onclick="Set_SMS_Alram('OT')">
-            <i class="fas fa-bell fa-fw"></i>
+            <i class="fas fa-bell fa-fw SMSBtn"></i>
         </a>
     }
 <div id="SMS_Modal" class="modal fade" tabindex="-1" role="dialog">
@@ -76,11 +76,11 @@
             <div class="modal-body">
                 <div class="p-3 row">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-                        <label class="form-check-label" for="flexSwitchCheckChecked">SMS 알림 받기</label>
+                        <input class="form-check-input" type="checkbox" id="SMSCheck">
+                        <label class="form-check-label" for="SMSCheck">SMS 알림 받기</label>
                     </div>
                 </div>
-                <div class="p-3 row SMS_Time">
+                <div class="p-3 row" id="SMS_Time">
 
                     <span class="p-1 mr-1">희망 시간 설정 :</span>
                     <select id="Time_Hour" class="form-control form-control-sm col-2">
@@ -91,7 +91,7 @@
                     </select>
                     <span class="mr-2 p-1">시</span>
                     <select id="Time_Minutes" class="form-control form-control-sm col-2">
-                        <option value="0">00</option>
+                        <option value="00">00</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
                         <option value="30">30</option>
@@ -104,7 +104,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="SMS_TimeSave()">저장</button>
+                <button type="button" class="btn btn-primary" onclick="SMS_TimeSave()">저장</button>
             </div>
         </div>
     </div>
@@ -378,28 +378,103 @@
         });
 
         Set_SMS('OT');
+        Check_SMS_Time();
 
+        $("#SMSCheck").on("click", function () {
+            Check_SMS_Time();
+        });
     });
+    function Check_SMS_Time() {
+        if ($("#SMSCheck").is(":checked")) {
+            $("#Time_Hour").attr("disabled", false);
+            $("#Time_Minutes").attr("disabled", false);
+        } else {
+
+            $("#Time_Hour").attr("disabled", true);
+            $("#Time_Minutes").attr("disabled", true);
+        }
+
+    }
     function Set_SMS_Alram(type) {  // 클릭 시 알람 정보 가져오는 메소드
         
-
-
-
         $("#SMS_Modal").modal('show');
     }
     function Set_SMS(type) {    //페이지 로딩 시
         
     // ajax로 상태여부 체크
+        $.ajax({
+            url: "/Approve/Sub31_4_1/" + approveType,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            success: function (result) {
+                let sjson = JSON.parse(result);
+                let tmpTime = sjson[0].SMStime;
+                let tmpHour = tmpTime.substring(0, 2);
+                let tmpMin = tmpTime.substring(3, 5);
+                $("#Time_Hour").val(tmpHour);
+                $("#Time_Minutes").val(tmpMin);
+                if (result != "not use") {
+                    
+                    for (i = 1; i <= 24; i++) { // sms 사용하는 회사면 세팅
+                        $("#Time_Hour").append('<option value=' + i + '>' + i + '</optioin>');
+                    }
+                    // sms알림 사용
+                    // smsUse n 이면 색깔 비활성화 <> y 면 활성화
+                    if (sjson[0].SMSuse == 'Y') {
+                        $(".SMSBtn").css("color", "red"); // 종 색깔
+                        $("#SMSCheck").prop("checked", true);// 체크박스 체크
+                        Check_SMS_Time();
+                    }
+                } else {
+                    //alert("sms 미사용");
 
-        // sms 사용하는 회사면 세팅
-        for (i = 1; i <= 24; i++) {
-            $("#Time_Hour").append('<option value=' + i + '>' + i + '</optioin>');
-        }
+                }
+            },
+            error: function () {
+                alert("err");
+            }
+        });
+        
+
         // 해당컬럼 y 면 사용 - .SMS_Time(div): show
 
         // 시간정보있으면 콤보 세팅
 
 
+    }
+    function SMS_TimeSave() {
+        let smsTime = ""
+        let smsUse = ""
+        let message = ""
+        smsTime = $("#Time_Hour").val() + ":" + $("#Time_Minutes").val();
+        if ($("#SMSCheck").is(":checked")) {
+            //alert($("#Time_Hour").val() + ":" + $("#Time_Minutes").val());
+            smsUse = "Y"
+            message = "매일 "+ smsTime + "에 SMS가 발송됩니다.";
+        } else {
+            smsUse = "N"
+            message = "SMS 알림 설정을 취소합니다";
+            
+        }
+        
+        $.ajax({
+            url: "/Approve/Sub31_4/" + approveType + "/" + smsUse + "/" + smsTime,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            success: function () {
+                alert(message);
+                location.href = "/Approve/Sub30";
+            },
+            error: function () {
+                alert("err");
+            }
+        });
+
+
+        $("#SMS_Modal").modal('hide');
+        Set_SMS(approveType);
     }
 
     function allowVacation() {

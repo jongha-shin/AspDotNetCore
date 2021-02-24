@@ -204,7 +204,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             string result;
-            _logger.LogInformation("sub31_2(): " + VacID + " / " + RereaSon);
+            //_logger.LogInformation("sub31_2(): " + VacID + " / " + RereaSon);
             var rs = _db.LoadStoredProc("apply_process_reject").AddParam("Type", type)
                         .AddParam("approveID", LoginUser.StaffId).AddParam("VacID", VacID).AddParam("RereaSon", RereaSon).ExecNonQuery();
             if (rs > 0)
@@ -221,7 +221,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             string result;
-            _logger.LogInformation("sub31_2_1(): " + VacID);
+            //_logger.LogInformation("sub31_2_1(): " + VacID);
             var rs = _db.LoadStoredProc("apply_process_reject_Cancel").AddParam("Type", type)
                         .AddParam("StaffID", LoginUser.StaffId).AddParam("VacID", VacID).ExecNonQuery();
             if (rs > 0)
@@ -239,7 +239,7 @@ namespace HanbizaMVC.Controllers
             Boolean checkLogin = CheckLogin();
             var jsonString = "";
 
-            List<Approve_History> AHlist = null; ;
+            List<Approve_History> AHlist = null; 
             _db.LoadStoredProc("dbo.apply_resultHistory").AddParam("Type", type).AddParam("Snal", Snal).AddParam("Enal", Enal)
                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                .Exec(r => AHlist = r.ToList<Approve_History>());
@@ -254,14 +254,45 @@ namespace HanbizaMVC.Controllers
         }
         
         // (공용)31-4 SMS 설정 세팅
-        [Route("/Approve/Sub31_4/{type}")]
-        public string Sub31_4(string type)
+        [Route("/Approve/Sub31_4/{type}/{smsUse}/{smsTime}")]
+        public string Sub31_4(string type, string smsUse, string smsTime)
         {
+            Boolean checkLogin = CheckLogin();
+            //Console.WriteLine(type +" " + smsUse + " " + smsTime);
+            string result;
+            var rs = _db.LoadStoredProc("SMS_Setting").AddParam("smsUse", smsUse).AddParam("smsTime", smsTime)
+                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                .ExecNonQuery();
 
-            return "";
+            if (rs > 0)
+            {
+                result = "success";
+                return result;
+            }
+            result = "fail";
+            return result;
         }
+        // (공용)31-4-1 SMS 설정 가져오기
+        [Route("/Approve/Sub31_4_1/{type}")]
+        public string Sub31_4_1(string type)
+        {
+            Boolean checkLogin = CheckLogin();
+            //Console.WriteLine(type +" " + smsUse + " " + smsTime);
+            string jsonString = "not use";
+            List<LoginInfor> loginInfor = null;
 
+            _db.LoadStoredProc("SMS_get_Setting").AddParam("type", type)
+                .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
+                .Exec(r => loginInfor = r.ToList<LoginInfor>());
 
+            if (loginInfor.Count > 0) 
+            {
+                jsonString = JsonConvert.SerializeObject(loginInfor);
+                return jsonString;
+            }
+            
+            return jsonString;
+        }
 
         // 32 인사평가
         [Authorize]
