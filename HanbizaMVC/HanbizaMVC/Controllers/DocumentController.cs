@@ -130,7 +130,7 @@ namespace HanbizaMVC.Controllers
 
             ViewBag.menulist = menulist;
             ViewBag.IsSignature = fileInfo[0].IsSignature;
-            ViewBag.FileType = Path.GetExtension(fileInfo[0].FileName);
+            ViewBag.FileType = Path.GetExtension(fileInfo[0].FileName).ToLower();
             ViewBag.Seqid = Seqid;
 
             return View();

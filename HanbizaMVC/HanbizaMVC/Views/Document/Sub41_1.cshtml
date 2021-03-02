@@ -209,7 +209,7 @@ else
 
         //$("#SignCanvas").css({ "transform": "scale(" + 0.1 * ratio+")" });  // 이용자 편의를 위해 축소
 
-        if (Ftype == ".pdf") ViewPDF(Seqid);
+        if (Ftype.toLowerCase() == ".pdf") ViewPDF(Seqid);
         else if (Ftype == ".jpg" || Ftype == ".png") ViewElseFile(Seqid);   // .jpg .png
         else { alert("PDF 혹은 이미지 파일이 아닙니다."); location.href = "/Document/Sub41"; }
 
