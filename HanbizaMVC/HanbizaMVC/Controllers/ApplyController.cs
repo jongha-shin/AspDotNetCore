@@ -263,8 +263,8 @@ namespace HanbizaMVC.Controllers
             //_logger.LogInformation("sub21_4(): " + LoginUser.BizNum + " / " + LoginUser.StaffId + " / " + approve_Params.StaffID1);
             string rsString;
 
-            var rs = _db.LoadStoredProc("dbo.apply_insertEachApprover").AddParam("Type", approve_Params.Type)
-                     .AddParam("ProCDeep", approve_Params.ProCDeep).AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname).AddParam("StaffName", LoginUser.StaffName)
+            var rs = _db.LoadStoredProc("dbo.apply_insert_EachApprover").AddParam("Type", approve_Params.Type).AddParam("ProCDeep", approve_Params.ProCDeep)
+                     .AddParam("BizNum", LoginUser.BizNum).AddParam("Dname", LoginUser.Dname).AddParam("StaffID", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
                      .AddParam("StaffID1", approve_Params.StaffID1).AddParam("StaffID2", approve_Params.StaffID2).AddParam("StaffID3", approve_Params.StaffID3).AddParam("StaffID4", approve_Params.StaffID4).AddParam("StaffID5", approve_Params.StaffID5)
                      .AddParam("Sign1", approve_Params.Sign1).AddParam("Sign2", approve_Params.Sign2).AddParam("Sign3", approve_Params.Sign3).AddParam("Sign4", approve_Params.Sign4).AddParam("Sign5", approve_Params.Sign5)
                      .ExecNonQuery();
