@@ -31,6 +31,16 @@
         cursor: pointer;
         background-color: rgba(0, 0, 0, 0.075);
     }
+
+    .SMS_Btn {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+    }
+
+        .SMS_Btn:hover {
+            cursor: pointer
+        }
 </style>
 
 <div class="text-center col-12 col-sm-8 offset-sm-2 p-2" style="background-color:white">
@@ -48,6 +58,57 @@
             <a class="nav-link" id="pills-profile3-tab" data-toggle="pill" href="#pills-profile3" role="tab" aria-controls="pills-profile3" aria-selected="false" onclick="getHistory()">결재결과</a>
         </li>
     </ul>
+    @if (ViewBag.menulist[0].휴가결재.Equals("2"))
+    {
+    <a class="SMS_Btn" onclick="Set_SMS_Alram('vacation')">
+        <i class="fas fa-bell fa-fw SMSBtn"></i>
+    </a>
+    }
+    <div id="SMS_Modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-primary modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title">SMS알림 시간 설정</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="p-3 row">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="SMSCheck">
+                            <label class="form-check-label" for="SMSCheck">SMS 알림 받기</label>
+                        </div>
+                    </div>
+                    <div class="p-3 row" id="SMS_Time">
+
+                        <span class="p-1 mr-1">희망 시간 설정 :</span>
+                        <select id="Time_Hour" class="form-control form-control-sm col-2">
+                            @for (int i = 0; i < 24; i++)
+                        {
+                            <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                        }
+                        </select>
+                        <span class="mr-2 p-1">시</span>
+                        <select id="Time_Minutes" class="form-control form-control-sm col-2">
+                            <option value="00">00</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                        </select>
+                        <span class="p-1">분</span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" onclick="SMS_TimeSave()">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="tab-content" id="pills-tabContent">
         @* 대기 *@
         <div class="tab-pane show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -67,7 +128,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model)
+                        @foreach (var item in Model)
                     {
                         if (item.AResult.Equals("N") && item.processPoint.Equals("Y"))
                         {
@@ -82,7 +143,7 @@
                             <td style="color:red;">@item.Staffname</td>
                             }
                             <td>
-                            @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
+                                @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                             {
                                 <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                             }
@@ -103,7 +164,7 @@
                             a++;
                         }
                     }
-                    @if (a == 0)
+                        @if (a == 0)
                     {
                         <tr>
                             <td colspan="3">데이터가 없습니다</td>
@@ -138,14 +199,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model)
+                        @foreach (var item in Model)
                     {
                         if (item.AResult.Equals("Y") && !item.AllProCess.Equals("F"))
                         {
                         <tr>
                             <td>@item.Staffname</td>
                             <td>
-                            @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
+                                @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                             {
                                 <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                             }
@@ -160,7 +221,7 @@
                             b++;
                         }
                     }
-                    @if (b == 0)
+                        @if (b == 0)
                     {
                         <tr>
                             <td colspan="3">데이터가 없습니다</td>
@@ -187,14 +248,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model)
+                        @foreach (var item in Model)
                     {
                         if (item.AResult.Equals("F") && item.AllProCess.Equals("F"))
                         {
                         <tr class="tr-hover" onclick="CancleReject('@item.VacID','@string.Format("{0:yyyy-MM-dd}", item.SNal)')">
                             <td>@item.Staffname</td>
                             <td>
-                            @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
+                                @if (item.Vicname.Equals("반차") || item.Vicname.Equals("반차휴가") || item.Vicname.Equals("연차휴가(반차)"))
                             {
                                 <span>@item.Vicname : @string.Format("{0:yyyy-MM-dd}", item.SNal) (@item.UseTime 시간)</span>
                             }
@@ -324,7 +385,106 @@
             getHistory();
         });
 
+        Set_SMS('vacation');
+        Check_SMS_Time();
+
+        $("#SMSCheck").on("click", function () {
+            Check_SMS_Time();
+        });
+
     });
+    function Check_SMS_Time() {
+        if ($("#SMSCheck").is(":checked")) {
+            $("#Time_Hour").attr("disabled", false);
+            $("#Time_Minutes").attr("disabled", false);
+        } else {
+
+            $("#Time_Hour").attr("disabled", true);
+            $("#Time_Minutes").attr("disabled", true);
+        }
+
+    }
+    function Set_SMS_Alram(type) {  // 클릭 시 알람 정보 가져오는 메소드
+
+        $("#SMS_Modal").modal('show');
+    }
+    function Set_SMS(type) {    //페이지 로딩 시
+
+        // ajax로 상태여부 체크
+        $.ajax({
+            url: "/Approve/Sub31_4_1/" + approveType,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            success: function (result) {
+                let sjson = JSON.parse(result);
+                let tmpTime = sjson[0].SMStime;
+                let tmpHour = tmpTime.substring(0, 2);
+                let tmpMin = tmpTime.substring(3, 5);
+                $("#Time_Hour").val(tmpHour);
+                $("#Time_Minutes").val(tmpMin);
+                if (result != "not use") {
+
+                    for (i = 1; i <= 24; i++) { // sms 사용하는 회사면 세팅
+                        $("#Time_Hour").append('<option value=' + i + '>' + i + '</optioin>');
+                    }
+                    // sms알림 사용
+                    // smsUse n 이면 색깔 비활성화 <> y 면 활성화
+                    if (sjson[0].SMSuse == 'Y') {
+                        $(".SMSBtn").css("color", "red"); // 종 색깔
+                        $("#SMSCheck").prop("checked", true);// 체크박스 체크
+                        Check_SMS_Time();
+                    }
+                } else {
+                    //alert("sms 미사용");
+
+                }
+            },
+            error: function () {
+                alert("err");
+            }
+        });
+
+
+        // 해당컬럼 y 면 사용 - .SMS_Time(div): show
+
+        // 시간정보있으면 콤보 세팅
+
+
+    }
+    function SMS_TimeSave() {
+        let smsTime = ""
+        let smsUse = ""
+        let message = ""
+        smsTime = $("#Time_Hour").val() + ":" + $("#Time_Minutes").val();
+        if ($("#SMSCheck").is(":checked")) {
+            //alert($("#Time_Hour").val() + ":" + $("#Time_Minutes").val());
+            smsUse = "Y"
+            message = "매일 " + smsTime + "에 SMS가 발송됩니다.";
+        } else {
+            smsUse = "N"
+            message = "SMS 알림 설정을 취소합니다";
+
+        }
+
+        $.ajax({
+            url: "/Approve/Sub31_4/" + approveType + "/" + smsUse + "/" + smsTime,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "text",
+            success: function () {
+                alert(message);
+                location.href = "/Approve/Sub31";
+            },
+            error: function () {
+                alert("err");
+            }
+        });
+
+
+        $("#SMS_Modal").modal('hide');
+        Set_SMS(approveType);
+    }
     function allowVacation() {
         let checkedVacId = "";
         $(".checkBox_body:checked").each(function () {
