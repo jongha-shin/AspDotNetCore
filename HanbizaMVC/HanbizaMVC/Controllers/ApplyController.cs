@@ -240,8 +240,8 @@ namespace HanbizaMVC.Controllers
             //_logger.LogInformation("sub21_3(): " + LoginUser.BizNum + " / " + LoginUser.StaffId);
 
             var rs = _db.LoadStoredProc("dbo.apply_insert_Vacation")
-                        .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum)
-                        .AddParam("StaffId", LoginUser.StaffId).AddParam("Vicname", VaInfo.Vicname).AddParam("UseTime", VaInfo.UseTime)
+                        .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                        .AddParam("Vicname", VaInfo.Vicname).AddParam("UseTime", VaInfo.UseTime)
                         .AddParam("Snal", VaInfo.Snal).AddParam("Enal", VaInfo.Enal).AddParam("ProCDeep", VaInfo.ProCDeep)
                         .AddParam("VicReaSon", VaInfo.VicReason)
                         .ExecNonQuery();
@@ -368,7 +368,7 @@ namespace HanbizaMVC.Controllers
         {
             Boolean checkLogin = CheckLogin();
             string rsString;
-            Console.WriteLine("사유길이 : "+etc.EtcReason.Length);
+            //Console.WriteLine("사유길이 : "+etc.EtcReason.Length);
             var rs = _db.LoadStoredProc("dbo.apply_insert_ETC")
                         .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId).AddParam("StaffName", LoginUser.StaffName)
                         .AddParam("Gubun1", etc.Gubun1).AddParam("Gubun2", etc.Gubun2).AddParam("Snal", etc.Snal).AddParam("Enal", etc.Enal).AddParam("EtcReason", etc.EtcReason).AddParam("ProCDeep", etc.ProCDeep)
