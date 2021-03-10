@@ -66,24 +66,31 @@
             <div class="bg-white collapse-inner rounded">
                 @if (ViewBag.menulist[0].OT신청.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Apply/Sub20">
-                    <i class="fas fa-fw fa-clock"></i>&nbsp;
-                    <span> OT신청 </span>
-                </a>
+                    <a class="collapse-item text-left" href="/Apply/Sub20">
+                        <i class="fas fa-fw fa-clock"></i>&nbsp;
+                        <span> OT신청 </span>
+                    </a>
                 }
                 @if (ViewBag.menulist[0].휴가신청.Equals("1"))
                 {
-                <a class="collapse-item text-left" href="/Apply/Sub21">
-                    <i class="fas fa-fw fa-plane-departure"></i>&nbsp;
-                    <span> &nbsp;휴가신청&nbsp;</span>
-                </a>
+                    <a class="collapse-item text-left" href="/Apply/Sub21">
+                        <i class="fas fa-fw fa-plane-departure"></i>&nbsp;
+                        <span> &nbsp;휴가신청&nbsp;</span>
+                    </a>
                 }
-                @if (ViewBag.menulist[0].신청.Equals("1")) @*@if (ViewBag.menulist[0].기타신청.Equals("1"))*@
+                @if (ViewBag.menulist[0].신청.Equals("1"))@*@if (ViewBag.menulist[0].기타신청.Equals("1"))*@
                 {
-                <a class="collapse-item text-left" style="" href="/Apply/Sub22">
-                    <i class="fas fa-fw fa-plus"></i>&nbsp;
-                    <span>&nbsp;기타신청&nbsp;</span>
-                </a>
+                    <a class="collapse-item text-left" href="/Apply/Sub22">
+                        <i class="fas fa-fw fa-plus"></i>&nbsp;
+                        <span>&nbsp;기타신청&nbsp;</span>
+                    </a>
+                }
+                @if (ViewBag.menulist[0].신청.Equals("1"))
+                {
+                    <a class="collapse-item text-left" href="#" onclick="CheckDevice('시설물예약')">
+                        <i class="fas fa-fw fa-car"></i>&nbsp;
+                        <span>&nbsp;시설물예약&nbsp;</span>
+                    </a>
                 }
             </div>
         </div>
@@ -195,8 +202,23 @@
 
 
 <script>
-
-
+    function CheckDevice(menuName) {
+        if (menuName == '시설물예약') {
+            if (isMobile()) {
+                alert(menuName + "모바일");
+                // 모바일 페이지 이동
+                location.href = "/Apply/Sub23/Phone"
+            } else {
+                // 컴퓨터 페이지 이동
+                //alert(menuName + "컴퓨터");
+                location.href = "/Apply/Sub23/Computer"
+            }
+            
+        }
+    }
+    function isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
 </script>
 
 

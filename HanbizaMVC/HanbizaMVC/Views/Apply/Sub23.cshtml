@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "시설물 예약";
+}
+<style>
+    #calendar {
+        height: 99%;
+        box-sizing: border-box;
+        padding: 0.5%;
+        
+    }
+
+    .calendar__day {
+        display: inline-block;
+        vertical-align: bottom;
+        width: calc(97% / 7);
+        height: calc(98% / 5);
+        min-height: 100px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        padding: 5px 0px 0px 5px;
+    }
+
+    .horizontalGutter {
+        margin-right: 0.5%;
+    }
+
+    .verticalGutter {
+        margin-top: 0.5%;
+    }
+
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+        color: #214085
+    }
+
+    .nav-tabs .nav-link {
+        color: grey;
+    }
+
+    label {
+        font-weight: bold
+    }
+</style>
+@model List<Etc_List>
+<div class="text-center col-12 col-md-8 offset-md-2 p-2" style="background-color:white; min-width:1000px">
+    <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true" onclick="showSelectYear('N')">예약 및 현황</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false" onclick="showSelectYear('Y')">예약내역</a>
+        </li>
+        <ul class="nav justify-content-end" id="SelectYear" style="font-size:small; position:absolute; right:0px; top: 11px;">
+            <a href="#" id="prevBtn" onclick="changeYear('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+            <span style="margin:5px"><span id="year">@ViewBag.Year</span> - <span id="month">@ViewBag.Month</span></span>
+            <a href="#" id="nextBtn" onclick="changeYear('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
+        </ul>
+    </ul>
+    <div id="calendar" class="text-left"></div>
+</div>
+
+<script src="~/js/Apply/Sub23.js"></script>

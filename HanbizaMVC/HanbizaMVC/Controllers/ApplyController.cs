@@ -383,6 +383,31 @@ namespace HanbizaMVC.Controllers
         }
 
 
+        [Authorize]
+        [Route("/Apply/Sub23/{Device}")]
+        public IActionResult Sub23(string Device)
+        {
+            Boolean checkLogin = CheckLogin();
+            if (!checkLogin) return RedirectToAction("Login", "Account");
+            ViewBag.menulist = menulist;
+            //Console.WriteLine(Device);
+            // 시설물 현황 및 시설 예약 내역 가져오기
+
+            var dateYearMonth = DateTime.Now.ToString("yyyy-MM");
+            ViewBag.Year = dateYearMonth.Substring(0, 4);
+            ViewBag.Month = dateYearMonth.Substring(5, 2);
+            
+            if (Device.Equals("Phone"))
+            {
+                return View("~/Views/Apply/Sub23_1.cshtml");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
