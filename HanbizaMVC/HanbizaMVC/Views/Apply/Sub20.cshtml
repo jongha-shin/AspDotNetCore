@@ -486,13 +486,18 @@
                 var s = '<table id="approverTable" class="table-sm table-bordered table-hover col-sm-12">';
                 s += "<thead><tr><th align='center' width='50%'>부서명</th><th align='center' width='50%'>이름</th></tr></thead>"
                 if (sjson.length == 0) {
-                    s += '<tr><td colspan="2" align="center">데이터가 없습니다</td></tr>';
+                    s += "<tr style='pointer-events: none'><td colspan='2' align='center'>데이터가 없습니다</td></tr>";
                 } else {
                     for (var i = 0; i < sjson.length; i++) {
-                        s += "<tr>";
-                        s += "<td>" + sjson[i].Buseo + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
-
-                        s += "<td>" + sjson[i].StaffName + "</td>"
+                        if (staffList.indexOf(sjson[i].StaffID) != -1) {
+                            s += "<tr style='pointer-events:none'>";
+                            s += "<td>" + sjson[i].Buseo + "</td>";
+                            s += "<td>" + sjson[i].StaffName + "(등록된 결재자)</td>"
+                        } else {
+                            s += "<tr>";
+                            s += "<td>" + sjson[i].Buseo + "<input type='hidden' value='" + sjson[i].StaffID + "'></td>"
+                            s += "<td>" + sjson[i].StaffName + "</td>"
+                        }
                         s += "</tr>"
                         //alert(sjson[i].Buseo);
                     }

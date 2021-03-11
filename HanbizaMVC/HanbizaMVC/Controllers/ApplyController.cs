@@ -199,7 +199,7 @@ namespace HanbizaMVC.Controllers
                 if (!SearchWord.Equals(""))
                 {
                     List<Approver> Datatable = null;
-                    _db.LoadStoredProc("dbo.apply_getApprover")
+                    _db.LoadStoredProc("dbo.apply_getApprover_1")
                        .AddParam("BizNum", LoginUser.BizNum).AddParam("StaffID", LoginUser.StaffId).AddParam("Dname", LoginUser.Dname)
                        .AddParam("SearchWord", SearchWord)/*.AddParam("Step_num", Step_num)*/.AddParam("StaffList", StaffList)
                        .Exec(r => Datatable = r.ToList<Approver>());
