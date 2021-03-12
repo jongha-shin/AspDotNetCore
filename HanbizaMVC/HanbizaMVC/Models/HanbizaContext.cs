@@ -28,7 +28,9 @@ namespace HanbizaMVC.Models
         public virtual DbSet<Login_Record> Login_Record { get; set; }
         public virtual DbSet<인사평가> 인사평가 { get; set; }
         public virtual DbSet<Etc_List> Etc_List { get; set; }
-        
+        public virtual DbSet<시설물> 시설물 { get; set; }
+        public virtual DbSet<시설예약대장> 시설예약대장 { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -477,6 +479,14 @@ namespace HanbizaMVC.Models
                 entity.HasNoKey();
             });
             modelBuilder.Entity<Etc_List>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<시설물>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<시설예약대장>(entity =>
             {
                 entity.HasNoKey();
             });

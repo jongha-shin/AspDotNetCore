@@ -397,14 +397,51 @@ namespace HanbizaMVC.Controllers
             ViewBag.Year = dateYearMonth.Substring(0, 4);
             ViewBag.Month = dateYearMonth.Substring(5, 2);
             
+            List<시설물> Alist = null;
+            
+            _db.LoadStoredProc("dbo.apply_getSharing_List")
+                .AddParam("Dname", LoginUser.Dname).AddParam("BizNum", LoginUser.BizNum).AddParam("StaffId", LoginUser.StaffId)
+                .Exec(r => Alist = r.ToList<시설물>());
             if (Device.Equals("Phone"))
             {
                 return View("~/Views/Apply/Sub23_1.cshtml");
             }
             else
             {
-                return View();
+                return View(Alist);
             }
+        }
+        [Authorize]
+        [Route("/Apply/Sub23_1/{Gubun1}")]
+        public IActionResult Sub23_1(string Gubun1)
+        {
+            Boolean checkLogin = CheckLogin();
+            var jsonString = "";
+            List<시설물> Alist = null;
+                
+            Alist = _db.시설물.Where(r => r.BizNum == LoginUser.BizNum && r.Dname == LoginUser.Dname && r.Gubun1 == Gubun1).ToList();
+               
+            jsonString = JsonConvert.SerializeObject(Alist);
+
+            return new JsonResult(jsonString);
+        }
+
+        [Authorize]
+        [Route("/Apply/Sub23_2/{date}")]
+        public IActionResult Sub23_2(string date)
+        {
+            Boolean checkLogin = CheckLogin();
+            var jsonString = "";
+            List<시설예약대장> Alist = null;
+
+            var StrtDate = DateTime.Parse(date);
+
+            Alist = _db.시설예약대장.Where(r => r.BizNum == LoginUser.BizNum && r.Dname == LoginUser.Dname && r.Start_Time == StrtDate && r.End_Time == StrtDate)
+                        .ToList();
+
+            jsonString = JsonConvert.SerializeObject(Alist);
+
+            return new JsonResult(jsonString);
         }
 
 

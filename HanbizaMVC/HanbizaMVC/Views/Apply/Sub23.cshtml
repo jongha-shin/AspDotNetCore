@@ -2,11 +2,23 @@
     ViewData["Title"] = "시설물 예약";
 }
 <style>
+    .table-hover > tbody > tr {
+        cursor: pointer
+    }
+
+    table {
+        font-size: small;
+    }
+
+        table > thead > tr > th {
+            background-color: #3763ab;
+            color: white;
+        }
+
     #calendar {
         height: 99%;
         box-sizing: border-box;
         padding: 0.5%;
-        
     }
 
     .calendar__day {
@@ -41,7 +53,7 @@
         font-weight: bold
     }
 </style>
-@model List<Etc_List>
+@model List<시설물>
 <div class="text-center col-12 col-md-8 offset-md-2 p-2" style="background-color:white; min-width:1000px">
     <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
         <li class="nav-item">
@@ -52,11 +64,83 @@
         </li>
         <ul class="nav justify-content-end" id="SelectYear" style="font-size:small; position:absolute; right:0px; top: 11px;">
             <a href="#" id="prevBtn" onclick="changeYear('-')"><img src="~/img/search-prev.png" style="width:13px; height:20px; margin:5px" /></a>
+            
             <span style="margin:5px"><span id="year">@ViewBag.Year</span> - <span id="month">@ViewBag.Month</span></span>
+            
             <a href="#" id="nextBtn" onclick="changeYear('+')"><img src="~/img/search-next.png" style="width:13px; height:20px; margin:5px" /></a>
         </ul>
     </ul>
-    <div id="calendar" class="text-left"></div>
+    <div>
+        <select class="Gubun1" onchange="GetData(1)">
+            <option>전체보기</option>
+            @foreach (var item in Model)
+            {
+                <option value=@item.Gubun1>@item.Gubun1</option>
+            }
+        </select>
+        <select class="Gubun2" onchange="GetData(2)">
+            <option>전체보기</option>
+        </select>
+    </div>
+    <div>
+        <button onclick="setCalendarType('month_Type')">월</button>
+        <button onclick="setCalendarType('week_Type')">주</button>
+        <button onclick="">일</button>
+    </div>
+    <div id="calendar" class="text-left">
+        <div id="Day_calendar" style="display:none">
+            @* 시프티 테이블 참고. 오전 오후 12시간씩. 칸나눠 해당 일에 표시 *@
+        </div>
+    </div>
 </div>
 
+<div id="findReserveModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-primary modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="modal-title">시설물 예약</p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="p-3 row input-group">
+                    <select class="form-control form-control-sm col-3 Gubun1" onchange="GetData(1)">
+                        <option selected>전체보기</option>
+                        @foreach (var item in Model)
+                        {
+                            <option value=@item.Gubun1>@item.Gubun1</option>
+                        }
+                    </select>
+                    <select class="form-control form-control-sm col-3 Gubun2">
+                        <option selected>전체보기</option>
+                        
+                    </select>
+                    <input class="form-control form-control-sm col-6 offset-2" type="text" placeholder="원하는 날짜를 선택하세요" id="ReserveDate" />
+                    <div class="input-group-append">
+                        <button class="btn btn-sm btn-primary" id="searchBtn">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                    </div>
+
+                </div>
+                @* ajax로 데이터 가져옴 *@
+                <spand id="result"></spand>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="~/js/Apply/Sub23.js"></script>
+<script>
+    $(function () {
+        $("#ReserveDate").datepicker({
+            language: 'ko',
+            autoclose: true
+        });
+
+    });
+
+</script>
